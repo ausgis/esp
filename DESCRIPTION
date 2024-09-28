@@ -6,7 +6,9 @@ Authors@R:
            email = "lyu.geosocial@gmail.com", 
            role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0009-0002-6003-3800"))
-Description: What the package does (one paragraph).
+Description: Evaluating the spatial association between explanatory and response variables 
+             using the geographical detector q statistic within a multiscale geographically 
+             weighted regression framework.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
