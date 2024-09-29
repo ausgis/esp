@@ -18,6 +18,7 @@ BugReports: https://github.com/stscl/esp/issues
 Depends: 
     R (>= 4.1.0)
 Imports: 
+    ClustGeo,
     dplyr,
     GWmodel3,
     magrittr,

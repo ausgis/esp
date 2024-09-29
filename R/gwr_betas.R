@@ -2,8 +2,8 @@
 #'
 #' @param formula A formula of `GWR` model.
 #' @param data An sf object of observation data
-#' @param bw (optional) The bandwidth used in selecting models. The optimal bandwidth can be selected
-#' using one of two methods: `AIC`, and `CV`. Default will use `AIC`.
+#' @param bw (optional) The bandwidth used in selecting models. The optimal bandwidth can be
+#' selected using one of two methods: `AIC`, and `CV`. Default will use `AIC`.
 #' @param adaptive (optional) Whether the bandwidth value is adaptive or not. Default is `TRUE`.
 #' @param kernel (optional) Kernel function. Default is `gaussian`.
 #'
