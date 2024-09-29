@@ -19,6 +19,7 @@ Depends:
     R (>= 4.1.0)
 Imports: 
     dplyr,
+    GWmodel3,
     magrittr,
     sdsfun,
     sf,

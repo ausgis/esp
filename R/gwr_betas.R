@@ -31,7 +31,7 @@ gwr_betas = \(formula, data, bw = "AIC",
     formula, data, bw = bw, adaptive = adaptive, kernel = kernel
   )})
 
-  betas = coef(g) |>
+  betas = stats::coef(g) |>
     tibble::as_tibble() |>
     dplyr::select(dplyr::all_of(xname))
   return(betas)
