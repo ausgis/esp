@@ -1,10 +1,11 @@
-#' Title
+#' Estimated Model Coefficients By `GWR`
 #'
-#' @param formula
-#' @param data
-#' @param adaptive
-#' @param kernel
-#' @param multiscale
+#' @param formula A formula of `GWR` model.
+#' @param data An sf object of observation data
+#' @param bw (optional) The bandwidth used in selecting models. The optimal bandwidth can be selected
+#' using one of two methods: `AIC`, and `CV`. Default will use `AIC`.
+#' @param adaptive (optional) Whether the bandwidth value is adaptive or not. Default is `TRUE`.
+#' @param kernel (optional) Kernel function. Default is `gaussian`.
 #'
 #' @return A `tibble`
 #' @export
@@ -14,12 +15,9 @@
 #'   readr::read_csv() |>
 #'   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
 #' gwr_betas(Depression_prevelence ~ ., data = depression)
-#' gwr_betas(Depression_prevelence ~ ., data = depression, multiscale = TRUE)
 #'
-gwr_betas = \(formula, data,
-              adaptive = TRUE,
-              kernel = "gaussian",
-              multiscale = FALSE){
+gwr_betas = \(formula, data, bw = "AIC",
+              adaptive = TRUE, kernel = "gaussian"){
   formula = stats::as.formula(formula)
   formula.vars = all.vars(formula)
   if (formula.vars[2] != "."){
@@ -29,22 +27,12 @@ gwr_betas = \(formula, data,
   gname = sdsfun::sf_geometry_name(data)
   xname = colnames(data)[-which(colnames(data) %in% c(yname,gname))]
 
-  longlat = dplyr::if_else(sf::st_is_longlat(data),TRUE,FALSE,FALSE)
-  if (multiscale) {
-    suppressWarnings({g = GWmodel3::gwr_multiscale(
-      formula, data,
-      config = list(GWmodel3::mgwr_config(adaptive = adaptive,
-                                          kernel = kernel,
-                                          longlat = longlat))
-    )})
-  } else {
-    suppressWarnings({g = GWmodel3::gwr_basic(
-      formula, data, adaptive = adaptive, kernel = kernel
-    )})
-  }
+  suppressWarnings({g = GWmodel3::gwr_basic(
+    formula, data, bw = bw, adaptive = adaptive, kernel = kernel
+  )})
 
-  betas = coef(g) %>%
-    tibble::as_tibble() %>%
+  betas = coef(g) |>
+    tibble::as_tibble() |>
     dplyr::select(dplyr::all_of(xname))
   return(betas)
 }
