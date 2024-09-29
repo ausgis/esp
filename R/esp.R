@@ -22,11 +22,15 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
   discdf = dplyr::select(data,dplyr::all_of(c(yname,xdiscname)))
 
   gwrcoefs = esp::gwr_betas(paste0(yname," ~ ."),discdf,bw,adaptive,kernel)
-  discdf = purrr::map_dfc(gwrcoefs, \(.coef) {
+  discdf = purrr::map_dfr(gwrcoefs, names(gwrcoefs), \(.coef,.name) {
     D0 = stats::dist(.coef)
-    res = ClustGeo::hclustgeo(D0,as.dist(gdist),alpha)
-    return(as.factor(stats::cutree(res,.k)))
+    resh = ClustGeo::hclustgeo(D0,as.dist(gdist),alpha)
+    resdisc = tibble::as_tibble(stats::cutree(resh,discnum))
+    names(resdisc) = paste0("disc_",discnum)
+    resdisc = dplyr::mutate(resdisc,xname = .name)
+    return(resdisc)
   })
+
   return(discdf)
 }
 
