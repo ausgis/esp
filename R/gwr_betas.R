@@ -18,21 +18,11 @@
 #'
 gwr_betas = \(formula, data, bw = "AIC",
               adaptive = TRUE, kernel = "gaussian"){
-  formula = stats::as.formula(formula)
-  formula.vars = all.vars(formula)
-  if (formula.vars[2] != "."){
-    data = dplyr::select(data,dplyr::all_of(formula.vars))
-  }
-  yname = formula.vars[1]
-  gname = sdsfun::sf_geometry_name(data)
-  xname = colnames(data)[-which(colnames(data) %in% c(yname,gname))]
-
   suppressWarnings({g = GWmodel3::gwr_basic(
     formula, data, bw = bw, adaptive = adaptive, kernel = kernel
   )})
-
   betas = stats::coef(g) |>
     tibble::as_tibble() |>
-    dplyr::select(dplyr::all_of(xname))
+    dplyr::select(-1)
   return(betas)
 }
