@@ -18,11 +18,14 @@ BugReports: https://github.com/stscl/esp/issues
 Depends: 
     R (>= 4.1.0)
 Imports: 
+    dplyr,
     magrittr,
     sdsfun,
     sf,
-    stats
+    stats,
+    tibble
 Suggests: 
-    gdverse
+    gdverse,
+    readr
 Remotes:
     GWmodel-Lab/GWmodel3
