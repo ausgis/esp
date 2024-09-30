@@ -25,7 +25,8 @@ Imports:
     sdsfun,
     sf,
     stats,
-    tibble
+    tibble,
+    tidyr
 Suggests: 
     gdverse,
     readr
