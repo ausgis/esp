@@ -13,3 +13,7 @@ PredictDummyY <- function(mat, vec) {
     .Call(`_esp_PredictDummyY`, mat, vec)
 }
 
+CalculateQ <- function(y_pred, discmat, y) {
+    .Call(`_esp_CalculateQ`, y_pred, discmat, y)
+}
+
