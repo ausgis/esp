@@ -7,7 +7,7 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
     data = dplyr::select(data,dplyr::all_of(formula.vars))
   }
   yname = formula.vars[1]
-  yvec = data[,"yname",drop = TRUE]
+  yvec = data[, yname, drop = TRUE]
   geom = sf::st_geometry(data)
   gdist = sdsfun::sf_distance_matrix(data)
   gname = sdsfun::sf_geometry_name(data)
