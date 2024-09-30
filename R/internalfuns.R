@@ -36,6 +36,7 @@
   }
   discdf = dplyr::select(data,dplyr::all_of(c(yname,xdiscname)))
   if (!is.null(xundiscname)) {
+    xvarname = c(xdiscname,xundiscname)
     undiscdf = data |>
       sf::st_drop_geometry() |>
       tibble::as_tibble() |>
@@ -47,11 +48,12 @@
           x = as.integer(as.factor(x))
         }
         return(x)
-      }))
+    }))
 
     names(undiscdf) = paste0('x',seq(length(xdiscname) + 1,by = 1,
                                      length.out = length(xundiscname) + 1))
   } else {
+    xvarname = xdiscname
     undiscdf = NULL
   }
 
@@ -132,9 +134,17 @@
                         listw = listw, model = model)
   }
 
+  xinteract = utils::combn(xvarname,2,simplify = FALSE)
+  variable1 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][1])
+  variable2 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][2])
+  IntersectionSymbol = rawToChar(as.raw(c(0x20, 0xE2, 0x88, 0xA9, 0x20)))
+  allvarname = c(xvarname,paste0(variable1,IntersectionSymbol,variable2))
+
   res = list("coef" = sarcoef,
              "disc" = discdf,
-             "dummy" = discsf)
+             "y" = yvec,
+             "xvar" = xvarname,
+             "allvar" = allvarname)
   return(res)
 }
 
