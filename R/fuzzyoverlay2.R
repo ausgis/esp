@@ -1,3 +1,27 @@
+#' spatial fuzzy overlay between variables pairwise
+#'
+#' @param formula A formula.
+#' @param data A `data.frame` or `tibble` of discretized data.
+#' @param method (optional) Overlay methods. When `method` is `and`, use `min` to do
+#' fuzzy overlay; and when `method` is `or`,use `max` to do fuzzy overlay. Default is `and`.
+#'
+#' @return A list
+#' \describe{
+#' \item{\code{overlay}}{overlay results between pairs of variables}
+#' \item{\code{variable}}{pairwise interacting variable}
+#' }
+#' @export
+#'
+#' @examples
+#' sim = tibble::tibble(y = stats::runif(7,0,10),
+#'                      x1 = c(1,rep(2,3),rep(3,3)),
+#'                      x2 = c(rep(1,2),rep(2,2),rep(3,3)),
+#'                      x3 = c(rep(1,3),rep(2,2),rep(3,2)))
+#' fo1 = fuzzyoverlay2(y ~ .,data = sim, method = 'and')
+#' fo1
+#' fo2 = fuzzyoverlay2(y ~ .,data = sim, method = 'or')
+#' fo2
+#'
 fuzzyoverlay2 = \(formula, data, method = "and"){
   formula = stats::as.formula(formula)
   formula.vars = all.vars(formula)
@@ -16,5 +40,8 @@ fuzzyoverlay2 = \(formula, data, method = "and"){
     resout = as.integer(as.factor(resout))
   })})
   names(res) = paste0("xi",seq_along(variable1))
+  IntersectionSymbol = rawToChar(as.raw(c(0x20, 0xE2, 0x88, 0xA9, 0x20)))
+  variable = paste0(variable1,IntersectionSymbol,variable2)
+  res = list("overlay" = res, "variable" = variable)
   return(res)
 }
