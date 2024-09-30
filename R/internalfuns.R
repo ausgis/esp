@@ -98,6 +98,18 @@
     discdf = purrr::map(seq_along(discdf), bind_discdf)
   }
 
-  return(discdf)
+  do_dummy = \(n) {
+    .df = sdsfun::dummy_tbl(discdf[[n]])
+    .res = dplyr::bind_cols(tibble::tibble(y = yvec),.df)
+    # .res = sf::st_set_geometry(.res,geom)
+    return(.res)
+  }
+  if (doclust) {
+    discsf = parallel::parLapply(cores, seq_along(discdf), do_dummy)
+  } else {
+    discsf = purrr::map(seq_along(discdf), do_dummy)
+  }
+
+  return(discsf)
 }
 
