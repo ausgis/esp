@@ -7,6 +7,7 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
     data = dplyr::select(data,dplyr::all_of(formula.vars))
   }
   yname = formula.vars[1]
+  yvec = data[,"yname",drop = TRUE]
   geom = sf::st_geometry(data)
   gdist = sdsfun::sf_distance_matrix(data)
   gname = sdsfun::sf_geometry_name(data)
@@ -43,9 +44,28 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
       .res = .df |>
         dplyr::select(-discnum) |>
         tidyr::pivot_wider(names_from = xname,
-                           values_from = disc)
+                           values_from = disc) |>
+        dplyr::select(-rowid)
+      names(.res) = paste0('x',seq_along(.res))
+      .res = dplyr::bind_cols(tibble::tibble(y = yvec),.res)
       return(.res)
     })
+  if (!is.null(xundiscname)) {
+    undiscdf = data |>
+      sf::st_drop_geometry() |>
+      tibble::as_tibble() |>
+      dplyr::select(dplyr::all_of(xundiscname))
+    names(undiscdf) = paste0('x',seq(length(xdiscname) + 1,by = 1,
+                                     length.out = length(xundiscname) + 1))
+    discdf = purrr::map(discdf, \(.df) {
+      .res = dplyr::bind_cols(.df,undiscdf)
+      return(.res)
+    })
+  }
+  discdf = purrr::map(discdf, \(.df) {
+    .res = sf::st_set_geometry(.res,geom)
+    return(.res)
+  })
 
   return(discdf)
 }
