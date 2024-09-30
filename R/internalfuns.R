@@ -132,7 +132,7 @@
                         listw = listw, model = model)
   }
 
-  res = list("sarcoef" = sarcoef,
+  res = list("coef" = sarcoef,
              "disc" = discdf,
              "dummy" = discsf)
   return(res)
