@@ -30,6 +30,11 @@ Imports:
     utils
 Suggests: 
     gdverse,
+    Rcpp,
+    RcppArmadillo,
     readr
 Remotes:
     GWmodel-Lab/GWmodel3
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
