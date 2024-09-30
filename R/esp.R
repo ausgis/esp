@@ -63,7 +63,7 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
     })
   }
   discdf = purrr::map(discdf, \(.df) {
-    .res = sf::st_set_geometry(.res,geom)
+    .res = sf::st_set_geometry(.df,geom)
     return(.res)
   })
 
