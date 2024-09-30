@@ -21,6 +21,25 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
     xundiscname = xname[-which(xname %in% discvar)]
   }
   discdf = dplyr::select(data,dplyr::all_of(c(yname,xdiscname)))
+  if (!is.null(xundiscname)) {
+    undiscdf = data |>
+      sf::st_drop_geometry() |>
+      tibble::as_tibble() |>
+      dplyr::select(dplyr::all_of(xundiscname)) |>
+      dplyr::mutate(dplyr::across(dplyr::everything(),\(x){
+        if (inherits(x,"factor")){
+          x = as.integer(x)
+        } else if (inherits(x,'character')) {
+          x = as.integer(as.factor(x))
+        }
+        return(x)
+      }))
+
+    names(undiscdf) = paste0('x',seq(length(xdiscname) + 1,by = 1,
+                                     length.out = length(xundiscname) + 1))
+  } else {
+    undiscdf = NULL
+  }
 
   gwrcoefs = esp::gwr_betas(paste0(yname," ~ ."),discdf,bw,adaptive,kernel)
   discdf = purrr::map2_dfr(gwrcoefs, names(gwrcoefs), \(.coef,.name) {
@@ -47,25 +66,18 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
                            values_from = disc) |>
         dplyr::select(-rowid)
       names(.res) = paste0('x',seq_along(.res))
-      .res = dplyr::bind_cols(tibble::tibble(y = yvec),.res)
+      if (!is.null(undiscdf)){.res = dplyr::bind_cols(.res,undiscdf)}
       return(.res)
     })
-  if (!is.null(xundiscname)) {
-    undiscdf = data |>
-      sf::st_drop_geometry() |>
-      tibble::as_tibble() |>
-      dplyr::select(dplyr::all_of(xundiscname))
-    names(undiscdf) = paste0('x',seq(length(xdiscname) + 1,by = 1,
-                                     length.out = length(xundiscname) + 1))
-    discdf = purrr::map(discdf, \(.df) {
-      .res = dplyr::bind_cols(.df,undiscdf)
-      return(.res)
-    })
-  }
+
   discdf = purrr::map(discdf, \(.df) {
     .res = sf::st_set_geometry(.df,geom)
     return(.res)
   })
+  gwrcoefs = purrr::map(discdf, \(.df) {
+    esp::gwr_betas("y~.",.df,bw,adaptive,kernel)
+  })
+
 
   return(discdf)
 }
