@@ -49,3 +49,45 @@ arma::mat PredictDummyY(const arma::imat& mat, const arma::vec& vec){
 
   return result; // Return the final result matrix
 }
+
+// calculating equivalent q-values under the framework of linear regression
+
+// [[Rcpp::export]]
+Rcpp::NumericVector CalculateQ(const arma::mat& y_pred,
+                               const arma::imat& discmat,
+                               const arma::vec& y) {
+  int p = y_pred.n_cols;  // Number of columns (matches discmat)
+  int n = y_pred.n_rows;  // Number of rows (matches discmat and y)
+
+  arma::vec q(p, fill::zeros);  // Initialize result vector
+
+  // Iterate over each column of y_pred and discmat
+  for (int col_idx = 0; col_idx < p; ++col_idx) {
+    arma::ivec disc_col = discmat.col(col_idx); // Current column of discmat
+    arma::ivec levels = ArmaRunique(disc_col);  // Get unique levels in this column
+
+    arma::vec total_diff = square(y_pred.col(col_idx) - y);  // Squared differences for y_pred and y
+    double total_sum = sum(total_diff);  // Total sum of squared differences
+
+    arma::vec group_sums(levels.n_elem, fill::zeros);  // Store group-wise sum of squared differences
+
+    // Compute the sum of squared differences for each level
+    int levelidx_length = levels.n_elem;
+    for (int level_idx = 0; level_idx < levelidx_length; ++level_idx) {
+      int current_level = levels(level_idx);
+
+      // Mask for the current level
+      arma::uvec mask = find(disc_col == current_level);
+
+      // Sum the squared differences for this level
+      group_sums(level_idx) = sum(total_diff.elem(mask));
+    }
+
+    // Compute q for this column as 1 - (group_sum / total_sum)
+    double sum_of_ratios = sum(group_sums / total_sum);
+    q(col_idx) = 1.0 - sum_of_ratios;
+  }
+
+  // Convert q to Rcpp::NumericVector and return
+  return Rcpp::wrap(q);
+}
