@@ -1,6 +1,7 @@
-esp = \(formula, data, discvar = NULL, discnum = 3:8,
-        alpha = 0.75, bw = "AIC", adaptive = TRUE,
-        kernel = "gaussian", overlay = 'and', ...) {
+esp = \(formula, data, listw = NULL, overlay = 'and',
+        discvar = NULL, discnum = 3:8, alpha = 0.75,
+        bw = "AIC", adaptive = TRUE, kernel = "gaussian",
+        model = 'lag', ...) {
   formula = stats::as.formula(formula)
   formula.vars = all.vars(formula)
   if (formula.vars[2] != "."){
