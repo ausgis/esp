@@ -1,6 +1,6 @@
-#' Estimated Model Coefficients By `GWR`
+#' estimate `gwr`model coefficients
 #'
-#' @param formula A formula of `GWR` model.
+#' @param formula A formula of `gwr` model.
 #' @param data An sf object of observation data
 #' @param bw (optional) The bandwidth used in selecting models. The optimal bandwidth can be
 #' selected using one of two methods: `AIC`, and `CV`. Default will use `AIC`.
