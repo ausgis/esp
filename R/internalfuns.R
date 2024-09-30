@@ -1,5 +1,7 @@
-.gwr_hclust_disc = \(formula, data, overlay = 'and', discvar = NULL, discnum = 3:8, alpha = 0.75,
-                     bw = "AIC", adaptive = TRUE, kernel = "gaussian", cores = 1, ...) {
+.gwr_hclust_disc = \(formula, data, listw = NULL, overlay = 'and',
+                     discvar = NULL, discnum = 3:8, alpha = 0.75,
+                     bw = "AIC", adaptive = TRUE, kernel = "gaussian",
+                     model = 'lag', cores = 1, ...) {
   doclust = FALSE
   if (inherits(cores, "cluster")) {
     doclust = TRUE
@@ -20,6 +22,10 @@
   gdist = sdsfun::sf_distance_matrix(data)
   gname = sdsfun::sf_geometry_name(data)
   xname = colnames(data)[-which(colnames(data) %in% c(yname,gname))]
+
+  if (is.null(listw)) {
+    listw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
+  }
 
   if (is.null(discvar)) {
     xdiscname = xname
@@ -110,6 +116,25 @@
     discsf = purrr::map(seq_along(discdf), do_dummy)
   }
 
-  return(discsf)
+  run_slm = \(n,listw,model){
+    suppressWarnings({if (model == "lag") {
+      g = spatialreg::lagsarlm("y ~ .",discsf[[n]],listw,Durbin =  FALSE)
+    } else {
+      g = spatialreg::errorsarlm("y ~ .",discsf[[n]],listw,Durbin =  FALSE)
+    }})
+    return(stats::coef(g))
+  }
+  if (doclust) {
+    sarcoef = parallel::parLapply(cores, seq_along(discsf), run_slm,
+                                  listw = listw, model = model)
+  } else {
+    sarcoef = purrr::map(seq_along(discsf), run_slm,
+                        listw = listw, model = model)
+  }
+
+  res = list("sarcoef" = sarcoef,
+             "disc" = discdf,
+             "dummy" = discsf)
+  return(res)
 }
 
