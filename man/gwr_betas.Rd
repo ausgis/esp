@@ -38,5 +38,6 @@ depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
   readr::read_csv() |>
   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
 gwr_betas(Depression_prevelence ~ ., data = depression)
+gwr_betas(Depression_prevelence ~ ., data = depression, intercept = TRUE)
 
 }
