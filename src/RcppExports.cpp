@@ -33,10 +33,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// PredictDummyY
+arma::mat PredictDummyY(const arma::imat& mat, const arma::vec& vec);
+RcppExport SEXP _esp_PredictDummyY(SEXP matSEXP, SEXP vecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::imat& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type vec(vecSEXP);
+    rcpp_result_gen = Rcpp::wrap(PredictDummyY(mat, vec));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_esp_ArmaRunique", (DL_FUNC) &_esp_ArmaRunique, 1},
     {"_esp_ArmaDummyMat", (DL_FUNC) &_esp_ArmaDummyMat, 1},
+    {"_esp_PredictDummyY", (DL_FUNC) &_esp_PredictDummyY, 2},
     {NULL, NULL, 0}
 };
 
