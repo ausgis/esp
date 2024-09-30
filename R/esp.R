@@ -44,7 +44,7 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
   gwrcoefs = esp::gwr_betas(paste0(yname," ~ ."),discdf,bw,adaptive,kernel)
   discdf = purrr::map2_dfr(gwrcoefs, names(gwrcoefs), \(.coef,.name) {
     D0 = stats::dist(.coef)
-    resh = ClustGeo::hclustgeo(D0,as.dist(gdist),alpha)
+    resh = ClustGeo::hclustgeo(D0,as.dist(gdist),alpha,...)
     resdisc = tibble::as_tibble(stats::cutree(resh,discnum))
     names(resdisc) = paste0("disc_",discnum)
     resdisc = dplyr::mutate(resdisc,xname = .name)
@@ -67,7 +67,10 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
         dplyr::select(-rowid)
       names(.res) = paste0('x',seq_along(.res))
       if (!is.null(undiscdf)){.res = dplyr::bind_cols(.res,undiscdf)}
-      return(.res)
+      fdf = dplyr::bind_cols(tibble::tibble(y = yvec),.res)
+      fdfres = esp::fuzzyoverlay2("y ~ .",fdf,overlay)[[1]]
+      res = dplyr::bind_cols(.res,fdfres)
+      return(res)
   })
 
   discdf = purrr::map(discdf, \(.df) {
