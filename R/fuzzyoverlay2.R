@@ -15,6 +15,6 @@ fuzzyoverlay2 = \(formula, data, method = "and"){
     resout = sdsfun::fuzzyoverlay(paste0(yname, " ~ ."), dti,method)
     resout = as.integer(as.factor(resout))
   })})
-  names(res) = paste0("xinteract",seq_along(variable1))
+  names(res) = paste0("xi",seq_along(variable1))
   return(res)
 }
