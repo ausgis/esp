@@ -2,7 +2,7 @@
 % Please edit documentation in R/gwr_betas.R
 \name{gwr_betas}
 \alias{gwr_betas}
-\title{estimate \code{gwr}model coefficients}
+\title{estimate \code{gwr} model coefficients}
 \usage{
 gwr_betas(formula, data, bw = "AIC", adaptive = TRUE, kernel = "gaussian")
 }
@@ -22,7 +22,7 @@ selected using one of two methods: \code{AIC}, and \code{CV}. Default will use \
 A \code{tibble}
 }
 \description{
-estimate \code{gwr}model coefficients
+estimate \code{gwr} model coefficients
 }
 \examples{
 depression = system.file('extdata/Depression.csv',package = 'gdverse') |>

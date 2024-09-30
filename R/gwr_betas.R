@@ -1,4 +1,4 @@
-#' estimate `gwr`model coefficients
+#' estimate `gwr` model coefficients
 #'
 #' @param formula A formula of `gwr` model.
 #' @param data An sf object of observation data
