@@ -94,10 +94,9 @@ Rcpp::NumericVector CalculateQ(const arma::mat& y_pred,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector SLMQ(const arma::imat& levelmat,
-                         const arma::imat& dummymat,
                          const arma::vec& coefs,
                          const arma::vec& y){
-  arma::mat y_pred = PredictDummyY(dummymat,coefs);
+  arma::mat y_pred = PredictDummyY(levelmat,coefs);
   Rcpp::NumericVector qv = CalculateQ(y_pred,levelmat,y);
   return qv;
 }
