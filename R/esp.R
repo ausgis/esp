@@ -28,8 +28,24 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
     resdisc = tibble::as_tibble(stats::cutree(resh,discnum))
     names(resdisc) = paste0("disc_",discnum)
     resdisc = dplyr::mutate(resdisc,xname = .name)
+    resdisc = tibble::rowid_to_column(resdisc)
     return(resdisc)
-  })
+  }) |>
+    tidyr::pivot_longer(
+      cols = dplyr::starts_with("disc_"),
+      names_to = "discnum",
+      names_prefix = "disc_",
+      values_to = "disc",
+      values_drop_na = TRUE
+  ) |>
+    dplyr::group_split(discnum) |>
+    purrr::map(\(.df) {
+      .res = .df |>
+        dplyr::select(-discnum) |>
+        tidyr::pivot_wider(names_from = xname,
+                           values_from = disc)
+      return(.res)
+    })
 
   return(discdf)
 }
