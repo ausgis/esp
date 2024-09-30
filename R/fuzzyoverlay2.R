@@ -6,4 +6,15 @@ fuzzyoverlay2 = \(formula, data, method = "and"){
   }
   yname = formula.vars[1]
   xname = colnames(data)[-which(colnames(data) == yname)]
+  xinteract = utils::combn(xname,2,simplify = FALSE)
+  variable1 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][1])
+  variable2 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][2])
+
+  suppressWarnings({res = purrr::map2_dfc(variable1,variable2, \(.v1,.v2) {
+    dti = dplyr::select(dplyr::all_of(c(yname,.v1,.v2)))
+    resout = sdsfun::fuzzyoverlay(paste0(yname, " ~ ."), dti,method)
+    resout = as.integer(as.factor(resout))
+  })})
+  names(resout) = paste0("xinteract",seq_along(variable1))
+  return(resout)
 }
