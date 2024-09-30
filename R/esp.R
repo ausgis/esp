@@ -73,15 +73,18 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
       return(res)
   })
 
-  discdf = purrr::map(discdf, \(.df) {
-    .res = sf::st_set_geometry(.df,geom)
+  discsf = purrr::map(discdf, \(.df) {
+    .df = sdsfun::dummy_tbl(.df)
+    .res = dplyr::bind_cols(tibble::tibble(y = yvec),.df)
+    .res = sf::st_set_geometry(.res,geom)
     return(.res)
   })
-  gwrcoefs = purrr::map(discdf, \(.df) {
+  gwrcoefs = purrr::map(discsf, \(.df) {
     esp::gwr_betas("y~.",.df,bw,adaptive,kernel)
   })
 
-
+  res = list("coef" = gwrcoefs,
+             "disc" = discdf)
   return(discdf)
 }
 
