@@ -6,6 +6,8 @@
 #' selected using one of two methods: `AIC`, and `CV`. Default will use `AIC`.
 #' @param adaptive (optional) Whether the bandwidth value is adaptive or not. Default is `TRUE`.
 #' @param kernel (optional) Kernel function. Default is `gaussian`.
+#' @param intercept (optional) Whether to include the intercept term in the coefficient `tibble.
+#' Default is `FALSE`.
 #'
 #' @return A `tibble`
 #' @export
@@ -16,13 +18,12 @@
 #'   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
 #' gwr_betas(Depression_prevelence ~ ., data = depression)
 #'
-gwr_betas = \(formula, data, bw = "AIC",
-              adaptive = TRUE, kernel = "gaussian"){
+gwr_betas = \(formula, data, bw = "AIC", adaptive = TRUE,
+              kernel = "gaussian", intercept = FALSE){
   suppressWarnings({g = GWmodel3::gwr_basic(
     formula, data, bw = bw, adaptive = adaptive, kernel = kernel
   )})
-  betas = stats::coef(g) |>
-    tibble::as_tibble() |>
-    dplyr::select(-1)
+  betas = tibble::as_tibble(stats::coef(g))
+  if(!intercept){betas = dplyr::select(betas,-1)}
   return(betas)
 }
