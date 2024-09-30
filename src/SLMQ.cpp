@@ -57,7 +57,7 @@ Rcpp::NumericVector CalculateQ(const arma::mat& y_pred,
                                const arma::imat& discmat,
                                const arma::vec& y) {
   int p = y_pred.n_cols;  // Number of columns (matches discmat)
-  int n = y_pred.n_rows;  // Number of rows (matches discmat and y)
+  // int n = y_pred.n_rows;  // Number of rows (matches discmat and y)
 
   arma::vec q(p, fill::zeros);  // Initialize result vector
 
