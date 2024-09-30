@@ -27,6 +27,7 @@ Imports:
     sdsfun,
     sf,
     spatialreg,
+    spdep,
     stats,
     tibble,
     tidyr,
