@@ -17,7 +17,7 @@ CalculateQ <- function(y_pred, discmat, y) {
     .Call(`_esp_CalculateQ`, y_pred, discmat, y)
 }
 
-SLMQ <- function(levelmat, dummymat, coefs, y) {
-    .Call(`_esp_SLMQ`, levelmat, dummymat, coefs, y)
+SLMQ <- function(levelmat, coefs, y) {
+    .Call(`_esp_SLMQ`, levelmat, coefs, y)
 }
 
