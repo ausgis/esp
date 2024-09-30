@@ -8,7 +8,8 @@ using namespace arma;
 // [[Rcpp::export]]
 arma::ivec ArmaRunique(const arma::ivec& x) {
   std::vector<int> seen;
-  for (int i = 0; i < x.n_elem; ++i) {
+  int i_length = x.n_elem;
+  for (int i = 0; i < i_length; ++i) {
     if (std::find(seen.begin(), seen.end(), x[i]) == seen.end()) {
       seen.push_back(x[i]);
     }
@@ -29,11 +30,12 @@ arma::mat ArmaDummyMat(const arma::imat& mat) {
   for (int col_idx = 0; col_idx < p; ++col_idx) {
     arma::ivec x = mat.col(col_idx);
     arma::ivec levels = ArmaRunique(x);  // Get unique levels
+    int levelidx_length = levels.n_elem - 1;
 
     // n-1 dummy variables for each column
     arma::mat dummies(n, levels.n_elem - 1, fill::zeros);
 
-    for (int level_idx = 0; level_idx < levels.n_elem - 1; ++level_idx) {
+    for (int level_idx = 0; level_idx < levelidx_length; ++level_idx) {
       dummies.col(level_idx) = arma::conv_to<arma::vec>::from(x == levels(level_idx));
     }
 
