@@ -22,6 +22,7 @@ Imports:
     dplyr,
     GWmodel3,
     magrittr,
+    parallel,
     purrr,
     sdsfun,
     sf,
