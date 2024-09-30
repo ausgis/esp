@@ -4,7 +4,14 @@
 \alias{gwr_betas}
 \title{estimate \code{gwr} model coefficients}
 \usage{
-gwr_betas(formula, data, bw = "AIC", adaptive = TRUE, kernel = "gaussian")
+gwr_betas(
+  formula,
+  data,
+  bw = "AIC",
+  adaptive = TRUE,
+  kernel = "gaussian",
+  intercept = FALSE
+)
 }
 \arguments{
 \item{formula}{A formula of \code{gwr} model.}
@@ -17,6 +24,8 @@ selected using one of two methods: \code{AIC}, and \code{CV}. Default will use \
 \item{adaptive}{(optional) Whether the bandwidth value is adaptive or not. Default is \code{TRUE}.}
 
 \item{kernel}{(optional) Kernel function. Default is \code{gaussian}.}
+
+\item{intercept}{(optional) Whether to include the intercept term in the coefficient \verb{tibble. Default is }FALSE`.}
 }
 \value{
 A \code{tibble}
