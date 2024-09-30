@@ -1,7 +1,7 @@
 esp = \(formula, data, listw = NULL, overlay = 'and',
         discvar = NULL, discnum = 3:8, alpha = 0.75,
         bw = "AIC", adaptive = TRUE, kernel = "gaussian",
-        model = 'lag', ...) {
+        model = 'lag', cores = 1, ...) {
   formula = stats::as.formula(formula)
   formula.vars = all.vars(formula)
   if (formula.vars[2] != "."){
@@ -13,6 +13,10 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   gdist = sdsfun::sf_distance_matrix(data)
   gname = sdsfun::sf_geometry_name(data)
   xname = colnames(data)[-which(colnames(data) %in% c(yname,gname))]
+
+  if (is.null(listw)) {
+    listw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
+  }
 
   if (is.null(discvar)) {
     xdiscname = xname
@@ -77,14 +81,18 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   discsf = purrr::map(discdf, \(.df) {
     .df = sdsfun::dummy_tbl(.df)
     .res = dplyr::bind_cols(tibble::tibble(y = yvec),.df)
-    .res = sf::st_set_geometry(.res,geom)
+    # .res = sf::st_set_geometry(.res,geom)
     return(.res)
   })
   return(discsf)
-  gwrcoefs = purrr::map(discsf,
-                        \(.dsf) esp::gwr_betas("y ~ .",.dsf,bw,
-                                               adaptive,kernel,
-                                               intercept = TRUE))
+
+  if (model == "lag") {
+    sarcoefs = purrr::map(discsf,
+                          \(.dsf) esp::gwr_betas("y ~ .",.dsf,bw,
+                                                 adaptive,kernel,
+                                                 intercept = TRUE))
+  }
+
 
   res = list("coef" = gwrcoefs,
              "disc" = discdf)
