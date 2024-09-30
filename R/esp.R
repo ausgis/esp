@@ -88,9 +88,8 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
 
   if (model == "lag") {
     sarcoefs = purrr::map(discsf,
-                          \(.dsf) esp::gwr_betas("y ~ .",.dsf,bw,
-                                                 adaptive,kernel,
-                                                 intercept = TRUE))
+                          \(.dsf) spatialreg::lagsarlm("y ~ .",.dsf,listw,
+                                                       Durbin =  FALSE))
   }
 
 
