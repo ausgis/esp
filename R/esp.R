@@ -84,6 +84,6 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
 
   res = list("coef" = gwrcoefs,
              "disc" = discdf)
-  return(discdf)
+  return(res)
 }
 
