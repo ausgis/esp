@@ -11,8 +11,8 @@ gwr_betas(formula, data, bw = "AIC", adaptive = TRUE, kernel = "gaussian")
 
 \item{data}{An sf object of observation data}
 
-\item{bw}{(optional) The bandwidth used in selecting models. The optimal bandwidth can be selected
-using one of two methods: \code{AIC}, and \code{CV}. Default will use \code{AIC}.}
+\item{bw}{(optional) The bandwidth used in selecting models. The optimal bandwidth can be
+selected using one of two methods: \code{AIC}, and \code{CV}. Default will use \code{AIC}.}
 
 \item{adaptive}{(optional) Whether the bandwidth value is adaptive or not. Default is \code{TRUE}.}
 
