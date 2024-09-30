@@ -26,7 +26,8 @@ Imports:
     sf,
     stats,
     tibble,
-    tidyr
+    tidyr,
+    utils
 Suggests: 
     gdverse,
     readr

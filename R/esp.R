@@ -68,7 +68,7 @@ esp = \(formula, data, discvar = NULL, discnum = 3:8,
       names(.res) = paste0('x',seq_along(.res))
       if (!is.null(undiscdf)){.res = dplyr::bind_cols(.res,undiscdf)}
       return(.res)
-    })
+  })
 
   discdf = purrr::map(discdf, \(.df) {
     .res = sf::st_set_geometry(.df,geom)
