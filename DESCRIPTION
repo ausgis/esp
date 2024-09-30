@@ -25,6 +25,7 @@ Imports:
     purrr,
     sdsfun,
     sf,
+    spatialreg,
     stats,
     tibble,
     tidyr,
