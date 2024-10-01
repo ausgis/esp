@@ -107,28 +107,43 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
     discdf = purrr::map(seq_along(discdf), bind_discdf)
   }
 
-  run_slm = \(n,listw,model,Durbin){
+  get_slmy = \(n,listw,model,Durbin){
     slmvar = names(discdf[[n]])
     slmdf = sdsfun::dummy_tbl(slmdf)
     slmlevelvar = names(slmdf)
+    slmx = sapply(slmvar, function(x) {
+      matched = grep(paste0("^", x), slmlevelvar, value = TRUE)
+      res = paste(matched, collapse = "+")
+      return(unname(res))
+    })
     slmdf = dplyr::bind_cols(tibble::tibble(y = yvec),slmdf)
-    suppressWarnings({if (model == "lag") {
-      g = spatialreg::lagsarlm("y ~ .",slmdf,listw,
-                               Durbin = Durbin,zero.policy = TRUE)
-    } else if (model == "error") {
-      g = spatialreg::errorsarlm("y ~ .",slmdf,listw,
+
+    suppressMessages({y_pred = purrr::map_dfc(slmx, \(.varname) {
+      slmformula = paste0("y ~ ",.varname)
+      suppressWarnings({if (model == "lag") {
+        g = spatialreg::lagsarlm(slmformula, slmdf, listw,
                                  Durbin = Durbin,zero.policy = TRUE)
-    } else {
-      g = stats::lm("y ~ .",slmdf)
-    }})
-    return(g)
+      } else if (model == "error") {
+        g = spatialreg::errorsarlm(slmformula, slmdf, listw,
+                                   Durbin = Durbin,zero.policy = TRUE)
+      } else {
+        g = stats::lm(slmformula, slmdf)
+      }})
+      # fity = g$fitted.values
+      fity = stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA)
+      return(fity)
+    })})
+    names(y_pred) = slmvar
+    return(y_pred)
   }
+
+
   if (doclust) {
-    sarmodel = parallel::parLapply(cores, seq_along(discsf), run_slm, listw = listw,
-                                   model = model, Durbin = Durbin)
+    y_pred = parallel::parLapply(cores, seq_along(discsf), get_slmy, listw = listw,
+                                 model = model, Durbin = Durbin)
   } else {
-    sarmodel = purrr::map(seq_along(discsf), run_slm, listw = listw,
-                          model = model, Durbin = Durbin)
+    y_pred = purrr::map(seq_along(discsf), get_slmy, listw = listw,
+                        model = model, Durbin = Durbin)
   }
 
   xinteract = utils::combn(xvarname,2,simplify = FALSE)
@@ -137,7 +152,7 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   IntersectionSymbol = rawToChar(as.raw(c(0x20, 0xE2, 0x88, 0xA9, 0x20)))
   allvarname = c(xvarname,paste0(variable1,IntersectionSymbol,variable2))
 
-  res = list("model" = sarmodel,
+  res = list("pred" = y_pred,
              "disc" = discdf,
              "y" = yvec,
              "xvar" = xvarname,
