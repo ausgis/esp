@@ -129,6 +129,8 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
         g = stats::lm(slmformula, dummydf)
       }})
 
+      aicv = stats::AIC(g)
+      loglikv = as.numeric(stats::logLik(g))
       if (model == "ols") {
         fity = g$fitted.values
         g = summary(g)
@@ -139,7 +141,8 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
         g = summary(g)
         pv = as.numeric(g$LR1$p.value)
       }
-      return(list("pred" = fity, "pvalue" = pv))
+      return(list("pred" = fity, "pvalue" = pv,
+                  "AIC" = aicv, "LogLik" = loglikv))
     })})
     return(slm_res)
   }
@@ -157,6 +160,16 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   IntersectionSymbol = rawToChar(as.raw(c(0x20, 0xE2, 0x88, 0xA9, 0x20)))
   allvarname = c(xvarname,paste0(variable1,IntersectionSymbol,variable2))
 
+  aicv = purrr::map(slmres, \(.df){
+    .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("AIC")),1)
+    names(.res) = allvarname
+    return(.res)
+  })
+  loglikv = purrr::map(slmres, \(.df){
+    .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("LogLik")),1)
+    names(.res) = allvarname
+    return(.res)
+  })
   y_pred = purrr::map(slmres, \(.df){
     .res = dplyr::select(.df,dplyr::starts_with("pred"))
     names(.res) = allvarname
@@ -169,9 +182,11 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   })
   qv = purrr::map_dfr(seq_along(y_pred),\(n){
     qvalue = SLMQ(as.matrix(y_pred[[n]]),yvec)
-    resqv = tibble::tibble(variable = names(pv[[n]]),
-                           qvalue = qvalue,
-                           pvalue = as.numeric(pv[[n]]),
+    resqv = tibble::tibble(Variable = names(pv[[n]]),
+                           Qvalue = qvalue,
+                           Pvalue = as.numeric(pv[[n]]),
+                           AIC = as.numeric(aicv[[n]]),
+                           LogLik = as.numeric(loglikv[[n]]),
                            discnum = discnum[n])
     return(resqv)
   })
