@@ -41,7 +41,7 @@ used as \code{discvar}.}
 \item{overlay}{(optional) Spatial overlay method. One of \code{and}, \code{or}, \code{intersection}. Default is \code{and}.}
 
 \item{alpha}{(optional) Controlling the strength of spatial soft constraints, the larger the \code{alpha},
-the stronger the spatial soft constraint.}
+the stronger the spatial soft constraint. Default is \code{0.75}.}
 
 \item{bw}{(optional) The bandwidth used in selecting models. The optimal bandwidth can be
 selected using one of two methods: \code{AIC}, and \code{CV}. Default will use \code{AIC}.}
@@ -75,7 +75,7 @@ equivalent geographical detector under spatial linear regression framework
 depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
   readr::read_csv() |>
   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
-g = esp(Depression_prevelence ~ ., data = depression, cores = 6)
+g = esp_global(Depression_prevelence ~ ., data = depression, cores = 6)
 g$factor
 }
 }

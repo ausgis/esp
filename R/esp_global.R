@@ -11,7 +11,7 @@
 #' @param Durbin (optional) Whether to consider spatial Durbin terms, default is `false`.
 #' @param overlay (optional) Spatial overlay method. One of `and`, `or`, `intersection`. Default is `and`.
 #' @param alpha (optional) Controlling the strength of spatial soft constraints, the larger the `alpha`,
-#' the stronger the spatial soft constraint.
+#' the stronger the spatial soft constraint. Default is `0.75`.
 #' @param bw (optional) The bandwidth used in selecting models. The optimal bandwidth can be
 #' selected using one of two methods: `AIC`, and `CV`. Default will use `AIC`.
 #' @param adaptive (optional) Whether the bandwidth value is adaptive or not. Default is `TRUE`.
@@ -37,7 +37,7 @@
 #' depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
 #'   readr::read_csv() |>
 #'   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
-#' g = esp(Depression_prevelence ~ ., data = depression, cores = 6)
+#' g = esp_global(Depression_prevelence ~ ., data = depression, cores = 6)
 #' g$factor
 #' }
 esp_global = \(formula, data, discvar = NULL, discnum = 3:8, listw = NULL,
