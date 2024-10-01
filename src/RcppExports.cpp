@@ -33,6 +33,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ComputeR2
+double ComputeR2(const arma::vec& y, const arma::vec& y_pred);
+RcppExport SEXP _esp_ComputeR2(SEXP ySEXP, SEXP y_predSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y_pred(y_predSEXP);
+    rcpp_result_gen = Rcpp::wrap(ComputeR2(y, y_pred));
+    return rcpp_result_gen;
+END_RCPP
+}
 // PredictDummyY
 arma::mat PredictDummyY(const arma::imat& mat, const arma::vec& vec);
 RcppExport SEXP _esp_PredictDummyY(SEXP matSEXP, SEXP vecSEXP) {
@@ -75,6 +87,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_esp_ArmaRunique", (DL_FUNC) &_esp_ArmaRunique, 1},
     {"_esp_ArmaDummyMat", (DL_FUNC) &_esp_ArmaDummyMat, 1},
+    {"_esp_ComputeR2", (DL_FUNC) &_esp_ComputeR2, 2},
     {"_esp_PredictDummyY", (DL_FUNC) &_esp_PredictDummyY, 2},
     {"_esp_CalculateQ", (DL_FUNC) &_esp_CalculateQ, 3},
     {"_esp_SLMQ", (DL_FUNC) &_esp_SLMQ, 3},

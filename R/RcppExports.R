@@ -9,6 +9,10 @@ ArmaDummyMat <- function(mat) {
     .Call(`_esp_ArmaDummyMat`, mat)
 }
 
+ComputeR2 <- function(y, y_pred) {
+    .Call(`_esp_ComputeR2`, y, y_pred)
+}
+
 PredictDummyY <- function(mat, vec) {
     .Call(`_esp_PredictDummyY`, mat, vec)
 }
