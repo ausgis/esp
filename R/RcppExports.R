@@ -13,15 +13,15 @@ ComputeR2 <- function(y, y_pred) {
     .Call(`_esp_ComputeR2`, y, y_pred)
 }
 
+SLMQ <- function(FitY, Y) {
+    .Call(`_esp_SLMQ`, FitY, Y)
+}
+
 PredictDummyY <- function(mat, vec) {
     .Call(`_esp_PredictDummyY`, mat, vec)
 }
 
 CalculateQ <- function(y_pred, discmat, y) {
     .Call(`_esp_CalculateQ`, y_pred, discmat, y)
-}
-
-SLMQ <- function(levelmat, coefs, y) {
-    .Call(`_esp_SLMQ`, levelmat, coefs, y)
 }
 

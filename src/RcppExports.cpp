@@ -45,6 +45,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// SLMQ
+Rcpp::NumericVector SLMQ(const arma::mat& FitY, const arma::vec& Y);
+RcppExport SEXP _esp_SLMQ(SEXP FitYSEXP, SEXP YSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type FitY(FitYSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type Y(YSEXP);
+    rcpp_result_gen = Rcpp::wrap(SLMQ(FitY, Y));
+    return rcpp_result_gen;
+END_RCPP
+}
 // PredictDummyY
 arma::mat PredictDummyY(const arma::imat& mat, const arma::vec& vec);
 RcppExport SEXP _esp_PredictDummyY(SEXP matSEXP, SEXP vecSEXP) {
@@ -70,27 +82,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// SLMQ
-Rcpp::NumericVector SLMQ(const arma::imat& levelmat, const arma::vec& coefs, const arma::vec& y);
-RcppExport SEXP _esp_SLMQ(SEXP levelmatSEXP, SEXP coefsSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::imat& >::type levelmat(levelmatSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type coefs(coefsSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(SLMQ(levelmat, coefs, y));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_esp_ArmaRunique", (DL_FUNC) &_esp_ArmaRunique, 1},
     {"_esp_ArmaDummyMat", (DL_FUNC) &_esp_ArmaDummyMat, 1},
     {"_esp_ComputeR2", (DL_FUNC) &_esp_ComputeR2, 2},
+    {"_esp_SLMQ", (DL_FUNC) &_esp_SLMQ, 2},
     {"_esp_PredictDummyY", (DL_FUNC) &_esp_PredictDummyY, 2},
     {"_esp_CalculateQ", (DL_FUNC) &_esp_CalculateQ, 3},
-    {"_esp_SLMQ", (DL_FUNC) &_esp_SLMQ, 3},
     {NULL, NULL, 0}
 };
 
