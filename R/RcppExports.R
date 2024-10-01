@@ -17,6 +17,10 @@ ComputeR2 <- function(y, y_pred) {
     .Call(`_esp_ComputeR2`, y, y_pred)
 }
 
+ComputeLocalR2 <- function(y, y_pred, Ymean) {
+    .Call(`_esp_ComputeLocalR2`, y, y_pred, Ymean)
+}
+
 SLMQ <- function(FitY, Y) {
     .Call(`_esp_SLMQ`, FitY, Y)
 }

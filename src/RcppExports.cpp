@@ -58,6 +58,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ComputeLocalR2
+double ComputeLocalR2(const arma::vec& y, const arma::vec& y_pred, double Ymean);
+RcppExport SEXP _esp_ComputeLocalR2(SEXP ySEXP, SEXP y_predSEXP, SEXP YmeanSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type y_pred(y_predSEXP);
+    Rcpp::traits::input_parameter< double >::type Ymean(YmeanSEXP);
+    rcpp_result_gen = Rcpp::wrap(ComputeLocalR2(y, y_pred, Ymean));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SLMQ
 Rcpp::NumericVector SLMQ(const arma::mat& FitY, const arma::vec& Y);
 RcppExport SEXP _esp_SLMQ(SEXP FitYSEXP, SEXP YSEXP) {
@@ -89,6 +102,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_esp_ArmaDummyMat", (DL_FUNC) &_esp_ArmaDummyMat, 1},
     {"_esp_InteractionType", (DL_FUNC) &_esp_InteractionType, 3},
     {"_esp_ComputeR2", (DL_FUNC) &_esp_ComputeR2, 2},
+    {"_esp_ComputeLocalR2", (DL_FUNC) &_esp_ComputeLocalR2, 3},
     {"_esp_SLMQ", (DL_FUNC) &_esp_SLMQ, 2},
     {"_esp_SLMLocalQ", (DL_FUNC) &_esp_SLMLocalQ, 3},
     {NULL, NULL, 0}

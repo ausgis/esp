@@ -26,6 +26,24 @@ double ComputeR2(const arma::vec& y, const arma::vec& y_pred) {
 }
 
 // [[Rcpp::export]]
+double ComputeLocalR2(const arma::vec& y, const arma::vec& y_pred, double Ymean) {
+  // Use the provided mean of y (Ymean) instead of calculating it internally
+  double mean_y = Ymean;
+
+  // Calculate total variance (total sum of squares)
+  double total_variance = arma::sum(arma::pow(y - mean_y, 2));
+
+  // Calculate residual sum of squares (RSS)
+  double residual_sum_of_squares = arma::sum(arma::pow(y - y_pred, 2));
+
+  // Calculate R-squared
+  double r_squared = 1 - (residual_sum_of_squares / total_variance);
+
+  return r_squared;
+}
+
+
+// [[Rcpp::export]]
 Rcpp::NumericVector SLMQ(const arma::mat& FitY, const arma::vec& Y) {
   // Get the number of columns in FitY
   int n_cols = FitY.n_cols;
@@ -80,7 +98,9 @@ Rcpp::DataFrame SLMLocalQ(const arma::mat& FitY,
     // Compute R-squared for each column in the current zone
     for (int j = 0; j < n_cols; ++j) {
       arma::vec y_pred = FitY_zone.col(j);       // Predicted values in current zone
-      double r2 = ComputeR2(Y_zone, y_pred);     // Compute R-squared for the current column
+      // double r2 = ComputeR2(Y_zone, y_pred);     // Compute R-squared for the current column
+      double mean_Y = arma::mean(Y);     // Calculate the mean of y
+      double r2 = ComputeLocalR2(Y_zone, y_pred, mean_Y);
 
       // Ensure R-squared is between 0 and 1
       if (r2 < 0) r2 = 0.0;
