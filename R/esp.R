@@ -129,7 +129,7 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
         g = stats::lm(slmformula, dummydf)
       }})
 
-      if (model == 'ols') {
+      if (model == "ols") {
         fity = g$fitted.values
         g = summary(g)
         pv = suppressWarnings(stats::pf(g$fstatistic[1],g$fstatistic[2],
