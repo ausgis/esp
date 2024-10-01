@@ -162,15 +162,17 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   pv = purrr::map(simres, \(.df){
     purrr::set_names(purrr::map_dfc(.df, \(.x) .x[[2]]),allvarname)
   })
-  qv = purrr::map2(y_pred,pv,\(.fity,.pv){
-    qvalue = .pv |>
-      dplyr::bind_rows()
-      SLMQ(as.matrix(.fity),yvec)
-
+  qv = purrr::map_dfr(seq_along(y_pred),\(n){
+    qvalue = SLMQ(as.matrix(y_pred[[n]]),yvec)
+    resqv = tibble::tibble(variable = names(pv[[n]]),
+                           qvalue = qvalue,
+                           pvalue = pv[[n]],
+                           discnum = discnum[n])
+    return(resqv)
   })
 
-
-  res = list("model" = model,
+  res = list("qvalue" = qv,
+             "pred" = y_pred,
              "disc" = discdf,
              "y" = yvec,
              "xvar" = xvarname,
