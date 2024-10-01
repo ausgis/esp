@@ -23,6 +23,30 @@ double ComputeR2(const arma::vec& y, const arma::vec& y_pred) {
   return r_squared;
 }
 
+// [[Rcpp::export]]
+Rcpp::NumericVector SLMQ(const arma::mat& FitY, const arma::vec& Y) {
+  // Get the number of columns in FitY
+  int n_cols = FitY.n_cols;
+
+  // Initialize a NumericVector to store R-squared values
+  Rcpp::NumericVector r_squared_values(n_cols);
+
+  // Loop through each column of FitY
+  for (int i = 0; i < n_cols; ++i) {
+    // Extract the i-th column of FitY
+    arma::vec y_pred = FitY.col(i);
+
+    // Compute R-squared for the current column
+    double r2 = ComputeR2(Y, y_pred);
+
+    // Store the R-squared value in the result vector
+    r_squared_values[i] = r2;
+  }
+
+  // Return the vector of R-squared values
+  return r_squared_values;
+}
+
 // transform each column of the input matrix into dummy variables, and then,
 // for each column, retain only the corresponding dummy variables while setting
 // all other dummy variables to zero.
@@ -109,13 +133,4 @@ Rcpp::NumericVector CalculateQ(const arma::mat& y_pred,
 
   // Convert q to Rcpp::NumericVector and return
   return Rcpp::wrap(q);
-}
-
-// [[Rcpp::export]]
-Rcpp::NumericVector SLMQ(const arma::imat& levelmat,
-                         const arma::vec& coefs,
-                         const arma::vec& y){
-  arma::mat y_pred = PredictDummyY(levelmat,coefs);
-  Rcpp::NumericVector qv = CalculateQ(y_pred,levelmat,y);
-  return qv;
 }
