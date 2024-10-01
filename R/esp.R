@@ -156,10 +156,10 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   IntersectionSymbol = rawToChar(as.raw(c(0x20, 0xE2, 0x88, 0xA9, 0x20)))
   allvarname = c(xvarname,paste0(variable1,IntersectionSymbol,variable2))
 
-  y_pred = purrr::map(simres, \(.df){
+  y_pred = purrr::map(slmres, \(.df){
     purrr::set_names(purrr::map_dfc(.df, \(.x) .x[[1]]),allvarname)
   })
-  pv = purrr::map(simres, \(.df){
+  pv = purrr::map(slmres, \(.df){
     purrr::set_names(purrr::map_dfc(.df, \(.x) .x[[2]]),allvarname)
   })
   qv = purrr::map_dfr(seq_along(y_pred),\(n){
