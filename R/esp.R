@@ -139,10 +139,10 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
 
 
   if (doclust) {
-    y_pred = parallel::parLapply(cores, seq_along(discsf), get_slmy, listw = listw,
+    y_pred = parallel::parLapply(cores, seq_along(discdf), get_slmy, listw = listw,
                                  model = model, Durbin = Durbin)
   } else {
-    y_pred = purrr::map(seq_along(discsf), get_slmy, listw = listw,
+    y_pred = purrr::map(seq_along(discdf), get_slmy, listw = listw,
                         model = model, Durbin = Durbin)
   }
 
