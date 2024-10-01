@@ -207,21 +207,6 @@ esp = \(formula, data, zones = NULL, discvar = NULL, discnum = 3:8, listw = NULL
                           DiscNum = discnum[n]))
   })
 
-  if(!is.null(zones)){
-    lqv = purrr::map(seq_along(y_pred),\(n){
-      qvalue = SLMLocalQ(as.matrix(y_pred[[n]]),yvec,as.integer(zones))
-      resqv = tibble::tibble(Variable = names(pv[[n]]),
-                             Qvalue = qvalue,
-                             Pvalue = as.numeric(pv[[n]]),
-                             AIC = as.numeric(aicv[[n]]),
-                             LogLik = as.numeric(loglikv[[n]]),
-                             DiscNum = discnum[n])
-      return(resqv)
-    })
-
-    fdv = purrr::map_dfr(seq_along(qv),\(n) qv[[n]][seq_along(xvarname),])
-  }
-
   res = list("factor" = fdv,
              "interaction" = idv,
              "pred" = y_pred,
