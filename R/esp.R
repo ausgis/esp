@@ -18,6 +18,7 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   }
   yname = formula.vars[1]
   yvec = data[, yname, drop = TRUE]
+  SST = sum((yvec - mean(yvec))^2)
   geom = sf::st_geometry(data)
   gdist = sdsfun::sf_distance_matrix(data)
   gname = sdsfun::sf_geometry_name(data)
@@ -50,7 +51,7 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
         return(x)
       }))
 
-    names(undiscdf) = paste0('x',seq(length(xdiscname) + 1,by = 1,
+    names(undiscdf) = paste0('x',seq(length(xdiscname) + 1, by = 1,
                                      length.out = length(xundiscname) + 1))
   } else {
     xvarname = xdiscname
@@ -106,19 +107,11 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
     discdf = purrr::map(seq_along(discdf), bind_discdf)
   }
 
-  do_dummy = \(n) {
-    .df = sdsfun::dummy_tbl(discdf[[n]])
-    .res = dplyr::bind_cols(tibble::tibble(y = yvec),.df)
-    # .res = sf::st_set_geometry(.res,geom)
-    return(.res)
-  }
-  if (doclust) {
-    discsf = parallel::parLapply(cores, seq_along(discdf), do_dummy)
-  } else {
-    discsf = purrr::map(seq_along(discdf), do_dummy)
-  }
-
   run_slm = \(n,listw,model,Durbin){
+    slmvar = names(discdf[[n]])
+    slmdf = sdsfun::dummy_tbl(slmdf)
+    slmlevelvar = names(slmdf)
+    slmdf = dplyr::bind_cols(tibble::tibble(y = yvec),slmdf)
     suppressWarnings({if (model == "lag") {
       g = spatialreg::lagsarlm("y ~ .",discsf[[n]],listw,
                                Durbin = Durbin,zero.policy = TRUE)
