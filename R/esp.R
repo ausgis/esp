@@ -1,7 +1,7 @@
 esp = \(formula, data, listw = NULL, overlay = 'and',
         discvar = NULL, discnum = 3:8, alpha = 0.75,
         bw = "AIC", adaptive = TRUE, kernel = "gaussian",
-        model = 'lag', cores = 1, ...) {
+        model = 'lag', Durbin = FALSE, cores = 1, ...) {
   doclust = FALSE
   if (inherits(cores, "cluster")) {
     doclust = TRUE
@@ -118,20 +118,22 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
     discsf = purrr::map(seq_along(discdf), do_dummy)
   }
 
-  run_slm = \(n,listw,model){
+  run_slm = \(n,listw,model,Durbin){
     suppressWarnings({if (model == "lag") {
-      g = spatialreg::lagsarlm("y ~ .",discsf[[n]],listw,Durbin =  FALSE)
+      g = spatialreg::lagsarlm("y ~ .",discsf[[n]],listw,Durbin = Durbin)
+    } else if (model == "error") {
+      g = spatialreg::errorsarlm("y ~ .",discsf[[n]],listw,Durbin = Durbin)
     } else {
-      g = spatialreg::errorsarlm("y ~ .",discsf[[n]],listw,Durbin =  FALSE)
+      g = stats::lm("y ~ .",discsf[[n]],listw,Durbin = Durbin)
     }})
-    return(stats::coef(g))
+    return(g)
   }
   if (doclust) {
-    sarcoef = parallel::parLapply(cores, seq_along(discsf), run_slm,
-                                  listw = listw, model = model)
+    sarmodel = parallel::parLapply(cores, seq_along(discsf), run_slm, listw = listw,
+                                   model = model, Durbin = Durbin)
   } else {
-    sarcoef = purrr::map(seq_along(discsf), run_slm,
-                         listw = listw, model = model)
+    sarmodel = purrr::map(seq_along(discsf), run_slm, listw = listw,
+                          model = model, Durbin = Durbin)
   }
 
   xinteract = utils::combn(xvarname,2,simplify = FALSE)
@@ -140,7 +142,7 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   IntersectionSymbol = rawToChar(as.raw(c(0x20, 0xE2, 0x88, 0xA9, 0x20)))
   allvarname = c(xvarname,paste0(variable1,IntersectionSymbol,variable2))
 
-  res = list("coef" = sarcoef,
+  res = list("model" = sarmodel,
              "disc" = discdf,
              "y" = yvec,
              "xvar" = xvarname,

@@ -40,7 +40,7 @@ arma::mat PredictDummyY(const arma::imat& mat, const arma::vec& vec){
     // Keep only the dummy variables for the current column, zero out others
     modified_dummy.cols(col_offset, col_offset + levels_count[col_idx]) = dummy_matrix.cols(col_offset, col_offset + levels_count[col_idx]);
 
-    // Perform the multiplication with vec(1:p) and add vec(0) to the result
+    // Perform the multiplication with vec(1:p+1) and add vec(0) to the result
     result.col(col_idx) = modified_dummy * vec.subvec(1, p+1) + vec(0);
 
     // Update the offset for the next column
