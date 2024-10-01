@@ -70,28 +70,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// PredictDummyY
-arma::mat PredictDummyY(const arma::imat& mat, const arma::vec& vec);
-RcppExport SEXP _esp_PredictDummyY(SEXP matSEXP, SEXP vecSEXP) {
+// SLMLocalQ
+Rcpp::List SLMLocalQ(const arma::mat& FitY, const arma::vec& Y, const arma::ivec& Zones);
+RcppExport SEXP _esp_SLMLocalQ(SEXP FitYSEXP, SEXP YSEXP, SEXP ZonesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::imat& >::type mat(matSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type vec(vecSEXP);
-    rcpp_result_gen = Rcpp::wrap(PredictDummyY(mat, vec));
-    return rcpp_result_gen;
-END_RCPP
-}
-// CalculateQ
-Rcpp::NumericVector CalculateQ(const arma::mat& y_pred, const arma::imat& discmat, const arma::vec& y);
-RcppExport SEXP _esp_CalculateQ(SEXP y_predSEXP, SEXP discmatSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type y_pred(y_predSEXP);
-    Rcpp::traits::input_parameter< const arma::imat& >::type discmat(discmatSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(CalculateQ(y_pred, discmat, y));
+    Rcpp::traits::input_parameter< const arma::mat& >::type FitY(FitYSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const arma::ivec& >::type Zones(ZonesSEXP);
+    rcpp_result_gen = Rcpp::wrap(SLMLocalQ(FitY, Y, Zones));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -102,8 +90,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_esp_InteractionType", (DL_FUNC) &_esp_InteractionType, 3},
     {"_esp_ComputeR2", (DL_FUNC) &_esp_ComputeR2, 2},
     {"_esp_SLMQ", (DL_FUNC) &_esp_SLMQ, 2},
-    {"_esp_PredictDummyY", (DL_FUNC) &_esp_PredictDummyY, 2},
-    {"_esp_CalculateQ", (DL_FUNC) &_esp_CalculateQ, 3},
+    {"_esp_SLMLocalQ", (DL_FUNC) &_esp_SLMLocalQ, 3},
     {NULL, NULL, 0}
 };
 

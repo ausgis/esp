@@ -21,11 +21,7 @@ SLMQ <- function(FitY, Y) {
     .Call(`_esp_SLMQ`, FitY, Y)
 }
 
-PredictDummyY <- function(mat, vec) {
-    .Call(`_esp_PredictDummyY`, mat, vec)
-}
-
-CalculateQ <- function(y_pred, discmat, y) {
-    .Call(`_esp_CalculateQ`, y_pred, discmat, y)
+SLMLocalQ <- function(FitY, Y, Zones) {
+    .Call(`_esp_SLMLocalQ`, FitY, Y, Zones)
 }
 
