@@ -130,7 +130,7 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
         g = stats::lm(slmformula, dummydf)
       }})
       # fity = g$fitted.values
-      fity = stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA)
+      fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
       return(fity)
     })})
     names(y_pred) = slmvar
