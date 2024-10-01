@@ -113,13 +113,13 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
     slmlevelvar = names(slmdf)
     slmdf = dplyr::bind_cols(tibble::tibble(y = yvec),slmdf)
     suppressWarnings({if (model == "lag") {
-      g = spatialreg::lagsarlm("y ~ .",discsf[[n]],listw,
+      g = spatialreg::lagsarlm("y ~ .",slmdf,listw,
                                Durbin = Durbin,zero.policy = TRUE)
     } else if (model == "error") {
-      g = spatialreg::errorsarlm("y ~ .",discsf[[n]],listw,
+      g = spatialreg::errorsarlm("y ~ .",slmdf,listw,
                                  Durbin = Durbin,zero.policy = TRUE)
     } else {
-      g = stats::lm("y ~ .",discsf[[n]],listw,Durbin = Durbin)
+      g = stats::lm("y ~ .",slmdf)
     }})
     return(g)
   }
