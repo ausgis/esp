@@ -129,16 +129,17 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
         g = stats::lm(slmformula, dummydf)
       }})
 
-      fity = g$fitted.values
-      g = summary(g)
       if (model == 'ols') {
-        qv = suppressWarnings(stats::pf(g$fstatistic[1],g$fstatistic[2],
+        fity = g$fitted.values
+        g = summary(g)
+        pv = suppressWarnings(stats::pf(g$fstatistic[1],g$fstatistic[2],
                                         g$fstatistic[3],lower.tail = FALSE))
       } else {
-        # fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
-        qv = as.numeric(g$LR1$p.value)
+        fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        g = summary(g)
+        pv = as.numeric(g$LR1$p.value)
       }
-      return(list("pred" = fity, "qvalue" = qv))
+      return(list("pred" = fity, "pvalue" = pv))
     })})
     return(slm_res)
   }
@@ -157,16 +158,20 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   allvarname = c(xvarname,paste0(variable1,IntersectionSymbol,variable2))
 
   y_pred = purrr::map(slmres, \(.df){
-    purrr::set_names(purrr::map_dfc(.df, \(.x) .x[[1]]),allvarname)
+    .res = dplyr::select(.df,dplyr::starts_with("pred"))
+    names(.res) = allvarname
+    return(.res)
   })
   pv = purrr::map(slmres, \(.df){
-    purrr::set_names(purrr::map_dfc(.df, \(.x) .x[[2]]),allvarname)
+    .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("pvalue")),1)
+    names(.res) = allvarname
+    return(.res)
   })
   qv = purrr::map_dfr(seq_along(y_pred),\(n){
     qvalue = SLMQ(as.matrix(y_pred[[n]]),yvec)
     resqv = tibble::tibble(variable = names(pv[[n]]),
                            qvalue = qvalue,
-                           pvalue = pv[[n]],
+                           pvalue = as.numeric(pv[[n]]),
                            discnum = discnum[n])
     return(resqv)
   })
