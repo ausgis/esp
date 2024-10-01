@@ -1,7 +1,6 @@
-esp = \(formula, data, listw = NULL, overlay = 'and',
-        discvar = NULL, discnum = 3:8, alpha = 0.75,
-        bw = "AIC", adaptive = TRUE, kernel = "gaussian",
-        model = 'lag', Durbin = FALSE, cores = 1, ...) {
+esp = \(formula, data, zones = NULL, discvar = NULL, discnum = 3:8, listw = NULL,
+        model = 'lag', Durbin = FALSE, overlay = 'and', alpha = 0.75,
+        bw = "AIC", adaptive = TRUE, kernel = "gaussian",cores = 1, ...) {
   doclust = FALSE
   if (inherits(cores, "cluster")) {
     doclust = TRUE
@@ -158,7 +157,8 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   variable1 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][1])
   variable2 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][2])
   IntersectionSymbol = rawToChar(as.raw(c(0x20, 0xE2, 0x88, 0xA9, 0x20)))
-  allvarname = c(xvarname,paste0(variable1,IntersectionSymbol,variable2))
+  Interactname = paste0(variable1,IntersectionSymbol,variable2)
+  allvarname = c(xvarname,Interactname)
 
   aicv = purrr::map(slmres, \(.df){
     .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("AIC")),1)
@@ -180,18 +180,35 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
     names(.res) = allvarname
     return(.res)
   })
-  qv = purrr::map_dfr(seq_along(y_pred),\(n){
+  qv = purrr::map(seq_along(y_pred),\(n){
     qvalue = SLMQ(as.matrix(y_pred[[n]]),yvec)
     resqv = tibble::tibble(Variable = names(pv[[n]]),
                            Qvalue = qvalue,
                            Pvalue = as.numeric(pv[[n]]),
                            AIC = as.numeric(aicv[[n]]),
                            LogLik = as.numeric(loglikv[[n]]),
-                           discnum = discnum[n])
+                           DiscNum = discnum[n])
     return(resqv)
   })
 
-  res = list("qvalue" = qv,
+  fdv = purrr::map_dfr(seq_along(qv),\(n) qv[[n]][seq_along(xvarname),])
+  idv = purrr::map_dfr(seq_along(qv),\(n) {
+    qv_disc = qv[[n]][,"Qvalue",drop = TRUE]
+    names(qv_disc) = allvarname
+    idtype = purrr::pmap_chr(list(qv12 = qv_disc[Interactname],
+                                  qv1 = qv_disc[variable1],
+                                  qv2 = qv_disc[variable2]),
+                             InteractionType)
+    return(tibble::tibble(Variable = Interactname,
+                          Interaction = idtype,
+                          Qv1 = qv_disc[variable1],
+                          Qv2 = qv_disc[variable2],
+                          Qv12 = qv_disc[Interactname],
+                          DiscNum = discnum[n]))
+  })
+
+  res = list("factor" = fdv,
+             "interaction" = idv,
              "pred" = y_pred,
              "disc" = discdf,
              "y" = yvec,
