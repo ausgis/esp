@@ -120,9 +120,11 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
 
   run_slm = \(n,listw,model,Durbin){
     suppressWarnings({if (model == "lag") {
-      g = spatialreg::lagsarlm("y ~ .",discsf[[n]],listw,Durbin = Durbin)
+      g = spatialreg::lagsarlm("y ~ .",discsf[[n]],listw,
+                               Durbin = Durbin,zero.policy = TRUE)
     } else if (model == "error") {
-      g = spatialreg::errorsarlm("y ~ .",discsf[[n]],listw,Durbin = Durbin)
+      g = spatialreg::errorsarlm("y ~ .",discsf[[n]],listw,
+                                 Durbin = Durbin,zero.policy = TRUE)
     } else {
       g = stats::lm("y ~ .",discsf[[n]],listw,Durbin = Durbin)
     }})
