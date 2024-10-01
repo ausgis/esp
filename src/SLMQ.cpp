@@ -12,13 +12,13 @@ using namespace arma;
 // [[Rcpp::export]]
 arma::mat PredictDummyY(const arma::imat& mat, const arma::vec& vec){
   int p = mat.n_cols; // Number of columns in the original matrix
-  int n = mat.n_rows; // Number of rows
+  int n = mat.n_rows; // Number of rows in the original matrix
 
   // Generate the full dummy matrix
   arma::mat dummy_matrix = ArmaDummyMat(mat);
 
   // Initialize the result matrix
-  arma::mat result(n, p, fill::zeros);
+  arma::mat result(n, p, arma::fill::zeros);
 
   // Number of dummy variables per column
   std::vector<int> levels_count(p);
@@ -38,7 +38,7 @@ arma::mat PredictDummyY(const arma::imat& mat, const arma::vec& vec){
     arma::mat modified_dummy = arma::zeros(n, total_dummy_cols);
 
     // Keep only the dummy variables for the current column, zero out others
-    modified_dummy.cols(col_offset, col_offset + levels_count[col_idx] - 1) = dummy_matrix.cols(col_offset, col_offset + levels_count[col_idx] - 1);
+    modified_dummy.cols(col_offset, col_offset + levels_count[col_idx]) = dummy_matrix.cols(col_offset, col_offset + levels_count[col_idx]);
 
     // Perform the multiplication with vec(1:p) and add vec(0) to the result
     result.col(col_idx) = modified_dummy * vec.subvec(1, p) + vec(0);
