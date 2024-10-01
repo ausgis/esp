@@ -52,6 +52,7 @@ Rcpp::NumericVector SLMQ(const arma::mat& FitY, const arma::vec& Y) {
 // Function to compute R-squared for each group defined by Zones
 // and return the result as a DataFrame with dynamic column names
 // [[Rcpp::export]]
+// [[Rcpp::export]]
 Rcpp::DataFrame SLMLocalQ(const arma::mat& FitY,
                           const arma::vec& Y,
                           const arma::ivec& Zones) {
@@ -81,7 +82,12 @@ Rcpp::DataFrame SLMLocalQ(const arma::mat& FitY,
     for (int j = 0; j < n_cols; ++j) {
       arma::vec y_pred = FitY_zone.col(j);       // Predicted values in current zone
       double r2 = ComputeR2(Y_zone, y_pred);     // Compute R-squared for the current column
-      r_squared_matrix(j, i) = r2;               // Store the R-squared value
+
+      // Ensure R-squared is between 0 and 1
+      if (r2 < 0) r2 = 0;
+      if (r2 > 1) r2 = 1;
+
+      r_squared_matrix(j, i) = r2;               // Store the adjusted R-squared value
     }
 
     // Generate column name for this zone
@@ -95,6 +101,7 @@ Rcpp::DataFrame SLMLocalQ(const arma::mat& FitY,
 
   return result;
 }
+
 
 // // Function to compute R-squared for each group defined by Zones
 // // [[Rcpp::export]]
