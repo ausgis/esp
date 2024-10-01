@@ -1,6 +1,48 @@
-esp = \(formula, data, zones = NULL, discvar = NULL, discnum = 3:8, listw = NULL,
-        model = 'lag', Durbin = FALSE, overlay = 'and', alpha = 0.75,
-        bw = "AIC", adaptive = TRUE, kernel = "gaussian",cores = 1, ...) {
+#' equivalent geographical detector under spatial linear regression framework
+#'
+#' @param formula A formula
+#' @param data An `sf` object of observation data.
+#' @param discvar (optional) Name of continuous variable columns that need to be discretized. Noted that
+#' when `formula` has `discvar`, `data` must have these columns. By default, all independent variables are
+#' used as `discvar`.
+#' @param discnum (optional) Number of discretization. Default all will use `3:8`.
+#' @param listw (optional) A `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
+#' @param model (optional) The type of linear model used, with the spatial lag model as default.
+#' @param Durbin (optional) Whether to consider spatial Durbin terms, default is `false`.
+#' @param overlay (optional) Spatial overlay method. One of `and`, `or`, `intersection`. Default is `and`.
+#' @param alpha (optional) Controlling the strength of spatial soft constraints, the larger the `alpha`,
+#' the stronger the spatial soft constraint.
+#' @param bw (optional) The bandwidth used in selecting models. The optimal bandwidth can be
+#' selected using one of two methods: `AIC`, and `CV`. Default will use `AIC`.
+#' @param adaptive (optional) Whether the bandwidth value is adaptive or not. Default is `TRUE`.
+#' @param kernel (optional) Kernel function. Default is `gaussian`.
+#' @param cores (optional) Positive integer (default is 1). When cores are greater than 1, use
+#' multi-core parallel computing.
+#' @param ... (optional) Other arguments passed to `ClustGeo::hclustgeo()`.
+#'
+#' @return A list.
+#' \describe{
+#' \item{\code{factor}}{factor detection result}
+#' \item{\code{interaction}}{Interactive detection results}
+#' \item{\code{pred}}{predicted values of response variables required for the calculation of q-values}
+#' \item{\code{disc}}{spatial discretization results}
+#' \item{\code{y}}{values corresponding to the response variable}
+#' \item{\code{xvar}}{all the explanatory variables}
+#' \item{\code{allvar}}{all explanatory variables and their pairwise interaction variables.}
+#' }
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
+#'   readr::read_csv() |>
+#'   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
+#' g = esp(Depression_prevelence ~ ., data = depression, cores = 6)
+#' g$factor
+#' }
+esp_global = \(formula, data, discvar = NULL, discnum = 3:8, listw = NULL,
+               model = 'lag', Durbin = FALSE, overlay = 'and', alpha = 0.75,
+               bw = "AIC", adaptive = TRUE, kernel = "gaussian", cores = 1, ...) {
   doclust = FALSE
   if (inherits(cores, "cluster")) {
     doclust = TRUE
