@@ -2,8 +2,8 @@
 #'
 #' @param formula A formula.
 #' @param data A `data.frame` or `tibble` of discretized data.
-#' @param method (optional) Overlay methods. When `method` is `and`, use `min` to do
-#' fuzzy overlay; and when `method` is `or`,use `max` to do fuzzy overlay. Default is `and`.
+#' @param method (optional) Spatial overlay method. One of `and`, `or`, `intersection`.
+#' Default is `and`.
 #'
 #' @return A list
 #' \describe{
@@ -21,6 +21,8 @@
 #' fo1
 #' fo2 = fuzzyoverlay2(y ~ .,data = sim, method = 'or')
 #' fo2
+#' fo3 = fuzzyoverlay2(y ~ .,data = sim, method = 'intersection')
+#' fo3
 #'
 fuzzyoverlay2 = \(formula, data, method = "and"){
   formula = stats::as.formula(formula)
@@ -34,11 +36,19 @@ fuzzyoverlay2 = \(formula, data, method = "and"){
   variable1 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][1])
   variable2 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][2])
 
-  suppressMessages({res = purrr::map2_dfc(variable1,variable2, \(.v1,.v2) {
-    dti = dplyr::select(data, dplyr::all_of(c(yname,.v1,.v2)))
-    resout = sdsfun::fuzzyoverlay(paste0(yname, " ~ ."), dti,method)
-    resout = as.integer(as.factor(resout))
-  })})
+  if (method == 'intersection'){
+    suppressMessages({res = purrr::map2_dfc(variable1,variable2, \(.v1,.v2) {
+      dti = dplyr::select(data, dplyr::all_of(c(.v1,.v2)))
+      resout = purrr::reduce(dti,paste,sep = '_')
+      resout = as.integer(as.factor(resout))
+    })})
+  } else {
+    suppressMessages({res = purrr::map2_dfc(variable1,variable2, \(.v1,.v2) {
+      dti = dplyr::select(data, dplyr::all_of(c(yname,.v1,.v2)))
+      resout = sdsfun::fuzzyoverlay(paste0(yname, " ~ ."), dti,method)
+      resout = as.integer(as.factor(resout))
+    })})
+  }
   names(res) = paste0("xi",seq_along(variable1))
   IntersectionSymbol = rawToChar(as.raw(c(0x20, 0xE2, 0x88, 0xA9, 0x20)))
   variable = paste0(variable1,IntersectionSymbol,variable2)
