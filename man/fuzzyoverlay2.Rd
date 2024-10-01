@@ -11,8 +11,8 @@ fuzzyoverlay2(formula, data, method = "and")
 
 \item{data}{A \code{data.frame} or \code{tibble} of discretized data.}
 
-\item{method}{(optional) Overlay methods. When \code{method} is \code{and}, use \code{min} to do
-fuzzy overlay; and when \code{method} is \code{or},use \code{max} to do fuzzy overlay. Default is \code{and}.}
+\item{method}{(optional) Spatial overlay method. One of \code{and}, \code{or}, \code{intersection}.
+Default is \code{and}.}
 }
 \value{
 A list
@@ -33,5 +33,7 @@ fo1 = fuzzyoverlay2(y ~ .,data = sim, method = 'and')
 fo1
 fo2 = fuzzyoverlay2(y ~ .,data = sim, method = 'or')
 fo2
+fo3 = fuzzyoverlay2(y ~ .,data = sim, method = 'intersection')
+fo3
 
 }
