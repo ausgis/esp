@@ -106,7 +106,7 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
     discdf = purrr::map(seq_along(discdf), bind_discdf)
   }
 
-  get_slmy = \(n,listw,model,Durbin){
+  get_slm = \(n,listw,model,Durbin){
     slmvar = names(discdf[[n]])
     dummydf = sdsfun::dummy_tbl(discdf[[n]])
     slmlevelvar = names(dummydf)
@@ -117,7 +117,7 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
     })
     dummydf = dplyr::bind_cols(tibble::tibble(y = yvec),dummydf)
 
-    suppressMessages({y_pred = purrr::map_dfc(slmx, \(.varname) {
+    suppressMessages({slm_res = purrr::map_dfc(slmx, \(.varname) {
       slmformula = paste0("y ~ ",.varname)
       suppressWarnings({if (model == "lag") {
         g = spatialreg::lagsarlm(slmformula, dummydf, listw,
@@ -128,20 +128,25 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
       } else {
         g = stats::lm(slmformula, dummydf)
       }})
-      # fity = g$fitted.values
-      fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
-      return(fity)
+
+      fity = g$fitted.values
+      g = summary(g)
+      if (model == 'ols') {
+        qv = suppressWarnings(stats::pf(g$fstatistic[1],g$fstatistic[2],
+                                        g$fstatistic[3],lower.tail = FALSE))
+      } else {
+        # fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        qv = as.numeric(g$LR1$p.value)
+      }
+      return(list("pred" = fity, "qvalue" = qv))
     })})
-    names(y_pred) = slmvar
-    return(y_pred)
+    return(slm_res)
   }
-
-
   if (doclust) {
-    y_pred = parallel::parLapply(cores, seq_along(discdf), get_slmy, listw = listw,
+    slmres = parallel::parLapply(cores, seq_along(discdf), get_slm, listw = listw,
                                  model = model, Durbin = Durbin)
   } else {
-    y_pred = purrr::map(seq_along(discdf), get_slmy, listw = listw,
+    slmres = purrr::map(seq_along(discdf), get_slm, listw = listw,
                         model = model, Durbin = Durbin)
   }
 
@@ -151,7 +156,9 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   IntersectionSymbol = rawToChar(as.raw(c(0x20, 0xE2, 0x88, 0xA9, 0x20)))
   allvarname = c(xvarname,paste0(variable1,IntersectionSymbol,variable2))
 
-  res = list("pred" = y_pred,
+  slmres
+
+  res = list("model" = model,
              "disc" = discdf,
              "y" = yvec,
              "xvar" = xvarname,
