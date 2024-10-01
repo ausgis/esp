@@ -5,6 +5,24 @@ using namespace arma;
 
 // [[Rcpp::depends(RcppArmadillo)]]
 
+
+// [[Rcpp::export]]
+double ComputeR2(const arma::vec& y, const arma::vec& y_pred) {
+  // Calculate the mean of y
+  double mean_y = arma::mean(y);
+
+  // Calculate total variance (total sum of squares)
+  double total_variance = arma::sum(arma::pow(y - mean_y, 2));
+
+  // Calculate residual sum of squares (RSS)
+  double residual_sum_of_squares = arma::sum(arma::pow(y - y_pred, 2));
+
+  // Calculate R-squared
+  double r_squared = 1 - (residual_sum_of_squares / total_variance);
+
+  return r_squared;
+}
+
 // transform each column of the input matrix into dummy variables, and then,
 // for each column, retain only the corresponding dummy variables while setting
 // all other dummy variables to zero.
@@ -66,7 +84,8 @@ Rcpp::NumericVector CalculateQ(const arma::mat& y_pred,
     arma::ivec disc_col = discmat.col(col_idx); // Current column of discmat
     arma::ivec levels = ArmaRunique(disc_col);  // Get unique levels in this column
 
-    arma::vec total_diff = square(y_pred.col(col_idx) - y);  // Squared differences for y_pred and y
+    // Squared differences for y_pred and y
+    arma::vec total_diff = square(y_pred.col(col_idx) - y);
     double total_sum = sum(total_diff);  // Total sum of squared differences
 
     arma::vec group_sums(levels.n_elem, fill::zeros);  // Store group-wise sum of squared differences

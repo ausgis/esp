@@ -18,7 +18,6 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   }
   yname = formula.vars[1]
   yvec = data[, yname, drop = TRUE]
-  SST = sum((yvec - mean(yvec))^2)
   geom = sf::st_geometry(data)
   gdist = sdsfun::sf_distance_matrix(data)
   gname = sdsfun::sf_geometry_name(data)
