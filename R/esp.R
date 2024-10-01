@@ -156,7 +156,19 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
   IntersectionSymbol = rawToChar(as.raw(c(0x20, 0xE2, 0x88, 0xA9, 0x20)))
   allvarname = c(xvarname,paste0(variable1,IntersectionSymbol,variable2))
 
-  slmres
+  y_pred = purrr::map(simres, \(.df){
+    purrr::set_names(purrr::map_dfc(.df, \(.x) .x[[1]]),allvarname)
+  })
+  pv = purrr::map(simres, \(.df){
+    purrr::set_names(purrr::map_dfc(.df, \(.x) .x[[2]]),allvarname)
+  })
+  qv = purrr::map2(y_pred,pv,\(.fity,.pv){
+    qvalue = .pv |>
+      dplyr::bind_rows()
+      SLMQ(as.matrix(.fity),yvec)
+
+  })
+
 
   res = list("model" = model,
              "disc" = discdf,
