@@ -109,25 +109,25 @@ esp = \(formula, data, listw = NULL, overlay = 'and',
 
   get_slmy = \(n,listw,model,Durbin){
     slmvar = names(discdf[[n]])
-    slmdf = sdsfun::dummy_tbl(slmdf)
-    slmlevelvar = names(slmdf)
+    dummydf = sdsfun::dummy_tbl(discdf[[n]])
+    slmlevelvar = names(dummydf)
     slmx = sapply(slmvar, function(x) {
       matched = grep(paste0("^", x), slmlevelvar, value = TRUE)
       res = paste(matched, collapse = "+")
       return(unname(res))
     })
-    slmdf = dplyr::bind_cols(tibble::tibble(y = yvec),slmdf)
+    dummydf = dplyr::bind_cols(tibble::tibble(y = yvec),dummydf)
 
     suppressMessages({y_pred = purrr::map_dfc(slmx, \(.varname) {
       slmformula = paste0("y ~ ",.varname)
       suppressWarnings({if (model == "lag") {
-        g = spatialreg::lagsarlm(slmformula, slmdf, listw,
+        g = spatialreg::lagsarlm(slmformula, dummydf, listw,
                                  Durbin = Durbin,zero.policy = TRUE)
       } else if (model == "error") {
-        g = spatialreg::errorsarlm(slmformula, slmdf, listw,
+        g = spatialreg::errorsarlm(slmformula, dummydf, listw,
                                    Durbin = Durbin,zero.policy = TRUE)
       } else {
-        g = stats::lm(slmformula, slmdf)
+        g = stats::lm(slmformula, dummydf)
       }})
       # fity = g$fitted.values
       fity = stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA)
