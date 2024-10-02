@@ -1,11 +1,10 @@
 #' @title global stratified power
 #' @description
 #' Equivalent geographical detector q-statistic under a spatial linear regression framework.
-#' @note
-#' The column names of the independent variables should not be `all` or `none`.
 #'
 #' @param formula A formula
-#' @param data An `sf` object of observation data.
+#' @param data An `sf` object of observation data. Please note that the column names of the independent
+#' variables should not be `all` or `none`.
 #' @param listw (optional) A `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
 #' @param discvar (optional) Name of continuous variable columns that need to be discretized. Noted that
 #' when `formula` has `discvar`, `data` must have these columns. By default, all independent variables are
@@ -67,6 +66,10 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
   gdist = sdsfun::sf_distance_matrix(data)
   gname = sdsfun::sf_geometry_name(data)
   xname = colnames(data)[-which(colnames(data) %in% c(yname,gname))]
+
+  if (c("all","none") %in% xname) {
+    stop("The column names of the independent variables should not be `all` or `none`.")
+  }
 
   if (is.null(listw)) {
     listw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
