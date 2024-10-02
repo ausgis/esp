@@ -37,7 +37,7 @@ SLMQ <- function(Y, FitY) {
     .Call(`_esp_SLMQ`, Y, FitY)
 }
 
-SLMLocalQ <- function(FitY, Y, Zones) {
-    .Call(`_esp_SLMLocalQ`, FitY, Y, Zones)
+SLMLocalQ <- function(Y, FitY, Zones) {
+    .Call(`_esp_SLMLocalQ`, Y, FitY, Zones)
 }
 

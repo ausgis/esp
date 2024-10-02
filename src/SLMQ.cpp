@@ -69,8 +69,8 @@ Rcpp::NumericVector SLMQ(const arma::vec& Y, const arma::mat& FitY) {
 
 // Function to compute R-squared for each group defined by Zones
 // [[Rcpp::export]]
-Rcpp::List SLMLocalQ(const arma::mat& FitY,
-                     const arma::vec& Y,
+Rcpp::List SLMLocalQ(const arma::vec& Y,
+                     const arma::mat& FitY,
                      const arma::ivec& Zones) {
   // Get unique levels in Zones using ArmaRunique
   arma::ivec unique_zones = ArmaRunique(Zones);
