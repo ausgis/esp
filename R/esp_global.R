@@ -76,7 +76,7 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
     listw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
   }
 
-  if (discvar == "all") {
+  if (discvar == "all"){
     xdiscname = xname
     xundiscname = NULL
   } else if (discvar == "none"){
