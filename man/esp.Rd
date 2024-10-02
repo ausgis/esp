@@ -8,6 +8,7 @@ esp(
   formula,
   data,
   listw = NULL,
+  yzone = NULL,
   discvar = "all",
   discnum = 3:8,
   model = "ols",
@@ -17,6 +18,7 @@ esp(
   bw = "AIC",
   adaptive = TRUE,
   kernel = "gaussian",
+  increase_rate = 0.05,
   cores = 1,
   ...
 )
@@ -28,6 +30,9 @@ esp(
 variables should not be \code{all} or \code{none}.}
 
 \item{listw}{(optional) A \code{listw}. See \code{spdep::mat2listw()} and \code{spdep::nb2listw()} for details.}
+
+\item{yzone}{(optional) Spatial zones of the response variable. Default the response variable is divided into
+\code{3} categories using \code{quantile} discretization.}
 
 \item{discvar}{(optional) Name of continuous variable columns that need to be discretized. Noted that
 when \code{formula} has \code{discvar}, \code{data} must have these columns. Default is \code{all}, which means all independent
@@ -53,21 +58,23 @@ selected using one of two methods: \code{AIC}, and \code{CV}. Default will use \
 
 \item{kernel}{(optional) Kernel function. Default is \code{gaussian}.}
 
+\item{increase_rate}{(optional) The critical increase rate of the number of discretization.
+Default is \verb{5\%}.}
+
 \item{cores}{(optional) Positive integer (default is 1). When cores are greater than 1, use
 multi-core parallel computing.}
 
 \item{...}{(optional) Other arguments passed to \code{ClustGeo::hclustgeo()}.}
 }
 \value{
-A list.
+A list with \code{espm} class.
 \describe{
-\item{\code{factor}}{factor detection result}
-\item{\code{interaction}}{Interactive detection results}
-\item{\code{pred}}{predicted values of response variables required for the calculation of q-values}
-\item{\code{disc}}{spatial discretization results}
-\item{\code{y}}{values corresponding to the response variable}
-\item{\code{xvar}}{all the explanatory variables}
-\item{\code{allvar}}{all explanatory variables and their pairwise interaction variables.}
+\item{\code{factor}}{global factor detection result}
+\item{\code{interaction}}{global interactive detection results}
+\item{\code{optdisc}}{independent variable optimal spatial discretization}
+\item{\code{localq}}{q valueS of explanatory variables under different response zones}
+\item{\code{zone}}{zones of the response variable}
+\item{\code{allfactor}}{factor detection results corresponding to different numbers of discreteization}
 }
 }
 \description{
