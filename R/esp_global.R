@@ -195,24 +195,18 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
       } else {
         g = stats::lm(slmformula, dummydf)
       }})
-
       aicv = stats::AIC(g)
+      bicv = stats::AIC(g)
       loglikv = as.numeric(stats::logLik(g))
       fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
-      g = summary(g)
-      if (model == "ols") {
-        pv = suppressWarnings(stats::pf(g$fstatistic[1],g$fstatistic[2],
-                                        g$fstatistic[3],lower.tail = FALSE))
-      } else {
-        pv = as.numeric(g$LR1$p.value)
-      }
-      return(list("pred" = fity, "pvalue" = pv,
-                  "AIC" = aicv, "LogLik" = loglikv))
+      return(list("pred" = fity, "AIC" = aicv,
+                  "BIC" = bicv, "LogLik" = loglikv))
     })})
     return(slm_res)
   }
   if (doclust) {
-    slmres = parallel::parLapply(cores, seq_along(discdf), get_slm, listw = listw,
+    slmres = parallel::parLapply(cores, seq_along(discdf),
+                                 get_slm, listw = listw,
                                  model = model, Durbin = Durbin)
   } else {
     slmres = purrr::map(seq_along(discdf), get_slm, listw = listw,
@@ -231,6 +225,11 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
     names(.res) = allvarname
     return(.res)
   })
+  bicv = purrr::map(slmres, \(.df){
+    .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("BIC")),1)
+    names(.res) = allvarname
+    return(.res)
+  })
   loglikv = purrr::map(slmres, \(.df){
     .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("LogLik")),1)
     names(.res) = allvarname
@@ -241,17 +240,12 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
     names(.res) = allvarname
     return(.res)
   })
-  pv = purrr::map(slmres, \(.df){
-    .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("pvalue")),1)
-    names(.res) = allvarname
-    return(.res)
-  })
   qv = purrr::map(seq_along(y_pred),\(n){
     qvalue = SLMQ(as.matrix(y_pred[[n]]),yvec)
-    resqv = tibble::tibble(Variable = names(pv[[n]]),
+    resqv = tibble::tibble(Variable = names(aicv[[n]]),
                            Qvalue = qvalue,
-                           Pvalue = as.numeric(pv[[n]]),
                            AIC = as.numeric(aicv[[n]]),
+                           BIC = as.numeric(bicv[[n]]),
                            LogLik = as.numeric(loglikv[[n]]),
                            DiscNum = discnum[n])
     return(resqv)
