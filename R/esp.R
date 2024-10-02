@@ -156,10 +156,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
         dplyr::select(-rowid)
       if (!is.null(undiscdf)){.res = dplyr::bind_cols(.res,undiscdf)}
       names(.res) = paste0('x',seq_along(.res))
-      fdf = dplyr::bind_cols(tibble::tibble(y = yvec),.res)
-      fdfres = esp::fuzzyoverlay2("y ~ .",fdf,overlay)[[1]]
-      res = dplyr::bind_cols(.res,fdfres)
-      return(res)
+      return(.res)
     }
     if (doclust) {
       discdf = parallel::parLapply(cores, seq_along(discdf), bind_discdf)
@@ -173,11 +170,9 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
       sf::st_drop_geometry() |>
       dplyr::select(dplyr::all_of(xvarname))
     names(discdf) = paste0('x',seq_along(discdf))
-    fdf = dplyr::bind_cols(tibble::tibble(y = yvec),discdf)
-    fdfres = esp::fuzzyoverlay2("y ~ .",fdf,overlay)[[1]]
-    discdf = list(dplyr::bind_cols(discdf,fdfres))
+    discdf = list(discdf)
   }
-
+  return(discdf)
   get_slm = \(n,listw,model,Durbin,bw,adaptive,kernel){
     slmvar = names(discdf[[n]])
     dummydf = sdsfun::dummy_tbl(discdf[[n]])
@@ -238,23 +233,23 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
 
   y_pred = purrr::map(slmres, \(.df){
     .res = dplyr::select(.df,dplyr::starts_with("pred"))
-    names(.res) = allvarname
+    names(.res) = xvarname
     return(.res)
   })
   aicv = purrr::map(slmres, \(.df){
     .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("AIC")),1)
-    names(.res) = allvarname
+    names(.res) = xvarname
     return(.res)
   })
   if (model != "gwr") {
     bicv = purrr::map(slmres, \(.df){
       .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("BIC")),1)
-      names(.res) = allvarname
+      names(.res) = xvarname
       return(.res)
     })
     loglikv = purrr::map(slmres, \(.df){
       .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("LogLik")),1)
-      names(.res) = allvarname
+      names(.res) = xvarname
       return(.res)
     })
     qv = purrr::map(seq_along(y_pred),\(n){
@@ -277,8 +272,83 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
       })
   }
 
-  fdv = purrr::map_dfr(seq_along(qv),\(n) qv[[n]][seq_along(xvarname),])
-  idv = purrr::map_dfr(seq_along(qv),\(n) {
+  fdv = purrr::list_rbind(qv)
+
+  if (length(y_pred) > 1){
+    suppressWarnings({opt_discnum = dplyr::group_split(fdv,Variable) |>
+      purrr::map_dbl(\(.df) gdverse::loess_optdiscnum(.df$Qvalue,
+                                                      .df$DiscNum)[1])})
+    opt_discdf = purrr::map_dfc(seq_along(opt_discnum),
+                                \(.n) {dn = which(discnum == opt_discnum[.n])
+                                return(dplyr::select(discdf[[dn]],
+                                                     dplyr::all_of(paste0("x",.n))))
+                                })
+    opt_fdv = dplyr::group_split(fdv,Variable) |>
+      purrr::map2_dfr(opt_discnum,
+                      \(.qv,.discn) dplyr::filter(.qv,DiscNum == .discn)) |>
+      dplyr::select(-DiscNum)
+  } else {
+    opt_discnum = NULL
+    opt_discdf = discdf[[1]]
+    opt_fdv = fdv
+  }
+
+  fdf = dplyr::bind_cols(tibble::tibble(y = yvec),opt_discdf)
+  fdfres = esp::fuzzyoverlay2("y ~ .",fdf,overlay)[[1]]
+  idvdf = dplyr::bind_cols(opt_discdf,fdfres)
+  idvvar = names(idvdf)
+  dummyidvdf = sdsfun::dummy_tbl(idvdf)
+  idvlevelvar = names(dummyidvdf)
+  dummyidvdf = dplyr::bind_cols(tibble::tibble(y = yvec),dummyidvdf)
+
+  get_idv = \(svar,listw,model,Durbin,bw,adaptive,kernel){
+    slmx = sapply(svar, function(x) {
+      matched = grep(paste0("^", x, "_"), idvlevelvar, value = TRUE)
+      res = paste(matched, collapse = "+")
+      return(unname(res))
+    })
+
+    suppressMessages({slm_res = purrr::map_dfc(slmx, \(.varname) {
+      slmformula = paste0("y ~ ",.varname)
+      suppressWarnings({if (model == "lag") {
+        g = spatialreg::lagsarlm(slmformula, dummyidvdf, listw,
+                                 Durbin = Durbin,zero.policy = TRUE)
+      } else if (model == "error") {
+        g = spatialreg::errorsarlm(slmformula, dummyidvdf, listw,
+                                   Durbin = Durbin,zero.policy = TRUE)
+      } else if (model == "gwr") {
+        dummyidvdf = sf::st_set_geometry(dummyidvdf,geom)
+        g = GWmodel3::gwr_basic(
+          slmformula, dummyidvdf, bw = bw, adaptive = adaptive, kernel = kernel
+        )
+      } else {
+        g = stats::lm(slmformula, dummyidvdf)
+      }})
+
+      if (model != "gwr") {
+        aicv = stats::AIC(g)
+        bicv = stats::AIC(g)
+        loglikv = as.numeric(stats::logLik(g))
+        fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        return(list("pred" = fity, "AIC" = aicv,
+                    "BIC" = bicv, "LogLik" = loglikv))
+      } else {
+        aicv = g$diagnostic$AIC
+        fity = stats::predict(g,dummyidvdf)$yhat
+        return(list("pred" = fity, "AIC" = aicv))
+      }
+    })})
+    return(slm_res)
+  }
+  if (doclust) {
+    slmres = parallel::parLapply(cores, idvvar, get_idv, listw = listw, model = model,
+                                 Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+  } else {
+    slmres = purrr::map(idvvar, get_idv, listw = listw, model = model,
+                        Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+  }
+  return(list("factor" = opt_fdv,"res" = sinres))
+  opt_idv = purrr::map_dfr(seq_along(qv),\(n) {
     qv_disc = qv[[n]][,"Qvalue",drop = TRUE]
     names(qv_disc) = allvarname
     idtype = purrr::pmap_chr(list(qv12 = qv_disc[Interactname],
@@ -292,19 +362,6 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
                           Qv12 = qv_disc[Interactname],
                           DiscNum = discnum[n]))
   })
-
-  if (length(y_pred) > 1){
-    suppressWarnings({opt_discnum = dplyr::group_split(g1$factor,Variable) |>
-      purrr::map_dbl(\(.df) gdverse::loess_optdiscnum(.df$Qvalue,
-                                                      .df$DiscNum)[1])})
-    opt_discdf = purrr::map_dfc(seq_along(opt_discnum),
-                                \(.n) {dn = which(discnum == opt_discnum[.n])
-                                return(dplyr::select(discdf[[dn]],
-                                                     dplyr::all_of(paste0("x",.n))))
-                                })
-  } else {
-    opt_discdf = discdf[[1]]
-  }
 
   get_slmlocal = \(zs,listw,model,Durbin,bw,adaptive,kernel){
     opt_discdf = opt_discdf[which(yzone == zs),]
@@ -351,20 +408,64 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     return(slm_res)
   }
   if (doclust) {
-    slmres = parallel::parLapply(cores, unique(yzone), get_slm, listw = listw, model = model,
+    slmres = parallel::parLapply(cores, unique(yzone), get_slmlocal, listw = listw, model = model,
                                  Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   } else {
-    slmres = purrr::map(unique(yzone), get_slm, listw = listw, model = model,
+    slmres = purrr::map(unique(yzone), get_slmlocal, listw = listw, model = model,
                         Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   }
 
-  res = list("factor" = fdv,
-             "interaction" = idv,
-             "pred" = y_pred,
-             "disc" = discdf,
+  y_pred = purrr::map(slmres, \(.df){
+    .res = dplyr::select(.df,dplyr::starts_with("pred"))
+    names(.res) = allvarname
+    return(.res)
+  })
+  aicv = purrr::map(slmres, \(.df){
+    .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("AIC")),1)
+    names(.res) = allvarname
+    return(.res)
+  })
+  if (model != "gwr") {
+    bicv = purrr::map(slmres, \(.df){
+      .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("BIC")),1)
+      names(.res) = allvarname
+      return(.res)
+    })
+    loglikv = purrr::map(slmres, \(.df){
+      .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("LogLik")),1)
+      names(.res) = allvarname
+      return(.res)
+    })
+    localqv = purrr::map_dfr(seq_along(y_pred),\(n){
+      qvalue = SLMQ(yvec,as.matrix(y_pred[[n]]))
+      resqv = tibble::tibble(Variable = names(aicv[[n]]),
+                             Qvalue = qvalue,
+                             AIC = as.numeric(aicv[[n]]),
+                             BIC = as.numeric(bicv[[n]]),
+                             LogLik = as.numeric(loglikv[[n]]),
+                             Zone = unique(yzone)[n])
+      return(resqv)
+    })} else {
+      localqv = purrr::map_dfr(seq_along(y_pred),\(n){
+        qvalue = SLMQ(yvec,as.matrix(y_pred[[n]]))
+        resqv = tibble::tibble(Variable = names(aicv[[n]]),
+                               Qvalue = qvalue,
+                               AIC = as.numeric(aicv[[n]]),
+                               Zone = unique(yzone)[n])
+        return(resqv)
+      })
+    }
+
+  res = list("factor" = opt_fdv,
+             "interaction" = opt_idv,
+             "optdisc" = opt_discdf,
+             "localq" = localqv,
              "y" = yvec,
+             "localzone" = yzone,
              "xvar" = xvarname,
-             "allvar" = allvarname)
+             "allvar" = allvarname,
+             "allfactor" = fdv)
+  class(res) = "espm"
   return(res)
 }
 
