@@ -10,7 +10,7 @@ esp_global(
   listw = NULL,
   discvar = "all",
   discnum = 3:8,
-  model = "lag",
+  model = "ols",
   Durbin = FALSE,
   overlay = "and",
   alpha = 0.75,
@@ -36,7 +36,7 @@ be discretized.}
 
 \item{discnum}{(optional) Number of discretization. Default all will use \code{3:8}.}
 
-\item{model}{(optional) The type of linear model used, default is \code{lag}. The \code{model} value must be any of
+\item{model}{(optional) The type of linear model used, default is \code{ols}. The \code{model} value must be any of
 \code{ols}, \code{lag} or \code{error}.}
 
 \item{Durbin}{(optional) Whether to consider spatial Durbin terms, default is \code{false}.}

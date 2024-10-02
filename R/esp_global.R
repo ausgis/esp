@@ -11,7 +11,7 @@
 #' variables are used as `discvar`. When `discvar` is set to `none`, all independent variables do not need to
 #' be discretized.
 #' @param discnum (optional) Number of discretization. Default all will use `3:8`.
-#' @param model (optional) The type of linear model used, default is `lag`. The `model` value must be any of
+#' @param model (optional) The type of linear model used, default is `ols`. The `model` value must be any of
 #' `ols`, `lag` or `error`.
 #' @param Durbin (optional) Whether to consider spatial Durbin terms, default is `false`.
 #' @param overlay (optional) Spatial overlay method. One of `and`, `or`, `intersection`. Default is `and`.
@@ -46,7 +46,7 @@
 #' g$factor
 #' }
 esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
-               model = 'lag', Durbin = FALSE, overlay = 'and', alpha = 0.75,
+               model = 'ols', Durbin = FALSE, overlay = 'and', alpha = 0.75,
                bw = "AIC", adaptive = TRUE, kernel = "gaussian", cores = 1, ...) {
   if (!(model %in% c("ols","lag","error"))){
     stop("`model` must be one of `ols`,`lag` or `error`!")
