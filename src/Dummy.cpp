@@ -17,6 +17,26 @@ arma::ivec ArmaRunique(const arma::ivec& x) {
   return arma::conv_to<arma::ivec>::from(seen);
 }
 
+// Function to generate dummy variables for arma::vec
+// [[Rcpp::export]]
+arma::mat ArmaDummyVec(const arma::vec& vec) {
+  int n = vec.n_elem;  // Number of rows
+
+  // Get unique levels using ArmaRunique
+  arma::vec levels = arma::conv_to<arma::vec>::from(ArmaRunique(arma::conv_to<arma::ivec>::from(vec)));
+
+  int num_levels = levels.n_elem;  // Number of unique levels
+
+  // Create dummy variables (n-1 dummy variables)
+  arma::mat dummies(n, num_levels - 1, fill::zeros);
+
+  for (int level_idx = 0; level_idx < num_levels - 1; ++level_idx) {
+    dummies.col(level_idx) = arma::conv_to<arma::vec>::from(vec == levels(level_idx));
+  }
+
+  return dummies;  // Return the dummy variable matrix
+}
+
 // Function to generate dummy variables
 // [[Rcpp::export]]
 arma::mat ArmaDummyMat(const arma::imat& mat) {

@@ -22,6 +22,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ArmaDummyVec
+arma::mat ArmaDummyVec(const arma::vec& vec);
+RcppExport SEXP _esp_ArmaDummyVec(SEXP vecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type vec(vecSEXP);
+    rcpp_result_gen = Rcpp::wrap(ArmaDummyVec(vec));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ArmaDummyMat
 arma::mat ArmaDummyMat(const arma::imat& mat);
 RcppExport SEXP _esp_ArmaDummyMat(SEXP matSEXP) {
@@ -99,6 +110,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_esp_ArmaRunique", (DL_FUNC) &_esp_ArmaRunique, 1},
+    {"_esp_ArmaDummyVec", (DL_FUNC) &_esp_ArmaDummyVec, 1},
     {"_esp_ArmaDummyMat", (DL_FUNC) &_esp_ArmaDummyMat, 1},
     {"_esp_InteractionType", (DL_FUNC) &_esp_InteractionType, 3},
     {"_esp_ComputeR2", (DL_FUNC) &_esp_ComputeR2, 2},

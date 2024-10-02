@@ -5,6 +5,10 @@ ArmaRunique <- function(x) {
     .Call(`_esp_ArmaRunique`, x)
 }
 
+ArmaDummyVec <- function(vec) {
+    .Call(`_esp_ArmaDummyVec`, vec)
+}
+
 ArmaDummyMat <- function(mat) {
     .Call(`_esp_ArmaDummyMat`, mat)
 }
