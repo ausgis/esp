@@ -11,7 +11,8 @@
 #' variables are used as `discvar`. When `discvar` is set to `none`, all independent variables do not need to
 #' be discretized.
 #' @param discnum (optional) Number of discretization. Default all will use `3:8`.
-#' @param model (optional) The type of linear model used, with the spatial lag model as default.
+#' @param model (optional) The type of linear model used, default is `lag`. The `model` value must be any of
+#' `ols`, `lag` or `error`.
 #' @param Durbin (optional) Whether to consider spatial Durbin terms, default is `false`.
 #' @param overlay (optional) Spatial overlay method. One of `and`, `or`, `intersection`. Default is `and`.
 #' @param alpha (optional) Controlling the strength of spatial soft constraints, the larger the `alpha`,

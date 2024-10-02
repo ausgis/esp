@@ -36,7 +36,8 @@ be discretized.}
 
 \item{discnum}{(optional) Number of discretization. Default all will use \code{3:8}.}
 
-\item{model}{(optional) The type of linear model used, with the spatial lag model as default.}
+\item{model}{(optional) The type of linear model used, default is \code{lag}. The \code{model} value must be any of
+\code{ols}, \code{lag} or \code{error}.}
 
 \item{Durbin}{(optional) Whether to consider spatial Durbin terms, default is \code{false}.}
 
