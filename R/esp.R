@@ -1,8 +1,8 @@
-#' @title global stratified power
+#' @title enhanced stratified power
 #' @description
-#' Equivalent geographical detector q-statistic under a spatial linear regression framework on global scale.
+#' Equivalent geographical detector q-statistic under a spatial linear regression framework.
 #'
-#' @param formula A formula
+#' @param formula A formula for enhanced stratified power model.
 #' @param data An `sf` object of observation data. Please note that the column names of the independent
 #' variables should not be `all` or `none`.
 #' @param listw (optional) A `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
@@ -12,7 +12,7 @@
 #' be discretized.
 #' @param discnum (optional) Number of discretization. Default all will use `3:8`.
 #' @param model (optional) The type of linear model used, default is `ols`. The `model` value must be any of
-#' `ols`, `lag` or `error`.
+#' `ols`, `gwr`, `lag` or `error`.
 #' @param Durbin (optional) Whether to consider spatial Durbin terms, default is `false`.
 #' @param overlay (optional) Spatial overlay method. One of `and`, `or`, `intersection`. Default is `and`.
 #' @param alpha (optional) Controlling the strength of spatial soft constraints, the larger the `alpha`,
@@ -42,12 +42,12 @@
 #' depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
 #'   readr::read_csv() |>
 #'   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
-#' g = esp_global(Depression_prevelence ~ ., data = depression, cores = 6)
+#' g = esp(Depression_prevelence ~ ., data = depression, cores = 6)
 #' g$factor
 #' }
-esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
-               model = 'ols', Durbin = FALSE, overlay = 'and', alpha = 0.75,
-               bw = "AIC", adaptive = TRUE, kernel = "gaussian", cores = 1, ...) {
+esp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
+        model = 'ols', Durbin = FALSE, overlay = 'and', alpha = 0.75,
+        bw = "AIC", adaptive = TRUE, kernel = "gaussian", cores = 1, ...) {
   if (!(model %in% c("ols","gwr","lag","error"))){
     stop("`model` must be one of `ols`,`gwr`,`lag` or `error`!")
   }
@@ -210,7 +210,7 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
         return(list("pred" = fity, "AIC" = aicv,
                     "BIC" = bicv, "LogLik" = loglikv))
       } else {
-        aicv = gwr1$diagnostic$AIC
+        aicv = g$diagnostic$AIC
         fity = stats::predict(g,dummydf)$yhat
         return(list("pred" = fity, "AIC" = aicv))
       }
