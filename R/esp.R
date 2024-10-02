@@ -306,6 +306,58 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     opt_discdf = discdf[[1]]
   }
 
+  get_slmlocal = \(zs,listw,model,Durbin,bw,adaptive,kernel){
+    opt_discdf = opt_discdf[which(yzone == zs),]
+    dummydf = sdsfun::dummy_tbl(opt_discdf)
+    slmlevelvar = names(dummydf)
+    slmx = sapply(xvarname, function(x) {
+      matched = grep(paste0("^", x, "_"), slmlevelvar, value = TRUE)
+      res = paste(matched, collapse = "+")
+      return(unname(res))
+    })
+    dummydf = dplyr::bind_cols(tibble::tibble(y = yvec[which(yzone == zs)]),
+                               dummydf)
+
+    suppressMessages({slm_res = purrr::map_dfc(slmx, \(.varname) {
+      slmformula = paste0("y ~ ",.varname)
+      suppressWarnings({if (model == "lag") {
+        g = spatialreg::lagsarlm(slmformula, dummydf, listw,
+                                 Durbin = Durbin,zero.policy = TRUE)
+      } else if (model == "error") {
+        g = spatialreg::errorsarlm(slmformula, dummydf, listw,
+                                   Durbin = Durbin,zero.policy = TRUE)
+      } else if (model == "gwr") {
+        dummydf = sf::st_set_geometry(dummydf,geom)
+        g = GWmodel3::gwr_basic(
+          slmformula, dummydf, bw = bw, adaptive = adaptive, kernel = kernel
+        )
+      } else {
+        g = stats::lm(slmformula, dummydf)
+      }})
+
+      if (model != "gwr") {
+        aicv = stats::AIC(g)
+        bicv = stats::AIC(g)
+        loglikv = as.numeric(stats::logLik(g))
+        fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        return(list("pred" = fity, "AIC" = aicv,
+                    "BIC" = bicv, "LogLik" = loglikv))
+      } else {
+        aicv = g$diagnostic$AIC
+        fity = stats::predict(g,dummydf)$yhat
+        return(list("pred" = fity, "AIC" = aicv))
+      }
+    })})
+    return(slm_res)
+  }
+  if (doclust) {
+    slmres = parallel::parLapply(cores, unique(yzone), get_slm, listw = listw, model = model,
+                                 Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+  } else {
+    slmres = purrr::map(unique(yzone), get_slm, listw = listw, model = model,
+                        Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+  }
+
   res = list("factor" = fdv,
              "interaction" = idv,
              "pred" = y_pred,
