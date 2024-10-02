@@ -48,6 +48,9 @@
 esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
                model = 'lag', Durbin = FALSE, overlay = 'and', alpha = 0.75,
                bw = "AIC", adaptive = TRUE, kernel = "gaussian", cores = 1, ...) {
+  if (!(model %in% c("ols","lag","error"))){
+    stop("`model` must be one of `ols`,`lag` or `error`!")
+  }
   doclust = FALSE
   if (inherits(cores, "cluster")) {
     doclust = TRUE

@@ -26,7 +26,7 @@
 #'
 fuzzyoverlay2 = \(formula, data, method = "and"){
   if (!(method %in% c("and","or","intersection"))){
-    stop("`method` must `and`,`or` or `intersection`!")
+    stop("`method` must be one of `and`,`or` or `intersection`!")
   }
   formula = stats::as.formula(formula)
   formula.vars = all.vars(formula)
