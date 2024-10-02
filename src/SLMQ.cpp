@@ -101,8 +101,8 @@ Rcpp::DataFrame SLMLocalQ(const arma::vec& Y,
       double r2 = ComputeR2(Y_zone, y_pred);     // Compute R-squared for the current column
 
       // Ensure R-squared is between 0 and 1
-      if (r2 < 0) r2 = 0.0;
-      if (r2 > 1) r2 = 1.0;
+      // if (r2 < 0) r2 = 0.0;
+      // if (r2 > 1) r2 = 1.0;
 
       r_squared_matrix(j, i) = r2;               // Store the adjusted R-squared value
     }

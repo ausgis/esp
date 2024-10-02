@@ -45,9 +45,9 @@
 #' g = esp(Depression_prevelence ~ ., data = depression, cores = 6)
 #' g$factor
 #' }
-esp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
-        model = 'ols', Durbin = FALSE, overlay = 'and', alpha = 0.75,
-        bw = "AIC", adaptive = TRUE, kernel = "gaussian", cores = 1, ...) {
+esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:8,
+        model = 'ols', Durbin = FALSE, overlay = 'and', alpha = 0.75, bw = "AIC",
+        adaptive = TRUE, kernel = "gaussian", increase_rate = 0.05, cores = 1, ...) {
   if (!(model %in% c("ols","gwr","lag","error"))){
     stop("`model` must be one of `ols`,`gwr`,`lag` or `error`!")
   }
