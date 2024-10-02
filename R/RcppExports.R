@@ -17,6 +17,10 @@ InteractionType <- function(qv12, qv1, qv2) {
     .Call(`_esp_InteractionType`, qv12, qv1, qv2)
 }
 
+GenTau <- function(n) {
+    .Call(`_esp_GenTau`, n)
+}
+
 ComputeR2 <- function(y, y_pred) {
     .Call(`_esp_ComputeR2`, y, y_pred)
 }
