@@ -172,7 +172,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     names(discdf) = paste0('x',seq_along(discdf))
     discdf = list(discdf)
   }
-  return(discdf)
+
   get_slm = \(n,listw,model,Durbin,bw,adaptive,kernel){
     slmvar = names(discdf[[n]])
     dummydf = sdsfun::dummy_tbl(discdf[[n]])
