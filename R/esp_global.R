@@ -7,8 +7,9 @@
 #' variables should not be `all` or `none`.
 #' @param listw (optional) A `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
 #' @param discvar (optional) Name of continuous variable columns that need to be discretized. Noted that
-#' when `formula` has `discvar`, `data` must have these columns. By default, all independent variables are
-#' used as `discvar`.
+#' when `formula` has `discvar`, `data` must have these columns. Default is `all`, which means all independent
+#' variables are used as `discvar`. When `discvar` is set to `none`, all independent variables do not need to
+#' be discretized.
 #' @param discnum (optional) Number of discretization. Default all will use `3:8`.
 #' @param model (optional) The type of linear model used, with the spatial lag model as default.
 #' @param Durbin (optional) Whether to consider spatial Durbin terms, default is `false`.

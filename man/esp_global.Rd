@@ -30,8 +30,9 @@ variables should not be \code{all} or \code{none}.}
 \item{listw}{(optional) A \code{listw}. See \code{spdep::mat2listw()} and \code{spdep::nb2listw()} for details.}
 
 \item{discvar}{(optional) Name of continuous variable columns that need to be discretized. Noted that
-when \code{formula} has \code{discvar}, \code{data} must have these columns. By default, all independent variables are
-used as \code{discvar}.}
+when \code{formula} has \code{discvar}, \code{data} must have these columns. Default is \code{all}, which means all independent
+variables are used as \code{discvar}. When \code{discvar} is set to \code{none}, all independent variables do not need to
+be discretized.}
 
 \item{discnum}{(optional) Number of discretization. Default all will use \code{3:8}.}
 
