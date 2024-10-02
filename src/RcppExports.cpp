@@ -11,6 +11,18 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// QuantileDisc
+Rcpp::NumericVector QuantileDisc(const arma::vec& x, int n);
+RcppExport SEXP _esp_QuantileDisc(SEXP xSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(QuantileDisc(x, n));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ArmaRunique
 arma::ivec ArmaRunique(const arma::ivec& x);
 RcppExport SEXP _esp_ArmaRunique(SEXP xSEXP) {
@@ -120,6 +132,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_esp_QuantileDisc", (DL_FUNC) &_esp_QuantileDisc, 2},
     {"_esp_ArmaRunique", (DL_FUNC) &_esp_ArmaRunique, 1},
     {"_esp_ArmaDummyVec", (DL_FUNC) &_esp_ArmaDummyVec, 1},
     {"_esp_ArmaDummyMat", (DL_FUNC) &_esp_ArmaDummyMat, 1},
