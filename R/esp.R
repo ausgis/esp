@@ -80,6 +80,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     listw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
   }
 
+  if (is.null(yzone)) {
+    yzone = QuantileDisc(yvec,3)
+  }
+
   if (discvar == "all"){
     xdiscname = xname
     xundiscname = NULL
@@ -288,6 +292,19 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
                           Qv12 = qv_disc[Interactname],
                           DiscNum = discnum[n]))
   })
+
+  if (length(y_pred) > 1){
+    suppressWarnings({opt_discnum = dplyr::group_split(g1$factor,Variable) |>
+      purrr::map_dbl(\(.df) gdverse::loess_optdiscnum(.df$Qvalue,
+                                                      .df$DiscNum)[1])})
+    opt_discdf = purrr::map_dfc(seq_along(opt_discnum),
+                                \(.n) {dn = which(discnum == opt_discnum[.n])
+                                return(dplyr::select(discdf[[dn]],
+                                                     dplyr::all_of(paste0("x",.n))))
+                                })
+  } else {
+    opt_discdf = discdf[[1]]
+  }
 
   res = list("factor" = fdv,
              "interaction" = idv,
