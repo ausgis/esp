@@ -478,10 +478,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
 #' @export
 #' @noRd
 print.espm = \(x, ...) {
-  cat("***           Enhanced Stratified Power     ")
+  cat("***           Enhanced Stratified Power     \n")
   cat("\n --------- Global Power of Determinat : --------\n")
   print(x$factor)
   cat("\n -------- Global Variable Interaction : --------\n")
   print(dplyr::select(x$interaction,1:2))
-  cat("\n The others can be accessed through specific subsets of the epsm object.")
+  cat("\n### The others can be accessed through specific subsets of the epsm object.\n")
 }
