@@ -290,7 +290,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
   } else {
     opt_discnum = NULL
     opt_discdf = discdf[[1]]
-    opt_fdv = fdv
+    opt_fdv = dplyr::select(fdv,-DiscNum)
   }
 
   fdf = dplyr::bind_cols(tibble::tibble(y = yvec),opt_discdf)
