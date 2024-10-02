@@ -195,14 +195,12 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
 
       aicv = stats::AIC(g)
       loglikv = as.numeric(stats::logLik(g))
+      fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+      g = summary(g)
       if (model == "ols") {
-        fity = g$fitted.values
-        g = summary(g)
         pv = suppressWarnings(stats::pf(g$fstatistic[1],g$fstatistic[2],
                                         g$fstatistic[3],lower.tail = FALSE))
       } else {
-        fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
-        g = summary(g)
         pv = as.numeric(g$LR1$p.value)
       }
       return(list("pred" = fity, "pvalue" = pv,
