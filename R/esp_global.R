@@ -1,4 +1,6 @@
-#' equivalent geographical detector under spatial linear regression framework
+#' @title global stratified power
+#' @description
+#' Equivalent geographical detector q-statistic under a spatial linear regression framework.
 #'
 #' @param formula A formula
 #' @param data An `sf` object of observation data.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/esp_global.R
 \name{esp_global}
 \alias{esp_global}
-\title{equivalent geographical detector under spatial linear regression framework}
+\title{global stratified power}
 \usage{
 esp_global(
   formula,
@@ -68,7 +68,7 @@ A list.
 }
 }
 \description{
-equivalent geographical detector under spatial linear regression framework
+Equivalent geographical detector q-statistic under a spatial linear regression framework.
 }
 \examples{
 \dontrun{
