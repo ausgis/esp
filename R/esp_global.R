@@ -162,7 +162,10 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
   } else {
     discnum = 0
     xvarname = xundiscname
-    discdf = list(dplyr::select(data,dplyr::all_of(c(yname,xvarname))))
+    discdf = data |>
+      sf::st_drop_geometry() |>
+      dplyr::select(dplyr::all_of(c(yname,xvarname)))
+    discdf = list(discdf)
   }
 
   get_slm = \(n,listw,model,Durbin){
