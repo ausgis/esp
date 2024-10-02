@@ -150,8 +150,8 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
         tidyr::pivot_wider(names_from = xname,
                            values_from = disc) |>
         dplyr::select(-rowid)
-      names(.res) = paste0('x',seq_along(.res))
       if (!is.null(undiscdf)){.res = dplyr::bind_cols(.res,undiscdf)}
+      names(.res) = paste0('x',seq_along(.res)) # fix #6
       fdf = dplyr::bind_cols(tibble::tibble(y = yvec),.res)
       fdfres = esp::fuzzyoverlay2("y ~ .",fdf,overlay)[[1]]
       res = dplyr::bind_cols(.res,fdfres)
@@ -168,11 +168,12 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
     discdf = data |>
       sf::st_drop_geometry() |>
       dplyr::select(dplyr::all_of(c(yname,xvarname)))
+    names(discdf) = paste0('x',seq_along(discdf)) # fix #6
     fdf = dplyr::bind_cols(tibble::tibble(y = yvec),discdf)
     fdfres = esp::fuzzyoverlay2("y ~ .",fdf,overlay)[[1]]
     discdf = list(dplyr::bind_cols(discdf,fdfres))
   }
-
+  return(discdf)
   get_slm = \(n,listw,model,Durbin){
     slmvar = names(discdf[[n]])
     dummydf = sdsfun::dummy_tbl(discdf[[n]])
