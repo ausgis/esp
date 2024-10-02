@@ -1,1 +1,1 @@
-utils::globalVariables(c("disc","rowid","simres"))
+utils::globalVariables(c("disc","rowid","simres","DiscNum","Variable"))
