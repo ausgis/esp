@@ -276,6 +276,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
   }
 
   fdv = purrr::list_rbind(qv)
+  fdv$Variable = factor(fdv$Variable,levels = xvarname)
 
   if (length(y_pred) > 1){
     suppressWarnings({opt_discnum = dplyr::group_split(fdv,Variable) |>
