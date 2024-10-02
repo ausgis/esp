@@ -1,6 +1,8 @@
 #' @title global stratified power
 #' @description
 #' Equivalent geographical detector q-statistic under a spatial linear regression framework.
+#' @note
+#' The column names of the independent variables should not be `all` or `none`.
 #'
 #' @param formula A formula
 #' @param data An `sf` object of observation data.
@@ -42,7 +44,7 @@
 #' g = esp_global(Depression_prevelence ~ ., data = depression, cores = 6)
 #' g$factor
 #' }
-esp_global = \(formula, data, listw = NULL, discvar = NULL, discnum = 3:8,
+esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
                model = 'lag', Durbin = FALSE, overlay = 'and', alpha = 0.75,
                bw = "AIC", adaptive = TRUE, kernel = "gaussian", cores = 1, ...) {
   doclust = FALSE
