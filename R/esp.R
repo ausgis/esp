@@ -361,14 +361,15 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
                            Qv1 = qv_disc[variable1],
                            Qv2 = qv_disc[variable2],
                            Qv12 = qv_disc[Interactname])
-  return(list("factor" = opt_fdv,
-              "interaction" = opt_idv))
 
-  get_slmlocal = \(zs,listw,model,Durbin,bw,adaptive,kernel){
+  get_slmlocal = \(zs,model,Durbin,bw,adaptive,kernel){
     opt_discdf = opt_discdf[which(yzone == zs),]
+    listw = spdep::nb2listw(sdsfun::spdep_nb(data[which(yzone == zs),]),
+                            style = "W", zero.policy = TRUE)
+    geom = sf::st_geometry(data[which(yzone == zs),])
     dummydf = sdsfun::dummy_tbl(opt_discdf)
     slmlevelvar = names(dummydf)
-    slmx = sapply(xvarname, function(x) {
+    slmx = sapply(names(opt_discdf), function(x) {
       matched = grep(paste0("^", x, "_"), slmlevelvar, value = TRUE)
       res = paste(matched, collapse = "+")
       return(unname(res))
@@ -409,12 +410,13 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     return(slm_res)
   }
   if (doclust) {
-    slmres = parallel::parLapply(cores, unique(yzone), get_slmlocal, listw = listw, model = model,
-                                 Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+    slmres = parallel::parLapply(cores, unique(yzone), get_slmlocal, model = model, Durbin = Durbin,
+                                 bw = bw, adaptive = adaptive, kernel = kernel)
   } else {
-    slmres = purrr::map(unique(yzone), get_slmlocal, listw = listw, model = model,
-                        Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+    slmres = purrr::map(unique(yzone), get_slmlocal, model = model, Durbin = Durbin,
+                        bw = bw, adaptive = adaptive, kernel = kernel)
   }
+  return(slmres)
 
   y_pred = purrr::map(slmres, \(.df){
     .res = dplyr::select(.df,dplyr::starts_with("pred"))
