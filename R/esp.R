@@ -483,5 +483,5 @@ print.espm = \(x, ...) {
   print(x$factor)
   cat("\n ---------- Global Variable Interaction : ----------\n")
   print(dplyr::select(x$interaction,1:2))
-  cat("\n### The others can be accessed through specific subsets of the epsm object.\n")
+  cat("\n# The others can be accessed through specific subsets of the epsm object.\n")
 }
