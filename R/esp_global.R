@@ -68,7 +68,7 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
   gname = sdsfun::sf_geometry_name(data)
   xname = colnames(data)[-which(colnames(data) %in% c(yname,gname))]
 
-  if (c("all","none") %in% xname) {
+  if (any(c("all","none") %in% xname)) {
     stop("The column names of the independent variables should not be `all` or `none`.")
   }
 
