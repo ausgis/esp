@@ -7,9 +7,9 @@
 esp_global(
   formula,
   data,
+  listw = NULL,
   discvar = NULL,
   discnum = 3:8,
-  listw = NULL,
   model = "lag",
   Durbin = FALSE,
   overlay = "and",
@@ -26,13 +26,13 @@ esp_global(
 
 \item{data}{An \code{sf} object of observation data.}
 
+\item{listw}{(optional) A \code{listw}. See \code{spdep::mat2listw()} and \code{spdep::nb2listw()} for details.}
+
 \item{discvar}{(optional) Name of continuous variable columns that need to be discretized. Noted that
 when \code{formula} has \code{discvar}, \code{data} must have these columns. By default, all independent variables are
 used as \code{discvar}.}
 
 \item{discnum}{(optional) Number of discretization. Default all will use \code{3:8}.}
-
-\item{listw}{(optional) A \code{listw}. See \code{spdep::mat2listw()} and \code{spdep::nb2listw()} for details.}
 
 \item{model}{(optional) The type of linear model used, with the spatial lag model as default.}
 

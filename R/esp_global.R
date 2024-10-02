@@ -2,11 +2,11 @@
 #'
 #' @param formula A formula
 #' @param data An `sf` object of observation data.
+#' @param listw (optional) A `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
 #' @param discvar (optional) Name of continuous variable columns that need to be discretized. Noted that
 #' when `formula` has `discvar`, `data` must have these columns. By default, all independent variables are
 #' used as `discvar`.
 #' @param discnum (optional) Number of discretization. Default all will use `3:8`.
-#' @param listw (optional) A `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
 #' @param model (optional) The type of linear model used, with the spatial lag model as default.
 #' @param Durbin (optional) Whether to consider spatial Durbin terms, default is `false`.
 #' @param overlay (optional) Spatial overlay method. One of `and`, `or`, `intersection`. Default is `and`.
@@ -40,7 +40,7 @@
 #' g = esp_global(Depression_prevelence ~ ., data = depression, cores = 6)
 #' g$factor
 #' }
-esp_global = \(formula, data, discvar = NULL, discnum = 3:8, listw = NULL,
+esp_global = \(formula, data, listw = NULL, discvar = NULL, discnum = 3:8,
                model = 'lag', Durbin = FALSE, overlay = 'and', alpha = 0.75,
                bw = "AIC", adaptive = TRUE, kernel = "gaussian", cores = 1, ...) {
   doclust = FALSE
