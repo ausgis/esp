@@ -8,7 +8,7 @@ esp_global(
   formula,
   data,
   listw = NULL,
-  discvar = NULL,
+  discvar = "all",
   discnum = 3:8,
   model = "lag",
   Durbin = FALSE,
@@ -24,7 +24,8 @@ esp_global(
 \arguments{
 \item{formula}{A formula}
 
-\item{data}{An \code{sf} object of observation data.}
+\item{data}{An \code{sf} object of observation data. Please note that the column names of the independent
+variables should not be \code{all} or \code{none}.}
 
 \item{listw}{(optional) A \code{listw}. See \code{spdep::mat2listw()} and \code{spdep::nb2listw()} for details.}
 
