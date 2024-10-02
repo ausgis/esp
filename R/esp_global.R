@@ -165,7 +165,9 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
     discdf = data |>
       sf::st_drop_geometry() |>
       dplyr::select(dplyr::all_of(c(yname,xvarname)))
-    discdf = list(discdf)
+    fdf = dplyr::bind_cols(tibble::tibble(y = yvec),discdf)
+    fdfres = esp::fuzzyoverlay2("y ~ .",fdf,overlay)[[1]]
+    discdf = list(dplyr::bind_cols(discdf,fdfres))
   }
 
   get_slm = \(n,listw,model,Durbin){
