@@ -473,3 +473,14 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
   class(res) = "espm"
   return(res)
 }
+
+#' @title print esp model
+#' @export
+#' @noRd
+print.espm = \(x, ...) {
+  cat("***           Enhanced Stratified Power     ")
+  cat("\n --------- Global Power of Determinat : --------\n")
+  print(x$factor)
+  cat("\n -------- Global Variable Interaction : --------\n")
+  print(dplyr::select(x$interaction,1:2))
+}
