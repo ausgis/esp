@@ -178,7 +178,7 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
     dummydf = sdsfun::dummy_tbl(discdf[[n]])
     slmlevelvar = names(dummydf)
     slmx = sapply(slmvar, function(x) {
-      matched = grep(paste0("^", x), slmlevelvar, value = TRUE)
+      matched = grep(paste0("^", x, "_"), slmlevelvar, value = TRUE)
       res = paste(matched, collapse = "+")
       return(unname(res))
     })
