@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // QuantileDisc
-Rcpp::NumericVector QuantileDisc(const arma::vec& x, int n);
+Rcpp::IntegerVector QuantileDisc(const arma::vec& x, int n);
 RcppExport SEXP _esp_QuantileDisc(SEXP xSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

@@ -5,7 +5,7 @@ using namespace arma;
 // [[Rcpp::depends(RcppArmadillo)]]
 
 // [[Rcpp::export]]
-Rcpp::NumericVector QuantileDisc(const arma::vec& x, int n) {
+Rcpp::IntegerVector QuantileDisc(const arma::vec& x, int n) {
   // Ensure n > 0
   if (n <= 0) {
     Rcpp::stop("n must be greater than 0");
@@ -14,8 +14,8 @@ Rcpp::NumericVector QuantileDisc(const arma::vec& x, int n) {
   // Get the size of the vector
   int size = x.n_elem;
 
-  // Create a NumericVector to store the results
-  Rcpp::NumericVector result(size);
+  // Create an IntegerVector to store the results
+  Rcpp::IntegerVector result(size);
 
   // Calculate quantile cut points
   arma::vec quantiles = arma::quantile(x, arma::linspace<arma::vec>(0.0, 1.0, n + 1));
