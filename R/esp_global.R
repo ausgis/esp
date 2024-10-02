@@ -48,8 +48,8 @@
 esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
                model = 'ols', Durbin = FALSE, overlay = 'and', alpha = 0.75,
                bw = "AIC", adaptive = TRUE, kernel = "gaussian", cores = 1, ...) {
-  if (!(model %in% c("ols","lag","error"))){
-    stop("`model` must be one of `ols`,`lag` or `error`!")
+  if (!(model %in% c("ols","gwr","lag","error"))){
+    stop("`model` must be one of `ols`,`gwr`,`lag` or `error`!")
   }
   doclust = FALSE
   if (inherits(cores, "cluster")) {
@@ -174,7 +174,7 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
     discdf = list(dplyr::bind_cols(discdf,fdfres))
   }
 
-  get_slm = \(n,listw,model,Durbin){
+  get_slm = \(n,listw,model,Durbin,bw,adaptive,kernel){
     slmvar = names(discdf[[n]])
     dummydf = sdsfun::dummy_tbl(discdf[[n]])
     slmlevelvar = names(dummydf)
@@ -193,25 +193,36 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
       } else if (model == "error") {
         g = spatialreg::errorsarlm(slmformula, dummydf, listw,
                                    Durbin = Durbin,zero.policy = TRUE)
+      } else if (model == "gwr") {
+        dummydf = sf::st_set_geometry(dummydf,geom)
+        g = GWmodel3::gwr_basic(
+          slmformula, dummydf, bw = bw, adaptive = adaptive, kernel = kernel
+        )
       } else {
         g = stats::lm(slmformula, dummydf)
       }})
-      aicv = stats::AIC(g)
-      bicv = stats::AIC(g)
-      loglikv = as.numeric(stats::logLik(g))
-      fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
-      return(list("pred" = fity, "AIC" = aicv,
-                  "BIC" = bicv, "LogLik" = loglikv))
+
+      if (model != "gwr") {
+        aicv = stats::AIC(g)
+        bicv = stats::AIC(g)
+        loglikv = as.numeric(stats::logLik(g))
+        fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        return(list("pred" = fity, "AIC" = aicv,
+                    "BIC" = bicv, "LogLik" = loglikv))
+      } else {
+        aicv = gwr1$diagnostic$AIC
+        fity = stats::predict(g,dummydf)$yhat
+        return(list("pred" = fity, "AIC" = aicv))
+      }
     })})
     return(slm_res)
   }
   if (doclust) {
-    slmres = parallel::parLapply(cores, seq_along(discdf),
-                                 get_slm, listw = listw,
-                                 model = model, Durbin = Durbin)
+    slmres = parallel::parLapply(cores, seq_along(discdf), get_slm, listw = listw, model = model,
+                                 Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   } else {
-    slmres = purrr::map(seq_along(discdf), get_slm, listw = listw,
-                        model = model, Durbin = Durbin)
+    slmres = purrr::map(seq_along(discdf), get_slm, listw = listw, model = model,
+                        Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   }
 
   xinteract = utils::combn(xvarname,2,simplify = FALSE)
@@ -221,36 +232,46 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
   Interactname = paste0(variable1,IntersectionSymbol,variable2)
   allvarname = c(xvarname,Interactname)
 
-  aicv = purrr::map(slmres, \(.df){
-    .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("AIC")),1)
-    names(.res) = allvarname
-    return(.res)
-  })
-  bicv = purrr::map(slmres, \(.df){
-    .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("BIC")),1)
-    names(.res) = allvarname
-    return(.res)
-  })
-  loglikv = purrr::map(slmres, \(.df){
-    .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("LogLik")),1)
-    names(.res) = allvarname
-    return(.res)
-  })
   y_pred = purrr::map(slmres, \(.df){
     .res = dplyr::select(.df,dplyr::starts_with("pred"))
     names(.res) = allvarname
     return(.res)
   })
-  qv = purrr::map(seq_along(y_pred),\(n){
-    qvalue = SLMQ(as.matrix(y_pred[[n]]),yvec)
-    resqv = tibble::tibble(Variable = names(aicv[[n]]),
-                           Qvalue = qvalue,
-                           AIC = as.numeric(aicv[[n]]),
-                           BIC = as.numeric(bicv[[n]]),
-                           LogLik = as.numeric(loglikv[[n]]),
-                           DiscNum = discnum[n])
-    return(resqv)
+  aicv = purrr::map(slmres, \(.df){
+    .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("AIC")),1)
+    names(.res) = allvarname
+    return(.res)
   })
+  if (model != "gwr") {
+    bicv = purrr::map(slmres, \(.df){
+      .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("BIC")),1)
+      names(.res) = allvarname
+      return(.res)
+    })
+    loglikv = purrr::map(slmres, \(.df){
+      .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("LogLik")),1)
+      names(.res) = allvarname
+      return(.res)
+    })
+    qv = purrr::map(seq_along(y_pred),\(n){
+      qvalue = SLMQ(yvec,as.matrix(y_pred[[n]]))
+      resqv = tibble::tibble(Variable = names(aicv[[n]]),
+                             Qvalue = qvalue,
+                             AIC = as.numeric(aicv[[n]]),
+                             BIC = as.numeric(bicv[[n]]),
+                             LogLik = as.numeric(loglikv[[n]]),
+                             DiscNum = discnum[n])
+    return(resqv)
+    })} else {
+      qv = purrr::map(seq_along(y_pred),\(n){
+        qvalue = SLMQ(yvec,as.matrix(y_pred[[n]]))
+        resqv = tibble::tibble(Variable = names(aicv[[n]]),
+                               Qvalue = qvalue,
+                               AIC = as.numeric(aicv[[n]]),
+                               DiscNum = discnum[n])
+        return(resqv)
+      })
+  }
 
   fdv = purrr::map_dfr(seq_along(qv),\(n) qv[[n]][seq_along(xvarname),])
   idv = purrr::map_dfr(seq_along(qv),\(n) {
