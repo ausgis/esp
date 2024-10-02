@@ -25,6 +25,9 @@
 #' fo3
 #'
 fuzzyoverlay2 = \(formula, data, method = "and"){
+  if (!(method %in% c("and","or","intersection"))){
+    stop("`method` must `and`,`or` or `intersection`!")
+  }
   formula = stats::as.formula(formula)
   formula.vars = all.vars(formula)
   if (formula.vars[2] != "."){
@@ -36,7 +39,7 @@ fuzzyoverlay2 = \(formula, data, method = "and"){
   variable1 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][1])
   variable2 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][2])
 
-  if (method == 'intersection'){
+  if (method == "intersection"){
     suppressMessages({res = purrr::map2_dfc(variable1,variable2, \(.v1,.v2) {
       dti = dplyr::select(data, dplyr::all_of(c(.v1,.v2)))
       resout = purrr::reduce(dti,paste,sep = '_')
