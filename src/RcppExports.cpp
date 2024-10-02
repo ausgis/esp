@@ -118,7 +118,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // SLMLocalQ
-Rcpp::List SLMLocalQ(const arma::vec& Y, const arma::mat& FitY, const arma::ivec& Zones);
+Rcpp::DataFrame SLMLocalQ(const arma::vec& Y, const arma::mat& FitY, const arma::ivec& Zones);
 RcppExport SEXP _esp_SLMLocalQ(SEXP YSEXP, SEXP FitYSEXP, SEXP ZonesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

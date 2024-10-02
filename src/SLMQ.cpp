@@ -69,15 +69,15 @@ Rcpp::NumericVector SLMQ(const arma::vec& Y, const arma::mat& FitY) {
 
 // Function to compute R-squared for each group defined by Zones
 // [[Rcpp::export]]
-Rcpp::List SLMLocalQ(const arma::vec& Y,
-                     const arma::mat& FitY,
-                     const arma::ivec& Zones) {
-  // Get unique levels in Zones using ArmaRunique
-  arma::ivec unique_zones = ArmaRunique(Zones);
+Rcpp::DataFrame SLMLocalQ(const arma::vec& Y,
+                          const arma::mat& FitY,
+                          const arma::ivec& Zones) {
+  // Get unique levels in Zones
+  arma::ivec unique_zones = arma::unique(Zones);
   int n_zones = unique_zones.n_elem; // Number of unique zones
   int n_cols = FitY.n_cols;          // Number of columns in FitY
 
-  // Create a list to store the R-squared vectors for each zone
+  // Create a list to store R-squared vectors for each zone
   Rcpp::List results(n_zones);
 
   // Loop through each unique zone
@@ -105,8 +105,20 @@ Rcpp::List SLMLocalQ(const arma::vec& Y,
     results[i] = r_squared_values;
   }
 
-  // Return the list of R-squared values for each zone
-  return results;
+  // Create a DataFrame to store the results
+  Rcpp::DataFrame df = Rcpp::DataFrame::create();
+
+  // Loop through each zone and add columns to the DataFrame
+  for (int i = 0; i < n_zones; ++i) {
+    // Create column name
+    std::string col_name = "zones_" + std::to_string(unique_zones[i]);
+
+    // Add the R-squared values to the DataFrame
+    df[col_name] = results[i];
+  }
+
+  // Return the DataFrame of R-squared values for each zone
+  return df;
 }
 
 // // Function to compute R-squared for each group defined by Zones
