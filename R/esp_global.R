@@ -161,7 +161,7 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
   } else {
     discnum = 0
     xvarname = xundiscname
-    discdf = dplyr::select(data,dplyr::all_of(c(yname,xvarname)))
+    discdf = list(dplyr::select(data,dplyr::all_of(c(yname,xvarname))))
   }
 
   get_slm = \(n,listw,model,Durbin){
