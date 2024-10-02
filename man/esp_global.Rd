@@ -71,7 +71,7 @@ A list.
 }
 }
 \description{
-Equivalent geographical detector q-statistic under a spatial linear regression framework.
+Equivalent geographical detector q-statistic under a spatial linear regression framework on global scale.
 }
 \examples{
 \dontrun{
