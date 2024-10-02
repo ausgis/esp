@@ -44,7 +44,7 @@ double ComputeLocalR2(const arma::vec& y, const arma::vec& y_pred, double Ymean)
 
 
 // [[Rcpp::export]]
-Rcpp::NumericVector SLMQ(const arma::mat& FitY, const arma::vec& Y) {
+Rcpp::NumericVector SLMQ(const arma::vec& Y, const arma::mat& FitY) {
   // Get the number of columns in FitY
   int n_cols = FitY.n_cols;
 
@@ -70,8 +70,8 @@ Rcpp::NumericVector SLMQ(const arma::mat& FitY, const arma::vec& Y) {
 // Function to compute R-squared for each group defined by Zones
 // and return the result as a DataFrame with dynamic column names
 // [[Rcpp::export]]
-Rcpp::DataFrame SLMLocalQ(const arma::mat& FitY,
-                          const arma::vec& Y,
+Rcpp::DataFrame SLMLocalQ(const arma::vec& Y,
+                          const arma::mat& FitY,
                           const arma::ivec& Zones) {
   // Get unique levels in Zones using ArmaRunique
   arma::ivec unique_zones = ArmaRunique(Zones);

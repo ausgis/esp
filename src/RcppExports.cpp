@@ -106,27 +106,27 @@ BEGIN_RCPP
 END_RCPP
 }
 // SLMQ
-Rcpp::NumericVector SLMQ(const arma::mat& FitY, const arma::vec& Y);
-RcppExport SEXP _esp_SLMQ(SEXP FitYSEXP, SEXP YSEXP) {
+Rcpp::NumericVector SLMQ(const arma::vec& Y, const arma::mat& FitY);
+RcppExport SEXP _esp_SLMQ(SEXP YSEXP, SEXP FitYSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type FitY(FitYSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type Y(YSEXP);
-    rcpp_result_gen = Rcpp::wrap(SLMQ(FitY, Y));
+    Rcpp::traits::input_parameter< const arma::mat& >::type FitY(FitYSEXP);
+    rcpp_result_gen = Rcpp::wrap(SLMQ(Y, FitY));
     return rcpp_result_gen;
 END_RCPP
 }
 // SLMLocalQ
-Rcpp::DataFrame SLMLocalQ(const arma::mat& FitY, const arma::vec& Y, const arma::ivec& Zones);
-RcppExport SEXP _esp_SLMLocalQ(SEXP FitYSEXP, SEXP YSEXP, SEXP ZonesSEXP) {
+Rcpp::DataFrame SLMLocalQ(const arma::vec& Y, const arma::mat& FitY, const arma::ivec& Zones);
+RcppExport SEXP _esp_SLMLocalQ(SEXP YSEXP, SEXP FitYSEXP, SEXP ZonesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type FitY(FitYSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type FitY(FitYSEXP);
     Rcpp::traits::input_parameter< const arma::ivec& >::type Zones(ZonesSEXP);
-    rcpp_result_gen = Rcpp::wrap(SLMLocalQ(FitY, Y, Zones));
+    rcpp_result_gen = Rcpp::wrap(SLMLocalQ(Y, FitY, Zones));
     return rcpp_result_gen;
 END_RCPP
 }

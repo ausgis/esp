@@ -33,11 +33,11 @@ ComputeLocalR2 <- function(y, y_pred, Ymean) {
     .Call(`_esp_ComputeLocalR2`, y, y_pred, Ymean)
 }
 
-SLMQ <- function(FitY, Y) {
-    .Call(`_esp_SLMQ`, FitY, Y)
+SLMQ <- function(Y, FitY) {
+    .Call(`_esp_SLMQ`, Y, FitY)
 }
 
-SLMLocalQ <- function(FitY, Y, Zones) {
-    .Call(`_esp_SLMLocalQ`, FitY, Y, Zones)
+SLMLocalQ <- function(Y, FitY, Zones) {
+    .Call(`_esp_SLMLocalQ`, Y, FitY, Zones)
 }
 
