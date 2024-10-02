@@ -19,6 +19,7 @@ Depends:
 Imports: 
     ClustGeo,
     dplyr,
+    gdverse,
     GWmodel3,
     magrittr,
     parallel,
@@ -32,7 +33,6 @@ Imports:
     tidyr,
     utils
 Suggests: 
-    gdverse,
     Rcpp,
     RcppArmadillo,
     readr
