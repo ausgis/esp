@@ -6,6 +6,8 @@
 #' @param data An `sf` object of observation data. Please note that the column names of the independent
 #' variables should not be `all` or `none`.
 #' @param listw (optional) A `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
+#' @param yzone (optional) Spatial zones of the response variable. Default the response variable is divided into
+#' `3` categories using `quantile` discretization.
 #' @param discvar (optional) Name of continuous variable columns that need to be discretized. Noted that
 #' when `formula` has `discvar`, `data` must have these columns. Default is `all`, which means all independent
 #' variables are used as `discvar`. When `discvar` is set to `none`, all independent variables do not need to
@@ -21,19 +23,20 @@
 #' selected using one of two methods: `AIC`, and `CV`. Default will use `AIC`.
 #' @param adaptive (optional) Whether the bandwidth value is adaptive or not. Default is `TRUE`.
 #' @param kernel (optional) Kernel function. Default is `gaussian`.
+#' @param increase_rate (optional) The critical increase rate of the number of discretization.
+#' Default is `5%`.
 #' @param cores (optional) Positive integer (default is 1). When cores are greater than 1, use
 #' multi-core parallel computing.
 #' @param ... (optional) Other arguments passed to `ClustGeo::hclustgeo()`.
 #'
-#' @return A list.
+#' @return A list with `espm` class.
 #' \describe{
-#' \item{\code{factor}}{factor detection result}
-#' \item{\code{interaction}}{Interactive detection results}
-#' \item{\code{pred}}{predicted values of response variables required for the calculation of q-values}
-#' \item{\code{disc}}{spatial discretization results}
-#' \item{\code{y}}{values corresponding to the response variable}
-#' \item{\code{xvar}}{all the explanatory variables}
-#' \item{\code{allvar}}{all explanatory variables and their pairwise interaction variables.}
+#' \item{\code{factor}}{global factor detection result}
+#' \item{\code{interaction}}{global interactive detection results}
+#' \item{\code{optdisc}}{independent variable optimal spatial discretization}
+#' \item{\code{localq}}{q valueS of explanatory variables under different response zones}
+#' \item{\code{zone}}{zones of the response variable}
+#' \item{\code{allfactor}}{factor detection results corresponding to different numbers of discreteization}
 #' }
 #' @export
 #'
@@ -465,10 +468,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
              "interaction" = opt_idv,
              "optdisc" = opt_discdf,
              "localq" = localqv,
-             "y" = yvec,
-             "localzone" = yzone,
-             "xvar" = xvarname,
-             "allvar" = allvarname,
+             "zone" = yzone,
              "allfactor" = fdv)
   class(res) = "espm"
   return(res)
