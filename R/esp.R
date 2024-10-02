@@ -347,21 +347,22 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     slmres = purrr::map(idvvar, get_idv, listw = listw, model = model,
                         Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   }
-  return(list("factor" = opt_fdv,"res" = sinres))
-  opt_idv = purrr::map_dfr(seq_along(qv),\(n) {
-    qv_disc = qv[[n]][,"Qvalue",drop = TRUE]
-    names(qv_disc) = allvarname
-    idtype = purrr::pmap_chr(list(qv12 = qv_disc[Interactname],
-                                  qv1 = qv_disc[variable1],
-                                  qv2 = qv_disc[variable2]),
-                             InteractionType)
-    return(tibble::tibble(Variable = Interactname,
-                          Interaction = idtype,
-                          Qv1 = qv_disc[variable1],
-                          Qv2 = qv_disc[variable2],
-                          Qv12 = qv_disc[Interactname],
-                          DiscNum = discnum[n]))
-  })
+
+  suppressMessages({y_pred = purrr::map_dfc(slmres,
+                          \(.df) dplyr::select(.df,dplyr::starts_with("pred")))})
+  qv_disc = SLMQ(yvec,as.matrix(y_pred))
+  names(qv_disc) = allvarname
+  idtype = purrr::pmap_chr(list(qv12 = qv_disc[Interactname],
+                                qv1 = qv_disc[variable1],
+                                qv2 = qv_disc[variable2]),
+                           InteractionType)
+  opt_idv = tibble::tibble(Variable = Interactname,
+                           Interaction = idtype,
+                           Qv1 = qv_disc[variable1],
+                           Qv2 = qv_disc[variable2],
+                           Qv12 = qv_disc[Interactname])
+  return(list("factor" = opt_fdv,
+              "interaction" = opt_idv))
 
   get_slmlocal = \(zs,listw,model,Durbin,bw,adaptive,kernel){
     opt_discdf = opt_discdf[which(yzone == zs),]
