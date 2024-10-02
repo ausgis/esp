@@ -416,31 +416,32 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     slmres = purrr::map(unique(yzone), get_slmlocal, model = model, Durbin = Durbin,
                         bw = bw, adaptive = adaptive, kernel = kernel)
   }
-  return(slmres)
 
   y_pred = purrr::map(slmres, \(.df){
     .res = dplyr::select(.df,dplyr::starts_with("pred"))
-    names(.res) = allvarname
+    names(.res) = xvarname
     return(.res)
   })
+
   aicv = purrr::map(slmres, \(.df){
     .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("AIC")),1)
-    names(.res) = allvarname
+    names(.res) = xvarname
     return(.res)
   })
   if (model != "gwr") {
     bicv = purrr::map(slmres, \(.df){
       .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("BIC")),1)
-      names(.res) = allvarname
+      names(.res) = xvarname
       return(.res)
     })
     loglikv = purrr::map(slmres, \(.df){
       .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("LogLik")),1)
-      names(.res) = allvarname
+      names(.res) = xvarname
       return(.res)
     })
     localqv = purrr::map_dfr(seq_along(y_pred),\(n){
-      qvalue = SLMQ(yvec,as.matrix(y_pred[[n]]))
+      qvalue = SLMQ(yvec[which(yzone == unique(yzone)[n])],
+                    as.matrix(y_pred[[n]]))
       resqv = tibble::tibble(Variable = names(aicv[[n]]),
                              Qvalue = qvalue,
                              AIC = as.numeric(aicv[[n]]),
@@ -450,7 +451,8 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
       return(resqv)
     })} else {
       localqv = purrr::map_dfr(seq_along(y_pred),\(n){
-        qvalue = SLMQ(yvec,as.matrix(y_pred[[n]]))
+        qvalue = SLMQ(yvec[which(yzone == unique(yzone)[n])],
+                      as.matrix(y_pred[[n]]))
         resqv = tibble::tibble(Variable = names(aicv[[n]]),
                                Qvalue = qvalue,
                                AIC = as.numeric(aicv[[n]]),
@@ -471,4 +473,3 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
   class(res) = "espm"
   return(res)
 }
-
