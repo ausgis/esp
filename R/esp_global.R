@@ -103,7 +103,6 @@ esp_global = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
           }
           return(x)
         }))
-
       names(undiscdf) = paste0('x',seq(length(xdiscname) + 1, by = 1,
                                        length.out = length(xundiscname) + 1))
     } else {
