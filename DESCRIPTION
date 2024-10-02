@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0009-0002-6003-3800"))
 Description: Evaluating the spatial association between variables using an equivalent 
-             geographical detector q-statistic under a regression framework.
+             geographical detector q-statistic under the regression framework.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
