@@ -476,6 +476,8 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
       })
     }
 
+  opt_fdv$Variable = as.character(opt_fdv$Variable)
+  fdv$Variable = as.character(fdv$Variable)
   res = list("factor" = opt_fdv,
              "interaction" = opt_idv,
              "optdisc" = opt_discdf,
@@ -495,10 +497,10 @@ print.espm = \(x, ...) {
   cat(paste0("\n Q values are estimated using *",x$model,"* \n"))
   cat("\n ------------- Global Power of Determinat : ------------\n")
   cat("\n")
-  print(utils::head(x$factor,10))
+  PrintGloalQ(utils::head(x$factor,10))
   cat("\n ------------ Global Variable Interaction : ------------\n")
   cat("\n")
-  print(utils::head(dplyr::select(x$interaction,1:2),10))
+  PrintGloalQ(utils::head(dplyr::select(x$interaction,1:2),10))
   cat("\n! Only the top ten items of global power of determinat and variable interactions are displayed, \n
       the others can be accessed through specific subsets of the epsm object.\n")
 }
