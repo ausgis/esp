@@ -501,5 +501,5 @@ print.espm = \(x, ...) {
   cat("\n ------------ Global Variable Interaction : ------------\n")
   PrintGlobalQ(utils::head(dplyr::select(x$interaction,1:2),10))
   cat("\n! Only the top ten items of global scale are displayed.")
-  cat("\n! The others can be accessed through specific subsets of the epsm object.\n")
+  cat("\n! The others can be accessed through specific subsets.\n")
 }
