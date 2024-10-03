@@ -28,10 +28,11 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2
 
-      - name: Install C++ dependencies
+      - name: Install C++ dependencies and GWmodel3
         run: |
           sudo apt-get update -qq
           sudo apt-get install -qq libgsl-dev
+          R CMD INSTALL GWmodel3_3.0-0.tar.gz
 
       - uses: r-lib/actions/setup-r@v2
         with:
