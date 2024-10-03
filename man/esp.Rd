@@ -82,11 +82,9 @@ A list with \code{espm} class.
 Equivalent geographical detector q-statistic under a spatial linear regression framework.
 }
 \examples{
-\dontrun{
-depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
-  readr::read_csv() |>
-  sf::st_as_sf(coords = c('X','Y'), crs = 4326)
-g = esp(Depression_prevelence ~ ., data = depression, cores = 6)
-g$factor
-}
+NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
+g = esp(incidence ~ ., data = NTDs, discvar = 'none',
+        model = 'ols', overlay = 'intersection', cores = 1)
+g
+
 }

@@ -44,7 +44,7 @@
 #' @examples
 #' NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
 #' g = esp(incidence ~ ., data = NTDs, discvar = 'none',
-#'         model = 'ols', overlay = 'intersection', cores = 8)
+#'         model = 'ols', overlay = 'intersection', cores = 1)
 #' g
 #'
 esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:8,
