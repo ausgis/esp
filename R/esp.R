@@ -496,5 +496,6 @@ print.espm = \(x, ...) {
   print(x$factor)
   cat("\n ---------- Global Variable Interaction : ----------\n")
   print(dplyr::select(x$interaction,1:2))
+  cat(paste0("\n# Q values are estimated using *",x$model,"* \n"))
   cat("\n# The others can be accessed through specific subsets of the epsm object.\n")
 }
