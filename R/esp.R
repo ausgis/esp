@@ -5,7 +5,7 @@
 #' @param formula A formula for enhanced stratified power model.
 #' @param data An `sf` object of observation data. Please note that the column names of the independent
 #' variables should not be `all` or `none`.
-#' @param listw (optional) A `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
+#' @param listw (optional) A list of `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
 #' @param yzone (optional) Spatial zones of the response variable. Default the response variable is divided into
 #' `3` categories using `quantile` discretization.
 #' @param discvar (optional) Name of continuous variable columns that need to be discretized. Noted that
@@ -79,12 +79,22 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     stop("The column names of the independent variables should not be `all` or `none`.")
   }
 
-  if (is.null(listw)) {
-    listw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
-  }
-
   if (is.null(yzone)) {
     yzone = QuantileDisc(yvec,3)
+  }
+
+  if (is.null(listw)) {
+    globallw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
+    locallw = purrr::map(unique(yzone),
+                         \(.yz) spdep::nb2listw(sdsfun::spdep_nb(data[which(yzone == .yz),]),
+                                                style = "W", zero.policy = TRUE))
+  } else {
+    if (length(listw) != (length(unique(yzone)) + 1)) {
+      stop('The listw needs to be set for both the global and individual yzone, then preserved in a list.')
+    } else {
+      globallw = listw[[1]]
+      locallw = listw[-1]
+    }
   }
 
   if (discvar == "all"){
@@ -220,10 +230,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     return(slm_res)
   }
   if (doclust) {
-    slmres = parallel::parLapply(cores, seq_along(discdf), get_slm, listw = listw, model = model,
+    slmres = parallel::parLapply(cores, seq_along(discdf), get_slm, listw = globallw, model = model,
                                  Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   } else {
-    slmres = purrr::map(seq_along(discdf), get_slm, listw = listw, model = model,
+    slmres = purrr::map(seq_along(discdf), get_slm, listw = globallw, model = model,
                         Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   }
 
@@ -345,10 +355,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     return(slm_res)
   }
   if (doclust) {
-    slmres = parallel::parLapply(cores, idvvar, get_idv, listw = listw, model = model,
+    slmres = parallel::parLapply(cores, idvvar, get_idv, listw = globallw, model = model,
                                  Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   } else {
-    slmres = purrr::map(idvvar, get_idv, listw = listw, model = model,
+    slmres = purrr::map(idvvar, get_idv, listw = globallw, model = model,
                         Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   }
 
@@ -366,10 +376,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
                            Qv2 = qv_disc[variable2],
                            Qv12 = qv_disc[Interactname])
 
-  get_slmlocal = \(zs,model,Durbin,bw,adaptive,kernel){
+  get_slmlocal = \(n,model,Durbin,bw,adaptive,kernel){
+    zs = unique(yzone)[n]
     opt_discdf = opt_discdf[which(yzone == zs),]
-    listw = spdep::nb2listw(sdsfun::spdep_nb(data[which(yzone == zs),]),
-                            style = "W", zero.policy = TRUE)
+    listw = locallw[[n]]
     geom = sf::st_geometry(data[which(yzone == zs),])
     dummydf = sdsfun::dummy_tbl(opt_discdf)
     slmlevelvar = names(dummydf)
@@ -414,11 +424,11 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     return(slm_res)
   }
   if (doclust) {
-    slmres = parallel::parLapply(cores, unique(yzone), get_slmlocal, model = model, Durbin = Durbin,
-                                 bw = bw, adaptive = adaptive, kernel = kernel)
+    slmres = parallel::parLapply(cores, seq_along(unique(yzone)), get_slmlocal, model = model,
+                                 Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   } else {
-    slmres = purrr::map(unique(yzone), get_slmlocal, model = model, Durbin = Durbin,
-                        bw = bw, adaptive = adaptive, kernel = kernel)
+    slmres = purrr::map(seq_along(unique(yzone)), get_slmlocal, model = model,
+                        Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   }
 
   y_pred = purrr::map(slmres, \(.df){
