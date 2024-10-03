@@ -42,13 +42,11 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
-#'   readr::read_csv() |>
-#'   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
-#' g = esp(Depression_prevelence ~ ., data = depression, cores = 6)
-#' g$factor
-#' }
+#' NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
+#' g = esp(incidence ~ ., data = NTDs, discvar = 'none',
+#'         model = 'ols', overlay = 'intersection', cores = 8)
+#' g
+#'
 esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:8,
         model = 'ols', Durbin = FALSE, overlay = 'and', alpha = 0.75, bw = "AIC",
         adaptive = TRUE, kernel = "gaussian", increase_rate = 0.05, cores = 1, ...) {
