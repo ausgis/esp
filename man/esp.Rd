@@ -29,7 +29,7 @@ esp(
 \item{data}{An \code{sf} object of observation data. Please note that the column names of the independent
 variables should not be \code{all} or \code{none}.}
 
-\item{listw}{(optional) A \code{listw}. See \code{spdep::mat2listw()} and \code{spdep::nb2listw()} for details.}
+\item{listw}{(optional) A list of \code{listw}. See \code{spdep::mat2listw()} and \code{spdep::nb2listw()} for details.}
 
 \item{yzone}{(optional) Spatial zones of the response variable. Default the response variable is divided into
 \code{3} categories using \code{quantile} discretization.}
