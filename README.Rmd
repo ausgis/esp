@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# esp
+# esp <img src="man/figures/logo.png" align="right" height="120"/>
 
 <!-- badges: start -->
 [![cran](https://www.r-pkg.org/badges/version/esp)](https://CRAN.R-project.org/package=esp) 
