@@ -41,3 +41,7 @@ SLMLocalQ <- function(Y, FitY, Zones) {
     .Call(`_esp_SLMLocalQ`, Y, FitY, Zones)
 }
 
+SLMUsed <- function(model, durbin) {
+    .Call(`_esp_SLMUsed`, model, durbin)
+}
+
