@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <iomanip>
 using namespace Rcpp;
 
 // [[Rcpp::export]]
@@ -21,5 +22,33 @@ std::string SLMUsed(std::string model, bool durbin) {
     return "Geographically Weighted Regression";
   } else {
     return "Unknown Model";
+  }
+}
+
+// [[Rcpp::export]]
+void PrintGloalQ(DataFrame df) {
+  int n = df.nrows();
+  CharacterVector colNames = df.names();
+
+  // Print column names
+  for (int j = 0; j < df.size(); ++j) {
+    Rcpp::Rcout << std::setw(15) << as<std::string>(colNames[j]) << " ";
+  }
+  Rcpp::Rcout << std::endl;
+
+  // Print data
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < df.size(); ++j) {
+      if (Rcpp::is<CharacterVector>(df[j])) {
+        // Non-numeric column
+        CharacterVector col = df[j];
+        Rcpp::Rcout << std::setw(15) << as<std::string>(col[i]) << " ";
+      } else if (Rcpp::is<NumericVector>(df[j])) {
+        // Numeric column
+        NumericVector col = df[j];
+        Rcpp::Rcout << std::setw(15) << std::fixed << std::setprecision(3) << col[i] << " ";
+      }
+    }
+    Rcpp::Rcout << std::endl;
   }
 }

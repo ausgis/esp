@@ -492,10 +492,13 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
 #' @noRd
 print.espm = \(x, ...) {
   cat("***           Enhanced Stratified Power     \n")
-  cat("\n ----------- Global Power of Determinat : ----------\n")
-  print(x$factor)
-  cat("\n ---------- Global Variable Interaction : ----------\n")
-  print(dplyr::select(x$interaction,1:2))
-  cat(paste0("\n# Q values are estimated using *",x$model,"* \n"))
-  cat("\n# The others can be accessed through specific subsets of the epsm object.\n")
+  cat(paste0("\n Q values are estimated using *",x$model,"* \n"))
+  cat("\n ------------- Global Power of Determinat : ------------\n")
+  cat("\n")
+  print(utils::head(x$factor,10))
+  cat("\n ------------ Global Variable Interaction : ------------\n")
+  cat("\n")
+  print(utils::head(dplyr::select(x$interaction,1:2),10))
+  cat("\n! Only the top ten items of global power of determinat and variable interactions are displayed, \n
+      the others can be accessed through specific subsets of the epsm object.\n")
 }

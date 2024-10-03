@@ -45,3 +45,7 @@ SLMUsed <- function(model, durbin) {
     .Call(`_esp_SLMUsed`, model, durbin)
 }
 
+PrintGloalQ <- function(df) {
+    invisible(.Call(`_esp_PrintGloalQ`, df))
+}
+

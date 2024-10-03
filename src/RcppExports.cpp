@@ -142,6 +142,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// PrintGloalQ
+void PrintGloalQ(DataFrame df);
+RcppExport SEXP _esp_PrintGloalQ(SEXP dfSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
+    PrintGloalQ(df);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_esp_QuantileDisc", (DL_FUNC) &_esp_QuantileDisc, 2},
@@ -155,6 +165,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_esp_SLMQ", (DL_FUNC) &_esp_SLMQ, 2},
     {"_esp_SLMLocalQ", (DL_FUNC) &_esp_SLMLocalQ, 3},
     {"_esp_SLMUsed", (DL_FUNC) &_esp_SLMUsed, 2},
+    {"_esp_PrintGloalQ", (DL_FUNC) &_esp_PrintGloalQ, 1},
     {NULL, NULL, 0}
 };
 
