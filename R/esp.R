@@ -37,6 +37,7 @@
 #' \item{\code{localq}}{q valueS of explanatory variables under different response zones}
 #' \item{\code{zone}}{zones of the response variable}
 #' \item{\code{allfactor}}{factor detection results corresponding to different numbers of discreteization}
+#' \item{\code{model}}{regression model used to estimate equivalent q values}
 #' }
 #' @export
 #'
@@ -480,7 +481,8 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
              "optdisc" = opt_discdf,
              "localq" = localqv,
              "zone" = yzone,
-             "allfactor" = fdv)
+             "allfactor" = fdv,
+             "model" = SLMUsed(model,Durbin))
   class(res) = "espm"
   return(res)
 }
