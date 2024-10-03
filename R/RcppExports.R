@@ -41,8 +41,8 @@ SLMLocalQ <- function(Y, FitY, Zones) {
     .Call(`_esp_SLMLocalQ`, Y, FitY, Zones)
 }
 
-PrintGloalQ <- function(df) {
-    invisible(.Call(`_esp_PrintGloalQ`, df))
+PrintGlobalQ <- function(df) {
+    invisible(.Call(`_esp_PrintGlobalQ`, df))
 }
 
 SLMUsed <- function(model, durbin) {

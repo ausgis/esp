@@ -25,7 +25,7 @@ int maxColumnWidth(NumericVector col, int precision) {
 }
 
 // [[Rcpp::export]]
-void PrintGloalQ(DataFrame df) {
+void PrintGlobalQ(DataFrame df) {
   int n = df.nrows();
   CharacterVector colNames = df.names();
   std::vector<int> colWidths(df.size());
