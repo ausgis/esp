@@ -6,8 +6,8 @@ Authors@R:
            email = "lyu.geosocial@gmail.com", 
            role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0009-0002-6003-3800"))
-Description: Evaluating the spatial association between variables using an equivalent 
-             geographical detector q-statistic under the regression framework.
+Description: Assessing the spatial association between variables through an equivalent 
+             geographical detector q-statistic within a regression framework.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
