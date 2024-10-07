@@ -289,8 +289,8 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
 
   if (length(y_pred) > 1){
     suppressWarnings({opt_discnum = dplyr::group_split(fdv,Variable) |>
-      purrr::map_dbl(\(.df) gdverse::loess_optdiscnum(.df$Qvalue,
-                                                      .df$DiscNum)[1])})
+      purrr::map_dbl(\(.df) sdsfun::loess_optnum(.df$Qvalue,
+                                                 .df$DiscNum)[1])})
     opt_discdf = purrr::map_dfc(seq_along(opt_discnum),
                                 \(.n) {dn = which(discnum == opt_discnum[.n])
                                 return(dplyr::select(discdf[[dn]],
