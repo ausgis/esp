@@ -1,0 +1,113 @@
+---
+title: "Enhanced Stratified Power Model"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{esp}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "##",
+  fig.path = "man/figures/esp/"
+)
+```
+
+## Install and load R packages
+
+```r
+install.packages(c("sf","gdverse"), dep = T)
+# install.packages("devtools")
+devtools::install_github("stscl/esp",
+                         build_vignettes = TRUE,
+                         dep = TRUE)
+```
+
+
+```{r}
+library(sf)
+library(esp)
+library(gdverse)
+```
+
+## Equivalence between the Q value and the original geographical detector within the regression framework
+
+```{r}
+NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
+
+system.time({
+go1 = esp(incidence ~ ., data = NTDs, discvar = 'none',
+          model = 'ols', overlay = 'intersection')
+})
+
+system.time({
+go2 = gd(incidence ~ ., data = NTDs,
+         type = c('factor','interaction'))
+})
+```
+
+### Factor detector
+
+```{r}
+go1$factor
+go2$factor
+```
+
+### Interaction detector
+
+```{r}
+go1$interaction
+go2$interaction
+```
+
+## Enhanced stratified power model using the spatial linear regression
+
+Using the same data as the gdverse idsa vignette:
+
+```{r}
+depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
+  readr::read_csv() |>
+  sf::st_as_sf(coords = c('X','Y'), crs = 4326)
+depression
+```
+
+### Enhanced Stratified Power Model With Linear Regression
+
+```{r}
+system.time({
+  g1 = esp(Depression_prevelence ~ ., data = depression,
+         model = 'ols', overlay = 'intersection', cores = 8)
+})
+g1
+```
+
+### Enhanced Stratified Power Model With Spatial Lag Regression
+
+```{r}
+system.time({
+  g2 = esp(Depression_prevelence ~ ., data = depression,
+           model = 'lag', cores = 8)
+})
+g2
+```
+
+### Enhanced Stratified Power Model With Spatial Error Regression
+
+```{r}
+system.time({
+  g3 = esp(Depression_prevelence ~ ., data = depression,
+           model = 'error', cores = 8)
+})
+g3
+```
+
+### Results of local zones-based power of determinat
+
+```{r}
+g1$localq
+g2$localq
+g3$localq
+```
+

@@ -1,0 +1,277 @@
+---
+title: "Enhanced Stratified Power Model"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{esp}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+## Install and load R packages
+
+```r
+install.packages(c("sf","gdverse"), dep = T)
+# install.packages("devtools")
+devtools::install_github("stscl/esp",
+                         build_vignettes = TRUE,
+                         dep = TRUE)
+```
+
+
+
+``` r
+library(sf)
+## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
+library(esp)
+library(gdverse)
+```
+
+## Equivalence between the Q value and the original geographical detector within the regression framework
+
+
+``` r
+NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
+
+system.time({
+go1 = esp(incidence ~ ., data = NTDs, discvar = 'none',
+          model = 'ols', overlay = 'intersection')
+})
+##    user  system elapsed 
+##    1.22    0.03    1.50
+
+system.time({
+go2 = gd(incidence ~ ., data = NTDs,
+         type = c('factor','interaction'))
+})
+##    user  system elapsed 
+##    0.05    0.00    0.06
+```
+
+### Factor detector
+
+
+``` r
+go1$factor
+## # A tibble: 3 × 5
+##   Variable  Qvalue    AIC    BIC LogLik
+##   <chr>      <dbl>  <dbl>  <dbl>  <dbl>
+## 1 watershed  0.638 -10.0  -10.0   15.0 
+## 2 elevation  0.607   1.18   1.18   7.41
+## 3 soiltype   0.386  79.7   79.7  -33.8
+go2$factor
+## # A tibble: 3 × 3
+##   variable  `Q-statistic` `P-value`
+##   <chr>             <dbl>     <dbl>
+## 1 watershed         0.638  0.000129
+## 2 elevation         0.607  0.0434  
+## 3 soiltype          0.386  0.372
+```
+
+### Interaction detector
+
+
+``` r
+go1$interaction
+## # A tibble: 3 × 5
+##   Variable              Interaction    Qv1   Qv2  Qv12
+##   <chr>                 <chr>        <dbl> <dbl> <dbl>
+## 1 watershed ∩ elevation Enhance, bi- 0.638 0.607 0.714
+## 2 watershed ∩ soiltype  Enhance, bi- 0.638 0.386 0.736
+## 3 elevation ∩ soiltype  Enhance, bi- 0.607 0.386 0.664
+go2$interaction
+## # A tibble: 3 × 6
+##   variable1 variable2 Interaction  `Variable1 Q-statistics` `Variable2 Q-statistics`
+##   <chr>     <chr>     <chr>                           <dbl>                    <dbl>
+## 1 watershed elevation Enhance, bi-                    0.638                    0.607
+## 2 watershed soiltype  Enhance, bi-                    0.638                    0.386
+## 3 elevation soiltype  Enhance, bi-                    0.607                    0.386
+## # ℹ 1 more variable: `Variable1 and Variable2 interact Q-statistics` <dbl>
+```
+
+## Enhanced stratified power model using the spatial linear regression
+
+Using the same data as the gdverse idsa vignette:
+
+
+``` r
+depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
+  readr::read_csv() |>
+  sf::st_as_sf(coords = c('X','Y'), crs = 4326)
+## Rows: 1072 Columns: 13
+## ── Column specification ─────────────────────────────────────────────────────────────────────────
+## Delimiter: ","
+## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Ne...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+depression
+## Simple feature collection with 1072 features and 11 fields
+## Geometry type: POINT
+## Dimension:     XY
+## Bounding box:  xmin: -83.1795 ymin: 32.11464 xmax: -78.6023 ymax: 35.17354
+## Geodetic CRS:  WGS 84
+## # A tibble: 1,072 × 12
+##    Depression_prevelence PopulationDensity Population65 NoHealthInsurance Neighbor_Disadvantage
+##  *                 <dbl>             <dbl>        <dbl>             <dbl>                 <dbl>
+##  1                  23.1              61.5         22.5              7.98               -0.0525
+##  2                  22.8              58.3         16.8             11.0                -0.254 
+##  3                  23.2              35.9         24.5              9.31               -0.0540
+##  4                  21.8              76.1         21.8             13.2                 0.0731
+##  5                  20.7              47.3         22.0             11                   0.763 
+##  6                  21.3              32.5         19.2             13.0                 0.422 
+##  7                  22                36.9         19.2             10.8                 0.113 
+##  8                  21.2              61.5         15.9              8.57               -0.154 
+##  9                  22.7              67.2         15.7             17.8                -0.320 
+## 10                  20.6             254.          11.3             12.7                 0.457 
+## # ℹ 1,062 more rows
+## # ℹ 7 more variables: Beer <dbl>, MentalHealthPati <dbl>, NatureParks <dbl>, Casinos <dbl>,
+## #   DrinkingPlaces <dbl>, X.HouseRent <dbl>, geometry <POINT [°]>
+```
+
+### Enhanced Stratified Power Model With Linear Regression
+
+
+``` r
+system.time({
+  g1 = esp(Depression_prevelence ~ ., data = depression,
+         model = 'ols', overlay = 'intersection', cores = 8)
+})
+##    user  system elapsed 
+##    3.38    0.49   23.93
+g1
+## ***           Enhanced Stratified Power     
+## 
+##  Q values are estimated using *Ordinary Least Square* 
+## 
+##  ------------- Global Power of Determinat : ------------
+## Variable              Qvalue AIC      BIC      LogLik    
+## PopulationDensity     0.278  4404.766 4404.766 -2193.383 
+## Population65          0.201  4507.632 4507.632 -2247.816 
+## NoHealthInsurance     0.214  4491.437 4491.437 -2238.719 
+## Neighbor_Disadvantage 0.194  4516.820 4516.820 -2252.410 
+## Beer                  0.192  4522.881 4522.881 -2253.441 
+## MentalHealthPati      0.207  4498.614 4498.614 -2243.307 
+## NatureParks           0.184  4529.323 4529.323 -2258.662 
+## Casinos               0.184  4529.888 4529.888 -2258.944 
+## DrinkingPlaces        0.204  4503.093 4503.093 -2245.547 
+## X.HouseRent           0.259  4428.440 4428.440 -2207.220 
+## 
+##  ------------ Global Variable Interaction : ------------
+## Variable                                    Interaction  
+## PopulationDensity ∩ Population65          Enhance, bi- 
+## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
+## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ MentalHealthPati      Enhance, bi- 
+## PopulationDensity ∩ NatureParks           Enhance, bi- 
+## PopulationDensity ∩ Casinos               Enhance, bi- 
+## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
+## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
+## Population65 ∩ NoHealthInsurance          Enhance, bi- 
+## 
+## ! Only the top ten items of global scale are displayed.
+## ! The others can be accessed through specific subsets.
+```
+
+### Enhanced Stratified Power Model With Spatial Lag Regression
+
+
+``` r
+system.time({
+  g2 = esp(Depression_prevelence ~ ., data = depression,
+           model = 'lag', cores = 8)
+})
+##    user  system elapsed 
+##    9.04    1.14  245.86
+g2
+## ***           Enhanced Stratified Power     
+## 
+##  Q values are estimated using *Spatial Lag Model* 
+## 
+##  ------------- Global Power of Determinat : ------------
+## Variable              Qvalue AIC      BIC      LogLik    
+## PopulationDensity     0.172  4315.505 4315.505 -2149.753 
+## Population65          0.157  4336.429 4336.429 -2161.214 
+## NoHealthInsurance     0.170  4325.982 4325.982 -2154.991 
+## Neighbor_Disadvantage 0.153  4347.690 4347.690 -2166.845 
+## Beer                  0.128  4356.675 4356.675 -2170.337 
+## MentalHealthPati      0.161  4335.474 4335.474 -2160.737 
+## NatureParks           0.147  4364.919 4364.919 -2175.460 
+## Casinos               0.134  4351.252 4351.252 -2168.626 
+## DrinkingPlaces        0.162  4330.582 4330.582 -2158.291 
+## X.HouseRent           0.221  4286.168 4286.168 -2135.084 
+## 
+##  ------------ Global Variable Interaction : ------------
+## Variable                                    Interaction  
+## PopulationDensity ∩ Population65          Enhance, bi- 
+## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
+## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ MentalHealthPati      Weaken, uni- 
+## PopulationDensity ∩ NatureParks           Enhance, bi- 
+## PopulationDensity ∩ Casinos               Weaken, uni- 
+## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
+## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
+## Population65 ∩ NoHealthInsurance          Enhance, bi- 
+## 
+## ! Only the top ten items of global scale are displayed.
+## ! The others can be accessed through specific subsets.
+```
+
+### Enhanced Stratified Power Model With Spatial Error Regression
+
+
+``` r
+system.time({
+  g3 = esp(Depression_prevelence ~ ., data = depression,
+           model = 'error', cores = 8)
+})
+## Error in checkForRemoteErrors(val): 6 nodes produced errors; first error: ℹ In index: 1.
+## ℹ With name: x1.
+## Caused by error in `predict.Sarlm()`:
+## ! no such predict method for error model
+## Timing stopped at: 4.31 0.61 24.1
+g3
+## Error: object 'g3' not found
+```
+
+### Results of local zones-based power of determinat
+
+
+``` r
+g1$localq
+## # A tibble: 30 × 6
+##    Variable              Qvalue   AIC   BIC LogLik  Zone
+##    <chr>                  <dbl> <dbl> <dbl>  <dbl> <int>
+##  1 PopulationDensity     0.176  1141. 1141.  -562.     3
+##  2 Population65          0.125  1157. 1157.  -572.     3
+##  3 NoHealthInsurance     0.113  1163. 1163.  -575.     3
+##  4 Neighbor_Disadvantage 0.140  1150. 1150.  -569.     3
+##  5 Beer                  0.114  1165. 1165.  -574.     3
+##  6 MentalHealthPati      0.106  1164. 1164.  -576.     3
+##  7 NatureParks           0.104  1165. 1165.  -577.     3
+##  8 Casinos               0.0892 1171. 1171.  -579.     3
+##  9 DrinkingPlaces        0.107  1164. 1164.  -576.     3
+## 10 X.HouseRent           0.106  1166. 1166.  -576.     3
+## # ℹ 20 more rows
+g2$localq
+## # A tibble: 30 × 6
+##    Variable              Qvalue   AIC   BIC LogLik  Zone
+##    <chr>                  <dbl> <dbl> <dbl>  <dbl> <int>
+##  1 PopulationDensity     0.142  1151. 1151.  -568.     3
+##  2 Population65          0.136  1153. 1153.  -569.     3
+##  3 NoHealthInsurance     0.124  1158. 1158.  -571.     3
+##  4 Neighbor_Disadvantage 0.150  1147. 1147.  -567.     3
+##  5 Beer                  0.112  1161. 1161.  -572.     3
+##  6 MentalHealthPati      0.116  1158. 1158.  -572.     3
+##  7 NatureParks           0.114  1160. 1160.  -573.     3
+##  8 Casinos               0.0994 1164. 1164.  -575.     3
+##  9 DrinkingPlaces        0.118  1158. 1158.  -572.     3
+## 10 X.HouseRent           0.117  1161. 1161.  -572.     3
+## # ℹ 20 more rows
+g3$localq
+## Error: object 'g3' not found
+```
+

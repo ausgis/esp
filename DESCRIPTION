@@ -32,12 +32,15 @@ Imports:
     utils
 Suggests: 
     gdverse,
+    knitr,
     Rcpp,
     RcppArmadillo,
-    readr
+    readr,
+    rmarkdown
 Remotes:
     stscl/sdsfun,
     GWmodel-Lab/GWmodel3
 LinkingTo: 
     Rcpp,
     RcppArmadillo
+VignetteBuilder: knitr
