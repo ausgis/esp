@@ -217,7 +217,11 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
         aicv = stats::AIC(g)
         bicv = stats::AIC(g)
         loglikv = as.numeric(stats::logLik(g))
-        fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        if (model == 'error'){
+          fity = as.numeric(stats::predict(g, pred.type = 'TS', listw = listw, re.form = NA))
+        } else {
+          fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        }
         return(list("pred" = fity, "AIC" = aicv,
                     "BIC" = bicv, "LogLik" = loglikv))
       } else {
@@ -342,7 +346,11 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
         aicv = stats::AIC(g)
         bicv = stats::AIC(g)
         loglikv = as.numeric(stats::logLik(g))
-        fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        if (model == 'error'){
+          fity = as.numeric(stats::predict(g, pred.type = 'TS', listw = listw, re.form = NA))
+        } else {
+          fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        }
         return(list("pred" = fity, "AIC" = aicv,
                     "BIC" = bicv, "LogLik" = loglikv))
       } else {
@@ -411,7 +419,11 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
         aicv = stats::AIC(g)
         bicv = stats::AIC(g)
         loglikv = as.numeric(stats::logLik(g))
-        fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        if (model == 'error'){
+          fity = as.numeric(stats::predict(g, pred.type = 'TS', listw = listw, re.form = NA))
+        } else {
+          fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
+        }
         return(list("pred" = fity, "AIC" = aicv,
                     "BIC" = bicv, "LogLik" = loglikv))
       } else {
