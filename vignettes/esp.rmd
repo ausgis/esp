@@ -27,7 +27,7 @@ library(esp)
 library(gdverse)
 ```
 
-## Equivalence between the Q value and the original geographical detector within the regression framework
+## Equivalence of Q Values in the Native Geographical Detector and Linear Regression Framework
 
 
 ``` r
