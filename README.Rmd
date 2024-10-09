@@ -18,8 +18,8 @@ knitr::opts_chunk$set(
 # esp <a href="https://stscl.github.io/esp/"><img src="man/figures/logo.png" align="right" height="139" alt="esp website" /></a>
 
 <!-- badges: start -->
-[![cran](https://www.r-pkg.org/badges/version/esp)](https://CRAN.R-project.org/package=esp) 
-[![r-universe](https://stscl.r-universe.dev/badges/esp?color=cyan)](https://stscl.r-universe.dev/esp)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-cyan.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![cran](https://www.r-pkg.org/badges/version/esp)](https://CRAN.R-project.org/package=esp)
 <!-- badges: end -->
 
 **Enhanced Stratified Power**

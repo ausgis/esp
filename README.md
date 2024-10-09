@@ -5,8 +5,9 @@
 
 <!-- badges: start -->
 
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-cyan.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![cran](https://www.r-pkg.org/badges/version/esp)](https://CRAN.R-project.org/package=esp)
-[![r-universe](https://stscl.r-universe.dev/badges/esp?color=cyan)](https://stscl.r-universe.dev/esp)
 <!-- badges: end -->
 
 **Enhanced Stratified Power**
