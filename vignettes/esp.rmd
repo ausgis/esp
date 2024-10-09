@@ -38,14 +38,14 @@ go1 = esp(incidence ~ ., data = NTDs, discvar = 'none',
           model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    1.03    0.08    1.55
+##    0.97    0.07    1.51
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.09    0.00    0.08
+##    0.05    0.00    0.06
 ```
 
 ### Factor detector
@@ -138,7 +138,7 @@ system.time({
          model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    4.19    0.92   18.33
+##    6.44    1.14   22.08
 g1
 ## ***           Enhanced Stratified Power     
 ## 
@@ -183,7 +183,7 @@ system.time({
            model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##   10.27    1.27  247.25
+##    9.56    1.15  259.40
 g2
 ## ***           Enhanced Stratified Power     
 ## 
@@ -228,7 +228,7 @@ system.time({
            model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    9.63    1.56  140.52
+##    6.19    0.29  140.80
 g3
 ## ***           Enhanced Stratified Power     
 ## 
