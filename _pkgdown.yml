@@ -1,11 +1,13 @@
 url: https://stscl.github.io/esp/
 template:
   bootstrap: 5
-  bootswatch: spacelab
   math-rendering: mathjax
   light-switch: true
 
 navbar:
+  structure:
+    right:  [search, github]
+    left: [reference, articles, news]
   bg: custom
   components:
     articles:
