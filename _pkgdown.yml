@@ -4,6 +4,9 @@ template:
   math-rendering: mathjax
   light-switch: true
 navbar:
+  structure:
+    right:  [search, github]
+    left: [reference, articles, news]
   bg: custom
 
 home:
@@ -12,11 +15,6 @@ home:
 authors:
   Wenbo Lv:
     href: https://spatlyu.github.io/
-
-navbar:
-  structure:
-    right:  [search, github]
-    left: [reference, articles, news]
 
 reference:
 - title: enhanced stratified power model
