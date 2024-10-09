@@ -82,6 +82,7 @@
 <span>                         dep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="co">## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/esp/">esp</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ausgis.github.io/gdverse/" class="external-link">gdverse</a></span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -97,14 +98,14 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 <span>          model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.97    0.07    1.51</span></span>
+<span><span class="co">##    1.13    0.03    1.57</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://ausgis.github.io/gdverse/reference/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
 <span>         type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'factor'</span>,<span class="st">'interaction'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.05    0.00    0.06</span></span></code></pre></div>
+<span><span class="co">##    0.08    0.00    0.07</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="factor-detector">Factor detector<a class="anchor" aria-label="anchor" href="#factor-detector"></a>
 </h3>
@@ -146,10 +147,11 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 </div>
 </div>
 <div class="section level2">
-<h2 id="enhanced-stratified-power-model-using-the-spatial-linear-regression">Enhanced stratified power model using the spatial linear
-regression<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power-model-using-the-spatial-linear-regression"></a>
+<h2 id="enhanced-stratified-power-model-under-the-spatial-linear-regression">Enhanced Stratified Power Model Under The Spatial Linear
+Regression<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power-model-under-the-spatial-linear-regression"></a>
 </h2>
-<p>Using the same data as the gdverse idsa vignette:</p>
+<p>Using the same data as <a href="https://ausgis.github.io/gdverse/articles/idsa.html" class="external-link">the gdverse
+idsa vignette</a>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">depression</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/Depression.csv'</span>,package <span class="op">=</span> <span class="st">'gdverse'</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -189,10 +191,10 @@ regression<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">g1</span> <span class="op">=</span> <span class="fu"><a href="../reference/esp.html">esp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">depression</span>,</span>
-<span>         model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
+<span>           model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    6.44    1.14   22.08</span></span>
+<span><span class="co">##    3.29    0.61   24.25</span></span>
 <span><span class="va">g1</span></span>
 <span><span class="co">## ***           Enhanced Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -232,11 +234,12 @@ regression<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power
 </h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>  <span class="va">g2</span> <span class="op">=</span> <span class="fu"><a href="../reference/esp.html">esp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">depression</span>,</span>
+<span>  <span class="va">g2</span> <span class="op">=</span> <span class="fu"><a href="../reference/esp.html">esp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>           data <span class="op">=</span> <span class="va">depression</span>,</span>
 <span>           model <span class="op">=</span> <span class="st">'lag'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    9.56    1.15  259.40</span></span>
+<span><span class="co">##    9.27    1.30  254.64</span></span>
 <span><span class="va">g2</span></span>
 <span><span class="co">## ***           Enhanced Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -276,11 +279,12 @@ regression<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power
 </h3>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>  <span class="va">g3</span> <span class="op">=</span> <span class="fu"><a href="../reference/esp.html">esp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">depression</span>,</span>
+<span>  <span class="va">g3</span> <span class="op">=</span> <span class="fu"><a href="../reference/esp.html">esp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>           data <span class="op">=</span> <span class="va">depression</span>,</span>
 <span>           model <span class="op">=</span> <span class="st">'error'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    6.19    0.29  140.80</span></span>
+<span><span class="co">##    7.64    1.09  132.89</span></span>
 <span><span class="va">g3</span></span>
 <span><span class="co">## ***           Enhanced Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -316,9 +320,55 @@ regression<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power
 <span><span class="co">## ! The others can be accessed through specific subsets.</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="results-of-local-zones-based-power-of-determinat">Results of local zones-based power of determinat<a class="anchor" aria-label="anchor" href="#results-of-local-zones-based-power-of-determinat"></a>
+<h3 id="enhanced-stratified-power-model-with-geographically-weighted-regression">Enhanced Stratified Power Model With Geographically Weighted
+Regression<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power-model-with-geographically-weighted-regression"></a>
 </h3>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  <span class="va">g4</span> <span class="op">=</span> <span class="fu"><a href="../reference/esp.html">esp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>           data <span class="op">=</span> <span class="va">depression</span>,</span>
+<span>           model <span class="op">=</span> <span class="st">'gwr'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">##    user  system elapsed </span></span>
+<span><span class="co">##   10.25    1.50  141.89</span></span>
+<span><span class="va">g4</span></span>
+<span><span class="co">## ***           Enhanced Stratified Power     </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  Q values are estimated using *Geographically Weighted Regression* </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  ------------- Global Power of Determinat : ------------</span></span>
+<span><span class="co">## Variable              Qvalue AIC      </span></span>
+<span><span class="co">## PopulationDensity     0.255  4428.172 </span></span>
+<span><span class="co">## Population65          0.355  4278.376 </span></span>
+<span><span class="co">## NoHealthInsurance     0.250  4435.042 </span></span>
+<span><span class="co">## Neighbor_Disadvantage 0.363  4263.032 </span></span>
+<span><span class="co">## Beer                  0.267  4411.036 </span></span>
+<span><span class="co">## MentalHealthPati      0.357  4273.905 </span></span>
+<span><span class="co">## NatureParks           0.270  4407.348 </span></span>
+<span><span class="co">## Casinos               0.339  4305.724 </span></span>
+<span><span class="co">## DrinkingPlaces        0.274  4401.081 </span></span>
+<span><span class="co">## X.HouseRent           0.295  4370.236 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  ------------ Global Variable Interaction : ------------</span></span>
+<span><span class="co">## Variable                                    Interaction  </span></span>
+<span><span class="co">## PopulationDensity ∩ Population65          Weaken, uni- </span></span>
+<span><span class="co">## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- </span></span>
+<span><span class="co">## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- </span></span>
+<span><span class="co">## PopulationDensity ∩ Beer                  Enhance, bi- </span></span>
+<span><span class="co">## PopulationDensity ∩ MentalHealthPati      Weaken, uni- </span></span>
+<span><span class="co">## PopulationDensity ∩ NatureParks           Enhance, bi- </span></span>
+<span><span class="co">## PopulationDensity ∩ Casinos               Weaken, uni- </span></span>
+<span><span class="co">## PopulationDensity ∩ DrinkingPlaces        Weaken, uni- </span></span>
+<span><span class="co">## PopulationDensity ∩ X.HouseRent           Enhance, bi- </span></span>
+<span><span class="co">## Population65 ∩ NoHealthInsurance          Weaken, uni- </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## ! Only the top ten items of global scale are displayed.</span></span>
+<span><span class="co">## ! The others can be accessed through specific subsets.</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="results-of-local-zones-based-power-of-determinat">Results of local zones-based power of determinat<a class="anchor" aria-label="anchor" href="#results-of-local-zones-based-power-of-determinat"></a>
+</h3>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">g1</span><span class="op">$</span><span class="va">localq</span></span>
 <span><span class="co">## # A tibble: 30 × 6</span></span>
 <span><span class="co">##    Variable              Qvalue   AIC   BIC LogLik  Zone</span></span>
@@ -363,6 +413,21 @@ regression<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power
 <span><span class="co">##  8 Casinos               0.0876 1168. 1168.  -577.     3</span></span>
 <span><span class="co">##  9 DrinkingPlaces        0.106  1161. 1161.  -573.     3</span></span>
 <span><span class="co">## 10 X.HouseRent           0.104  1164. 1164.  -574.     3</span></span>
+<span><span class="co">## # ℹ 20 more rows</span></span>
+<span><span class="va">g4</span><span class="op">$</span><span class="va">localq</span></span>
+<span><span class="co">## # A tibble: 30 × 4</span></span>
+<span><span class="co">##    Variable              Qvalue   AIC  Zone</span></span>
+<span><span class="co">##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;</span></span>
+<span><span class="co">##  1 PopulationDensity      0.144 1144.     3</span></span>
+<span><span class="co">##  2 Population65           0.191 1127.     3</span></span>
+<span><span class="co">##  3 NoHealthInsurance      0.123 1152.     3</span></span>
+<span><span class="co">##  4 Neighbor_Disadvantage  0.187 1128.     3</span></span>
+<span><span class="co">##  5 Beer                   0.123 1153.     3</span></span>
+<span><span class="co">##  6 MentalHealthPati       0.210 1122.     3</span></span>
+<span><span class="co">##  7 NatureParks            0.131 1149.     3</span></span>
+<span><span class="co">##  8 Casinos                0.166 1140.     3</span></span>
+<span><span class="co">##  9 DrinkingPlaces         0.126 1151.     3</span></span>
+<span><span class="co">## 10 X.HouseRent            0.178 1134.     3</span></span>
 <span><span class="co">## # ℹ 20 more rows</span></span></code></pre></div>
 </div>
 </div>
