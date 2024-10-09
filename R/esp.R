@@ -218,7 +218,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
         bicv = stats::AIC(g)
         loglikv = as.numeric(stats::logLik(g))
         if (model == 'error'){
-          fity = as.numeric(stats::predict(g, pred.type = 'TS', listw = listw, re.form = NA))
+          fity = as.numeric(stats::predict(g, pred.type = 'trend', listw = listw, re.form = NA))
         } else {
           fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
         }
@@ -347,7 +347,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
         bicv = stats::AIC(g)
         loglikv = as.numeric(stats::logLik(g))
         if (model == 'error'){
-          fity = as.numeric(stats::predict(g, pred.type = 'TS', listw = listw, re.form = NA))
+          fity = as.numeric(stats::predict(g, pred.type = 'trend', listw = listw, re.form = NA))
         } else {
           fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
         }
@@ -420,7 +420,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
         bicv = stats::AIC(g)
         loglikv = as.numeric(stats::logLik(g))
         if (model == 'error'){
-          fity = as.numeric(stats::predict(g, pred.type = 'TS', listw = listw, re.form = NA))
+          fity = as.numeric(stats::predict(g, pred.type = 'trend', listw = listw, re.form = NA))
         } else {
           fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
         }
