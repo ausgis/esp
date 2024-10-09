@@ -1,8 +1,7 @@
 Package: esp
 Title: Enhanced Stratified Power
 Version: 0.1.0
-Authors@R: 
-    Authors@R: c(
+Authors@R: c(
       person(given = "Wenbo", family = "Lv",
              email = "lyu.geosocial@gmail.com", 
              role = c("aut", "cre", "cph"),
