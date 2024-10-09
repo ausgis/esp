@@ -23,7 +23,6 @@ devtools::install_github("stscl/esp",
 
 ``` r
 library(sf)
-## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(esp)
 library(gdverse)
 ```
@@ -39,14 +38,14 @@ go1 = esp(incidence ~ ., data = NTDs, discvar = 'none',
           model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    1.22    0.03    1.50
+##    1.03    0.08    1.55
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.05    0.00    0.06
+##    0.09    0.00    0.08
 ```
 
 ### Factor detector
@@ -139,7 +138,7 @@ system.time({
          model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    3.38    0.49   23.93
+##    4.19    0.92   18.33
 g1
 ## ***           Enhanced Stratified Power     
 ## 
@@ -184,7 +183,7 @@ system.time({
            model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    9.04    1.14  245.86
+##   10.27    1.27  247.25
 g2
 ## ***           Enhanced Stratified Power     
 ## 
@@ -228,13 +227,41 @@ system.time({
   g3 = esp(Depression_prevelence ~ ., data = depression,
            model = 'error', cores = 8)
 })
-## Error in checkForRemoteErrors(val): 6 nodes produced errors; first error: ℹ In index: 1.
-## ℹ With name: x1.
-## Caused by error in `predict.Sarlm()`:
-## ! no such predict method for error model
-## Timing stopped at: 4.31 0.61 24.1
+##    user  system elapsed 
+##    9.63    1.56  140.52
 g3
-## Error: object 'g3' not found
+## ***           Enhanced Stratified Power     
+## 
+##  Q values are estimated using *Spatial Error Model* 
+## 
+##  ------------- Global Power of Determinat : ------------
+## Variable              Qvalue AIC      BIC      LogLik    
+## PopulationDensity     0.260  4242.465 4242.465 -2111.232 
+## Population65          0.195  4294.715 4294.715 -2140.358 
+## NoHealthInsurance     0.208  4283.546 4283.546 -2133.773 
+## Neighbor_Disadvantage 0.188  4309.098 4309.098 -2147.549 
+## Beer                  0.180  4302.506 4302.506 -2142.253 
+## MentalHealthPati      0.197  4293.660 4293.660 -2139.830 
+## NatureParks           0.176  4330.177 4330.177 -2158.089 
+## Casinos               0.173  4304.348 4304.348 -2145.174 
+## DrinkingPlaces        0.195  4294.383 4294.383 -2140.192 
+## X.HouseRent           0.253  4243.816 4243.816 -2113.908 
+## 
+##  ------------ Global Variable Interaction : ------------
+## Variable                                    Interaction  
+## PopulationDensity ∩ Population65          Enhance, bi- 
+## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
+## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ MentalHealthPati      Enhance, bi- 
+## PopulationDensity ∩ NatureParks           Enhance, bi- 
+## PopulationDensity ∩ Casinos               Enhance, bi- 
+## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
+## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
+## Population65 ∩ NoHealthInsurance          Enhance, bi- 
+## 
+## ! Only the top ten items of global scale are displayed.
+## ! The others can be accessed through specific subsets.
 ```
 
 ### Results of local zones-based power of determinat
@@ -272,6 +299,19 @@ g2$localq
 ## 10 X.HouseRent           0.117  1161. 1161.  -572.     3
 ## # ℹ 20 more rows
 g3$localq
-## Error: object 'g3' not found
+## # A tibble: 30 × 6
+##    Variable              Qvalue   AIC   BIC LogLik  Zone
+##    <chr>                  <dbl> <dbl> <dbl>  <dbl> <int>
+##  1 PopulationDensity     0.176  1141. 1141.  -561.     3
+##  2 Population65          0.124  1156. 1156.  -571.     3
+##  3 NoHealthInsurance     0.111  1161. 1161.  -572.     3
+##  4 Neighbor_Disadvantage 0.140  1150. 1150.  -568.     3
+##  5 Beer                  0.112  1161. 1161.  -571.     3
+##  6 MentalHealthPati      0.105  1162. 1162.  -574.     3
+##  7 NatureParks           0.102  1163. 1163.  -574.     3
+##  8 Casinos               0.0876 1168. 1168.  -577.     3
+##  9 DrinkingPlaces        0.106  1161. 1161.  -573.     3
+## 10 X.HouseRent           0.104  1164. 1164.  -574.     3
+## # ℹ 20 more rows
 ```
 
