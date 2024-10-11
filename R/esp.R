@@ -78,13 +78,13 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     stop("The column names of the independent variables should not be `all` or `none`.")
   }
 
-  if (!is.null(listw)) {
+  if (is.null(listw)){
+    globallw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
+  } else {
     if (length(listw) != (length(unique(yzone)) + 1)) {
       stop('The listw needs to be set for both the global and individual yzone, then preserved in a list.')
     }
     globallw = listw[[1]]
-  } else {
-    globallw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
   }
 
   if (discvar == "all"){
