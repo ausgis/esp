@@ -143,7 +143,7 @@ ggplot2::ggplot(data = depressionmap) +
     ggplot2::theme_bw()
 ```
 
-![plot of chunk Depression_prevelence](man/figures/esp/Depression_prevelence-1.png)
+![](../man/figures/esp/Depression_prevelence-1.png)
 
 ### Enhanced Stratified Power Model With Linear Regression
 
