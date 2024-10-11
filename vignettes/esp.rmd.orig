@@ -73,11 +73,23 @@ depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
 depression
 ```
 
+### Apply natural breaks to the response variable to generate 3 local zones
+
+```{r Depression_prevelence,fig.width=6.5,fig.height=4}
+yzone = sdsfun::discretize_vector(depression$Depression_prevelence,3,method = 'natural')
+depressionmap = sf::st_sf(zones = yzone,geom = sf::st_geometry(depression))
+
+ggplot2::ggplot(data = depressionmap) +
+    ggplot2::geom_sf(ggplot2::aes(color = factor(zones)), alpha = .65) +
+    ggplot2::labs(color = 'zones') +
+    ggplot2::theme_bw()
+```
+
 ### Enhanced Stratified Power Model With Linear Regression
 
 ```{r}
 system.time({
-  g1 = esp(Depression_prevelence ~ ., data = depression,
+  g1 = esp(Depression_prevelence ~ ., data = depression, yzone = yzone,
            model = 'ols', overlay = 'intersection', cores = 8)
 })
 g1
@@ -87,9 +99,8 @@ g1
 
 ```{r}
 system.time({
-  g2 = esp(Depression_prevelence ~ .,
-           data = depression,
-           model = 'lag', cores = 8)
+  g2 = esp(Depression_prevelence ~ ., data = depression,
+           yzone = yzone, model = 'lag', cores = 8)
 })
 g2
 ```
@@ -98,9 +109,8 @@ g2
 
 ```{r}
 system.time({
-  g3 = esp(Depression_prevelence ~ .,
-           data = depression,
-           model = 'error', cores = 8)
+  g3 = esp(Depression_prevelence ~ ., data = depression,
+           yzone = yzone, model = 'error', cores = 8)
 })
 g3
 ```
@@ -109,9 +119,8 @@ g3
 
 ```{r}
 system.time({
-  g4 = esp(Depression_prevelence ~ .,
-           data = depression,
-           model = 'gwr', cores = 8)
+  g4 = esp(Depression_prevelence ~ ., data = depression,
+           yzone = yzone, model = 'gwr', cores = 8)
 })
 g4
 ```
