@@ -115,14 +115,24 @@ system.time({
 g3
 ```
 
+### Enhanced Stratified Power Model With Spatial Durbin Regression
+
+```{r}
+system.time({
+  g4 = esp(Depression_prevelence ~ ., data = depression, yzone = yzone,
+           model = 'lag', durbin = TRUE, cores = 8)
+})
+g4
+```
+
 ### Enhanced Stratified Power Model With Geographically Weighted Regression
 
 ```{r}
 system.time({
-  g4 = esp(Depression_prevelence ~ ., data = depression,
+  g5 = esp(Depression_prevelence ~ ., data = depression,
            yzone = yzone, model = 'gwr', cores = 8)
 })
-g4
+g5
 ```
 
 ### Results of local zones-based power of determinat
@@ -132,5 +142,6 @@ g1$localq
 g2$localq
 g3$localq
 g4$localq
+g5$localq
 ```
 
