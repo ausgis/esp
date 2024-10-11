@@ -78,22 +78,24 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     stop("The column names of the independent variables should not be `all` or `none`.")
   }
 
-  if (is.null(yzone)) {
-    if (is.null(listw)) {
-      globallw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
+  if (!is.null(listw)){
+    if (length(listw) != (length(unique(yzone)) + 1)) {
+      stop('The listw needs to be set for both the global and individual yzone, then preserved in a list.')
     }
   }
 
-  if (is.null(listw)) {
-    globallw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
-    locallw = purrr::map(unique(yzone),
-                         \(.yz) spdep::nb2listw(sdsfun::spdep_nb(data[which(yzone == .yz),]),
-                                                style = "W", zero.policy = TRUE))
-  } else {
-    if (length(listw) != (length(unique(yzone)) + 1)) {
-      stop('The listw needs to be set for both the global and individual yzone, then preserved in a list.')
+  if (is.null(yzone)) {
+    if (is.null(listw)) {
+      globallw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
     } else {
       globallw = listw[[1]]
+    }
+  } else {
+    if (is.null(listw)) {
+      locallw = purrr::map(unique(yzone),
+                           \(.yz) spdep::nb2listw(sdsfun::spdep_nb(data[which(yzone == .yz),]),
+                                                  style = "W", zero.policy = TRUE))
+    } else {
       locallw = listw[-1]
     }
   }
