@@ -72,7 +72,7 @@ A list with \code{espm} class.
 \item{\code{factor}}{global factor detection result}
 \item{\code{interaction}}{global interactive detection results}
 \item{\code{optdisc}}{independent variable optimal spatial discretization}
-\item{\code{localq}}{q valueS of explanatory variables under different response zones}
+\item{\code{localq}}{q values of explanatory variables under different response zones}
 \item{\code{zone}}{zones of the response variable}
 \item{\code{allfactor}}{factor detection results corresponding to different numbers of discreteization}
 \item{\code{model}}{regression model used to estimate equivalent q values}
