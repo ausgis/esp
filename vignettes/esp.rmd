@@ -23,7 +23,6 @@ devtools::install_github("stscl/esp",
 
 ``` r
 library(sf)
-## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(esp)
 library(gdverse)
 ```
@@ -39,7 +38,7 @@ go1 = esp(incidence ~ ., data = NTDs, discvar = 'none',
           model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    0.36    0.02    0.70
+##    0.47    0.02    0.66
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
@@ -154,7 +153,7 @@ system.time({
            model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    2.77    0.45   24.61
+##    3.56    0.64   23.87
 g1
 ## ***           Enhanced Stratified Power     
 ## 
@@ -199,7 +198,7 @@ system.time({
            yzone = yzone, model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    3.86    0.56  265.52
+##    6.04    0.67  262.82
 g2
 ## ***           Enhanced Stratified Power     
 ## 
@@ -244,7 +243,7 @@ system.time({
            yzone = yzone, model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    5.18    0.72  145.07
+##    7.86    0.98  145.90
 g3
 ## ***           Enhanced Stratified Power     
 ## 
@@ -289,7 +288,7 @@ system.time({
            yzone = yzone, model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    7.14    1.07  139.88
+##    8.36    0.75  140.77
 g4
 ## ***           Enhanced Stratified Power     
 ## 
