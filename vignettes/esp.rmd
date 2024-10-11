@@ -38,14 +38,14 @@ go1 = esp(incidence ~ ., data = NTDs, discvar = 'none',
           model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    0.47    0.02    0.66
+##    0.46    0.00    0.64
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.05    0.00    0.07
+##    0.06    0.00    0.07
 ```
 
 ### Factor detector
@@ -153,7 +153,7 @@ system.time({
            model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    3.56    0.64   23.87
+##    4.81    0.79   20.53
 g1
 ## ***           Enhanced Stratified Power     
 ## 
@@ -198,7 +198,7 @@ system.time({
            yzone = yzone, model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    6.04    0.67  262.82
+##    9.55    1.21  254.82
 g2
 ## ***           Enhanced Stratified Power     
 ## 
@@ -243,7 +243,7 @@ system.time({
            yzone = yzone, model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    7.86    0.98  145.90
+##    9.87    1.27  136.25
 g3
 ## ***           Enhanced Stratified Power     
 ## 
@@ -279,17 +279,62 @@ g3
 ## ! The others can be accessed through specific subsets.
 ```
 
+### Enhanced Stratified Power Model With Spatial Durbin Regression
+
+
+``` r
+system.time({
+  g4 = esp(Depression_prevelence ~ ., data = depression, yzone = yzone,
+           model = 'lag', durbin = TRUE, cores = 8)
+})
+##    user  system elapsed 
+##    7.06    0.73  258.86
+g4
+## ***           Enhanced Stratified Power     
+## 
+##  Q values are estimated using *Spatial Durbin Model* 
+## 
+##  ------------- Global Power of Determinat : ------------
+## Variable              Qvalue AIC      BIC      LogLik    
+## PopulationDensity     0.241  4258.246 4258.246 -2116.123 
+## Population65          0.212  4293.682 4293.682 -2135.841 
+## NoHealthInsurance     0.226  4284.655 4284.655 -2129.328 
+## Neighbor_Disadvantage 0.203  4309.408 4309.408 -2143.704 
+## Beer                  0.238  4283.330 4283.330 -2124.665 
+## MentalHealthPati      0.302  4251.558 4251.558 -2110.779 
+## NatureParks           0.245  4295.636 4295.636 -2130.818 
+## Casinos               0.226  4295.287 4295.287 -2132.643 
+## DrinkingPlaces        0.218  4287.728 4287.728 -2132.864 
+## X.HouseRent           0.274  4243.204 4243.204 -2108.602 
+## 
+##  ------------ Global Variable Interaction : ------------
+## Variable                                    Interaction  
+## PopulationDensity ∩ Population65          Enhance, bi- 
+## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
+## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ MentalHealthPati      Enhance, bi- 
+## PopulationDensity ∩ NatureParks           Enhance, bi- 
+## PopulationDensity ∩ Casinos               Enhance, bi- 
+## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
+## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
+## Population65 ∩ NoHealthInsurance          Enhance, bi- 
+## 
+## ! Only the top ten items of global scale are displayed.
+## ! The others can be accessed through specific subsets.
+```
+
 ### Enhanced Stratified Power Model With Geographically Weighted Regression
 
 
 ``` r
 system.time({
-  g4 = esp(Depression_prevelence ~ ., data = depression,
+  g5 = esp(Depression_prevelence ~ ., data = depression,
            yzone = yzone, model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    8.36    0.75  140.77
-g4
+##    5.25    0.33  144.65
+g5
 ## ***           Enhanced Stratified Power     
 ## 
 ##  Q values are estimated using *Geographically Weighted Regression* 
@@ -374,6 +419,21 @@ g3$localq
 ## 10 X.HouseRent           0.0589  683.  683.  -334.     3
 ## # ℹ 20 more rows
 g4$localq
+## # A tibble: 30 × 6
+##    Variable              Qvalue   AIC   BIC LogLik  Zone
+##    <chr>                  <dbl> <dbl> <dbl>  <dbl> <int>
+##  1 PopulationDensity      0.133  676.  676.  -325.     3
+##  2 Population65           0.109  677.  677.  -328.     3
+##  3 NoHealthInsurance      0.118  675.  675.  -327.     3
+##  4 Neighbor_Disadvantage  0.114  676.  676.  -327.     3
+##  5 Beer                   0.138  682.  682.  -324.     3
+##  6 MentalHealthPati       0.106  686.  686.  -328.     3
+##  7 NatureParks            0.182  670.  670.  -318.     3
+##  8 Casinos                0.108  686.  686.  -328.     3
+##  9 DrinkingPlaces         0.102  679.  679.  -329.     3
+## 10 X.HouseRent            0.128  677.  677.  -325.     3
+## # ℹ 20 more rows
+g5$localq
 ## # A tibble: 30 × 4
 ##    Variable              Qvalue   AIC  Zone
 ##    <chr>                  <dbl> <dbl> <int>
