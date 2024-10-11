@@ -12,7 +12,7 @@ esp(
   discvar = "all",
   discnum = 3:8,
   model = "ols",
-  Durbin = FALSE,
+  durbin = FALSE,
   overlay = "and",
   alpha = 0.75,
   bw = "AIC",
@@ -44,7 +44,7 @@ be discretized.}
 \item{model}{(optional) The type of linear model used, default is \code{ols}. The \code{model} value must be any of
 \code{ols}, \code{gwr}, \code{lag} or \code{error}.}
 
-\item{Durbin}{(optional) Whether to consider spatial Durbin terms, default is \code{false}.}
+\item{durbin}{(optional) Whether to consider spatial durbin terms, default is \code{false}.}
 
 \item{overlay}{(optional) Spatial overlay method. One of \code{and}, \code{or}, \code{intersection}. Default is \code{and}.}
 

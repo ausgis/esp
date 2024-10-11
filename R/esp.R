@@ -15,7 +15,7 @@
 #' @param discnum (optional) Number of discretization. Default all will use `3:8`.
 #' @param model (optional) The type of linear model used, default is `ols`. The `model` value must be any of
 #' `ols`, `gwr`, `lag` or `error`.
-#' @param Durbin (optional) Whether to consider spatial Durbin terms, default is `false`.
+#' @param durbin (optional) Whether to consider spatial durbin terms, default is `false`.
 #' @param overlay (optional) Spatial overlay method. One of `and`, `or`, `intersection`. Default is `and`.
 #' @param alpha (optional) Controlling the strength of spatial soft constraints, the larger the `alpha`,
 #' the stronger the spatial soft constraint. Default is `0.75`.
@@ -48,7 +48,7 @@
 #' g
 #'
 esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:8,
-        model = 'ols', Durbin = FALSE, overlay = 'and', alpha = 0.75, bw = "AIC",
+        model = 'ols', durbin = FALSE, overlay = 'and', alpha = 0.75, bw = "AIC",
         adaptive = TRUE, kernel = "gaussian", increase_rate = 0.05, cores = 1, ...) {
   if (!(model %in% c("ols","gwr","lag","error"))){
     stop("`model` must be one of `ols`,`gwr`,`lag` or `error`!")
@@ -176,7 +176,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     discdf = list(discdf)
   }
 
-  get_slm = \(n,listw,model,Durbin,bw,adaptive,kernel){
+  get_slm = \(n,listw,model,durbin,bw,adaptive,kernel){
     slmvar = names(discdf[[n]])
     dummydf = sdsfun::dummy_tbl(discdf[[n]])
     slmlevelvar = names(dummydf)
@@ -191,10 +191,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
       slmformula = paste0("y ~ ",.varname)
       suppressWarnings({if (model == "lag") {
         g = spatialreg::lagsarlm(slmformula, dummydf, listw,
-                                 Durbin = Durbin,zero.policy = TRUE)
+                                 Durbin = durbin,zero.policy = TRUE)
       } else if (model == "error") {
         g = spatialreg::errorsarlm(slmformula, dummydf, listw,
-                                   Durbin = Durbin,zero.policy = TRUE)
+                                   Durbin = durbin,zero.policy = TRUE)
       } else if (model == "gwr") {
         dummydf = sf::st_set_geometry(dummydf,geom)
         g = GWmodel3::gwr_basic(
@@ -225,10 +225,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
   }
   if (doclust) {
     slmres = parallel::parLapply(cores, seq_along(discdf), get_slm, listw = globallw, model = model,
-                                 Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+                                 durbin = durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   } else {
     slmres = purrr::map(seq_along(discdf), get_slm, listw = globallw, model = model,
-                        Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+                        durbin = durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   }
 
   xinteract = utils::combn(xvarname,2,simplify = FALSE)
@@ -309,7 +309,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
   idvlevelvar = names(dummyidvdf)
   dummyidvdf = dplyr::bind_cols(tibble::tibble(y = yvec),dummyidvdf)
 
-  get_idv = \(svar,listw,model,Durbin,bw,adaptive,kernel){
+  get_idv = \(svar,listw,model,durbin,bw,adaptive,kernel){
     slmx = sapply(svar, function(x) {
       matched = grep(paste0("^", x, "_"), idvlevelvar, value = TRUE)
       res = paste(matched, collapse = "+")
@@ -320,10 +320,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
       slmformula = paste0("y ~ ",.varname)
       suppressWarnings({if (model == "lag") {
         g = spatialreg::lagsarlm(slmformula, dummyidvdf, listw,
-                                 Durbin = Durbin,zero.policy = TRUE)
+                                 Durbin = durbin,zero.policy = TRUE)
       } else if (model == "error") {
         g = spatialreg::errorsarlm(slmformula, dummyidvdf, listw,
-                                   Durbin = Durbin,zero.policy = TRUE)
+                                   Durbin = durbin,zero.policy = TRUE)
       } else if (model == "gwr") {
         dummyidvdf = sf::st_set_geometry(dummyidvdf,geom)
         g = GWmodel3::gwr_basic(
@@ -354,10 +354,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
   }
   if (doclust) {
     slmres = parallel::parLapply(cores, idvvar, get_idv, listw = globallw, model = model,
-                                 Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+                                 durbin = durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   } else {
     slmres = purrr::map(idvvar, get_idv, listw = globallw, model = model,
-                        Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+                        durbin = durbin, bw = bw, adaptive = adaptive, kernel = kernel)
   }
 
   suppressMessages({y_pred = purrr::map_dfc(slmres,
@@ -385,7 +385,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
       locallw = listw[-1]
     }
 
-    get_slmlocal = \(n,model,Durbin,bw,adaptive,kernel){
+    get_slmlocal = \(n,model,durbin,bw,adaptive,kernel){
       zs = unique(yzone)[n]
       opt_discdf = opt_discdf[which(yzone == zs),]
       listw = locallw[[n]]
@@ -404,10 +404,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
         slmformula = paste0("y ~ ",.varname)
         suppressWarnings({if (model == "lag") {
           g = spatialreg::lagsarlm(slmformula, dummydf, listw,
-                                   Durbin = Durbin,zero.policy = TRUE)
+                                   Durbin = durbin,zero.policy = TRUE)
         } else if (model == "error") {
           g = spatialreg::errorsarlm(slmformula, dummydf, listw,
-                                     Durbin = Durbin,zero.policy = TRUE)
+                                     Durbin = durbin,zero.policy = TRUE)
         } else if (model == "gwr") {
           dummydf = sf::st_set_geometry(dummydf,geom)
           g = GWmodel3::gwr_basic(
@@ -438,10 +438,10 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
     }
     if (doclust) {
       slmres = parallel::parLapply(cores, seq_along(unique(yzone)), get_slmlocal, model = model,
-                                   Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+                                   durbin = durbin, bw = bw, adaptive = adaptive, kernel = kernel)
     } else {
       slmres = purrr::map(seq_along(unique(yzone)), get_slmlocal, model = model,
-                          Durbin = Durbin, bw = bw, adaptive = adaptive, kernel = kernel)
+                          durbin = durbin, bw = bw, adaptive = adaptive, kernel = kernel)
     }
 
     y_pred = purrr::map(slmres, \(.df){
@@ -498,7 +498,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
              "localq" = localqv,
              "zone" = yzone,
              "allfactor" = fdv,
-             "model" = SLMUsed(model,Durbin))
+             "model" = SLMUsed(model,durbin))
   class(res) = "espm"
   return(res)
 }
