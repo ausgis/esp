@@ -39,14 +39,14 @@ go1 = esp(incidence ~ ., data = NTDs, discvar = 'none',
           model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    1.13    0.03    1.57
+##    0.36    0.02    0.70
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.08    0.00    0.07
+##    0.05    0.00    0.07
 ```
 
 ### Factor detector
@@ -130,16 +130,31 @@ depression
 ## #   DrinkingPlaces <dbl>, X.HouseRent <dbl>, geometry <POINT [°]>
 ```
 
+### Apply natural breaks to the response variable to generate 3 local zones
+
+
+``` r
+yzone = sdsfun::discretize_vector(depression$Depression_prevelence,3,method = 'natural')
+depressionmap = sf::st_sf(zones = yzone,geom = sf::st_geometry(depression))
+
+ggplot2::ggplot(data = depressionmap) +
+    ggplot2::geom_sf(ggplot2::aes(color = factor(zones)), alpha = .65) +
+    ggplot2::labs(color = 'zones') +
+    ggplot2::theme_bw()
+```
+
+![plot of chunk Depression_prevelence](man/figures/esp/Depression_prevelence-1.png)
+
 ### Enhanced Stratified Power Model With Linear Regression
 
 
 ``` r
 system.time({
-  g1 = esp(Depression_prevelence ~ ., data = depression,
+  g1 = esp(Depression_prevelence ~ ., data = depression, yzone = yzone,
            model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    3.29    0.61   24.25
+##    2.77    0.45   24.61
 g1
 ## ***           Enhanced Stratified Power     
 ## 
@@ -180,12 +195,11 @@ g1
 
 ``` r
 system.time({
-  g2 = esp(Depression_prevelence ~ .,
-           data = depression,
-           model = 'lag', cores = 8)
+  g2 = esp(Depression_prevelence ~ ., data = depression,
+           yzone = yzone, model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    9.27    1.30  254.64
+##    3.86    0.56  265.52
 g2
 ## ***           Enhanced Stratified Power     
 ## 
@@ -226,12 +240,11 @@ g2
 
 ``` r
 system.time({
-  g3 = esp(Depression_prevelence ~ .,
-           data = depression,
-           model = 'error', cores = 8)
+  g3 = esp(Depression_prevelence ~ ., data = depression,
+           yzone = yzone, model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    7.64    1.09  132.89
+##    5.18    0.72  145.07
 g3
 ## ***           Enhanced Stratified Power     
 ## 
@@ -272,12 +285,11 @@ g3
 
 ``` r
 system.time({
-  g4 = esp(Depression_prevelence ~ .,
-           data = depression,
-           model = 'gwr', cores = 8)
+  g4 = esp(Depression_prevelence ~ ., data = depression,
+           yzone = yzone, model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##   10.25    1.50  141.89
+##    7.14    1.07  139.88
 g4
 ## ***           Enhanced Stratified Power     
 ## 
@@ -321,61 +333,61 @@ g1$localq
 ## # A tibble: 30 × 6
 ##    Variable              Qvalue   AIC   BIC LogLik  Zone
 ##    <chr>                  <dbl> <dbl> <dbl>  <dbl> <int>
-##  1 PopulationDensity     0.176  1141. 1141.  -562.     3
-##  2 Population65          0.125  1157. 1157.  -572.     3
-##  3 NoHealthInsurance     0.113  1163. 1163.  -575.     3
-##  4 Neighbor_Disadvantage 0.140  1150. 1150.  -569.     3
-##  5 Beer                  0.114  1165. 1165.  -574.     3
-##  6 MentalHealthPati      0.106  1164. 1164.  -576.     3
-##  7 NatureParks           0.104  1165. 1165.  -577.     3
-##  8 Casinos               0.0892 1171. 1171.  -579.     3
-##  9 DrinkingPlaces        0.107  1164. 1164.  -576.     3
-## 10 X.HouseRent           0.106  1166. 1166.  -576.     3
+##  1 PopulationDensity     0.141   666.  666.  -324.     3
+##  2 Population65          0.0673  677.  677.  -333.     3
+##  3 NoHealthInsurance     0.0545  680.  680.  -334.     3
+##  4 Neighbor_Disadvantage 0.0830  674.  674.  -331.     3
+##  5 Beer                  0.0613  683.  683.  -333.     3
+##  6 MentalHealthPati      0.0500  681.  681.  -335.     3
+##  7 NatureParks           0.0611  679.  679.  -333.     3
+##  8 Casinos               0.0490  682.  682.  -335.     3
+##  9 DrinkingPlaces        0.0522  681.  681.  -334.     3
+## 10 X.HouseRent           0.0590  681.  681.  -334.     3
 ## # ℹ 20 more rows
 g2$localq
 ## # A tibble: 30 × 6
 ##    Variable              Qvalue   AIC   BIC LogLik  Zone
 ##    <chr>                  <dbl> <dbl> <dbl>  <dbl> <int>
-##  1 PopulationDensity     0.142  1151. 1151.  -568.     3
-##  2 Population65          0.136  1153. 1153.  -569.     3
-##  3 NoHealthInsurance     0.124  1158. 1158.  -571.     3
-##  4 Neighbor_Disadvantage 0.150  1147. 1147.  -567.     3
-##  5 Beer                  0.112  1161. 1161.  -572.     3
-##  6 MentalHealthPati      0.116  1158. 1158.  -572.     3
-##  7 NatureParks           0.114  1160. 1160.  -573.     3
-##  8 Casinos               0.0994 1164. 1164.  -575.     3
-##  9 DrinkingPlaces        0.118  1158. 1158.  -572.     3
-## 10 X.HouseRent           0.117  1161. 1161.  -572.     3
+##  1 PopulationDensity     0.0791  679.  679.  -331.     3
+##  2 Population65          0.0713  679.  679.  -332.     3
+##  3 NoHealthInsurance     0.0597  681.  681.  -334.     3
+##  4 Neighbor_Disadvantage 0.0863  675.  675.  -331.     3
+##  5 Beer                  0.0537  684.  684.  -334.     3
+##  6 MentalHealthPati      0.0545  682.  682.  -334.     3
+##  7 NatureParks           0.0657  680.  680.  -333.     3
+##  8 Casinos               0.0532  682.  682.  -334.     3
+##  9 DrinkingPlaces        0.0570  682.  682.  -334.     3
+## 10 X.HouseRent           0.0640  682.  682.  -333.     3
 ## # ℹ 20 more rows
 g3$localq
 ## # A tibble: 30 × 6
 ##    Variable              Qvalue   AIC   BIC LogLik  Zone
 ##    <chr>                  <dbl> <dbl> <dbl>  <dbl> <int>
-##  1 PopulationDensity     0.176  1141. 1141.  -561.     3
-##  2 Population65          0.124  1156. 1156.  -571.     3
-##  3 NoHealthInsurance     0.111  1161. 1161.  -572.     3
-##  4 Neighbor_Disadvantage 0.140  1150. 1150.  -568.     3
-##  5 Beer                  0.112  1161. 1161.  -571.     3
-##  6 MentalHealthPati      0.105  1162. 1162.  -574.     3
-##  7 NatureParks           0.102  1163. 1163.  -574.     3
-##  8 Casinos               0.0876 1168. 1168.  -577.     3
-##  9 DrinkingPlaces        0.106  1161. 1161.  -573.     3
-## 10 X.HouseRent           0.104  1164. 1164.  -574.     3
+##  1 PopulationDensity     0.141   667.  667.  -323.     3
+##  2 Population65          0.0673  679.  679.  -333.     3
+##  3 NoHealthInsurance     0.0543  682.  682.  -334.     3
+##  4 Neighbor_Disadvantage 0.0830  676.  676.  -331.     3
+##  5 Beer                  0.0611  684.  684.  -333.     3
+##  6 MentalHealthPati      0.0498  683.  683.  -334.     3
+##  7 NatureParks           0.0611  681.  681.  -333.     3
+##  8 Casinos               0.0488  683.  683.  -334.     3
+##  9 DrinkingPlaces        0.0520  683.  683.  -334.     3
+## 10 X.HouseRent           0.0589  683.  683.  -334.     3
 ## # ℹ 20 more rows
 g4$localq
 ## # A tibble: 30 × 4
 ##    Variable              Qvalue   AIC  Zone
 ##    <chr>                  <dbl> <dbl> <int>
-##  1 PopulationDensity      0.144 1144.     3
-##  2 Population65           0.191 1127.     3
-##  3 NoHealthInsurance      0.123 1152.     3
-##  4 Neighbor_Disadvantage  0.187 1128.     3
-##  5 Beer                   0.123 1153.     3
-##  6 MentalHealthPati       0.210 1122.     3
-##  7 NatureParks            0.131 1149.     3
-##  8 Casinos                0.166 1140.     3
-##  9 DrinkingPlaces         0.126 1151.     3
-## 10 X.HouseRent            0.178 1134.     3
+##  1 PopulationDensity     0.106   664.     3
+##  2 Population65          0.162   652.     3
+##  3 NoHealthInsurance     0.0662  672.     3
+##  4 Neighbor_Disadvantage 0.131   658.     3
+##  5 Beer                  0.0619  673.     3
+##  6 MentalHealthPati      0.150   658.     3
+##  7 NatureParks           0.0815  669.     3
+##  8 Casinos               0.138   659.     3
+##  9 DrinkingPlaces        0.0849  668.     3
+## 10 X.HouseRent           0.133   660.     3
 ## # ℹ 20 more rows
 ```
 
