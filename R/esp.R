@@ -87,7 +87,7 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
       }
       globallw = listw[[1]]
     } else {
-      stop("The listw needs to be a list.")
+      stop("The listw needs to be preserved in a list.")
     }
   }
 
