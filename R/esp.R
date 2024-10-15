@@ -6,8 +6,8 @@
 #' @param data An `sf` object of observation data. Please note that the column names of the independent
 #' variables should not be `all` or `none`.
 #' @param listw (optional) A list of `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
-#' @param yzone (optional) Spatial zones of the response variable. When *yzone* is `NULL`, the local q value is
-#' not calculated. Default is `NULL`.
+#' @param yzone (optional) Spatial zones of the response variable. When *yzone* is `NULL`, the local zones
+#' q value is not calculated. Default is `NULL`.
 #' @param discvar (optional) Name of continuous variable columns that need to be discretized. Noted that
 #' when `formula` has `discvar`, `data` must have these columns. Default is `all`, which means all independent
 #' variables are used as `discvar`. When `discvar` is set to `none`, all independent variables do not need to

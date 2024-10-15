@@ -31,8 +31,8 @@ variables should not be \code{all} or \code{none}.}
 
 \item{listw}{(optional) A list of \code{listw}. See \code{spdep::mat2listw()} and \code{spdep::nb2listw()} for details.}
 
-\item{yzone}{(optional) Spatial zones of the response variable. When \emph{yzone} is \code{NULL}, the local q value is
-not calculated. Default is \code{NULL}.}
+\item{yzone}{(optional) Spatial zones of the response variable. When \emph{yzone} is \code{NULL}, the local zones
+q value is not calculated. Default is \code{NULL}.}
 
 \item{discvar}{(optional) Name of continuous variable columns that need to be discretized. Noted that
 when \code{formula} has \code{discvar}, \code{data} must have these columns. Default is \code{all}, which means all independent
