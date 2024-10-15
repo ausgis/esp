@@ -81,10 +81,14 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
   if (is.null(listw)){
     globallw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
   } else {
-    if (length(listw) != (length(unique(yzone)) + 1)) {
-      stop('The listw needs to be set for both the global and individual yzone, then preserved in a list.')
+    if(inherits(listw,"list")){
+      if (length(listw) != (length(unique(yzone)) + 1)) {
+        stop('The listw needs to be set for both the global and individual yzone, then preserved in a list.')
+      }
+      globallw = listw[[1]]
+    } else {
+      stop("The listw needs to be a list.")
     }
-    globallw = listw[[1]]
   }
 
   if (discvar == "all"){
