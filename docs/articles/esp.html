@@ -91,7 +91,7 @@
 Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivalence-of-q-values-in-the-native-geographical-detector-and-linear-regression-framework"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">NTDs</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">gdverse</span><span class="fu">::</span><span class="va"><a href="https://ausgis.github.io/gdverse/reference/NTDs.html" class="external-link">NTDs</a></span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X'</span>,<span class="st">'Y'</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">NTDs</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">gdverse</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/gdverse/man/NTDs.html" class="external-link">NTDs</a></span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X'</span>,<span class="st">'Y'</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span><span class="va">go1</span> <span class="op">=</span> <span class="fu"><a href="../reference/esp.html">esp</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>, discvar <span class="op">=</span> <span class="st">'none'</span>,</span>
@@ -101,7 +101,7 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 <span><span class="co">##    0.53    0.02    0.84</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
-<span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://ausgis.github.io/gdverse/reference/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
+<span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/gdverse/man/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
 <span>         type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'factor'</span>,<span class="st">'interaction'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
@@ -150,7 +150,7 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 <h2 id="enhanced-stratified-power-model-under-the-spatial-linear-regression-framework">Enhanced Stratified Power Model Under The Spatial Linear Regression
 Framework<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power-model-under-the-spatial-linear-regression-framework"></a>
 </h2>
-<p>Using the same data as <a href="https://ausgis.github.io/gdverse/articles/idsa.html" class="external-link">the gdverse
+<p>Using the same data as <a href="https://stscl.github.io/gdverse/articles/idsa.html" class="external-link">the gdverse
 idsa vignette</a>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">depression</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/Depression.csv'</span>,package <span class="op">=</span> <span class="st">'gdverse'</span><span class="op">)</span> <span class="op">|&gt;</span></span>
