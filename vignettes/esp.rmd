@@ -92,7 +92,7 @@ go2$interaction
 
 ## Enhanced Stratified Power Model Under The Spatial Linear Regression Framework
 
-Using the same data as [the gdverse idsa vignette](https://ausgis.github.io/gdverse/articles/idsa.html):
+Using the same data as [the gdverse idsa vignette](https://stscl.github.io/gdverse/articles/idsa.html):
 
 
 ``` r
