@@ -23,6 +23,7 @@ devtools::install_github("stscl/esp",
 
 ``` r
 library(sf)
+## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(esp)
 library(gdverse)
 ```
@@ -38,14 +39,14 @@ go1 = esp(incidence ~ ., data = NTDs, discvar = 'none',
           model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    0.46    0.00    0.64
+##    0.53    0.02    0.84
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.06    0.00    0.07
+##     0.0     0.0     0.1
 ```
 
 ### Factor detector
@@ -153,7 +154,7 @@ system.time({
            model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    4.81    0.79   20.53
+##    5.11    0.64   25.02
 g1
 ## ***           Enhanced Stratified Power     
 ## 
@@ -198,7 +199,7 @@ system.time({
            yzone = yzone, model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    9.55    1.21  254.82
+##    8.86    1.35  254.83
 g2
 ## ***           Enhanced Stratified Power     
 ## 
@@ -243,7 +244,7 @@ system.time({
            yzone = yzone, model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    9.87    1.27  136.25
+##    6.09    0.68  145.31
 g3
 ## ***           Enhanced Stratified Power     
 ## 
@@ -288,7 +289,7 @@ system.time({
            model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##    7.06    0.73  258.86
+##    6.11    0.85  255.84
 g4
 ## ***           Enhanced Stratified Power     
 ## 
@@ -333,7 +334,7 @@ system.time({
            yzone = yzone, model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    5.25    0.33  144.65
+##    9.00    0.98  136.94
 g5
 ## ***           Enhanced Stratified Power     
 ## 
