@@ -49,7 +49,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/stscl/esp/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ausgis/esp/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -65,7 +65,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Enhanced Stratified Power Model</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/stscl/esp/blob/HEAD/vignettes/esp.rmd" class="external-link"><code>vignettes/esp.rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ausgis/esp/blob/HEAD/vignettes/esp.rmd" class="external-link"><code>vignettes/esp.rmd</code></a></small>
       <div class="d-none name"><code>esp.rmd</code></div>
     </div>
 
@@ -83,7 +83,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="co">## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/esp/">esp</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/esp/" class="external-link">esp</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ausgis.github.io/gdverse/" class="external-link">gdverse</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -98,14 +98,14 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 <span>          model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.53    0.02    0.84</span></span>
+<span><span class="co">##    0.44    0.02    0.72</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/gdverse/man/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
 <span>         type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'factor'</span>,<span class="st">'interaction'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##     0.0     0.0     0.1</span></span></code></pre></div>
+<span><span class="co">##    0.05    0.00    0.07</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="factor-detector">Factor detector<a class="anchor" aria-label="anchor" href="#factor-detector"></a>
 </h3>
@@ -154,7 +154,7 @@ Framework<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power-
 idsa vignette</a>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">depression</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/Depression.csv'</span>,package <span class="op">=</span> <span class="st">'gdverse'</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/readr/man/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X'</span>,<span class="st">'Y'</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span>
 <span><span class="co">## Rows: 1072 Columns: 13</span></span>
 <span><span class="co">## ── Column specification ─────────────────────────────────────────────────────────────────────────</span></span>
@@ -208,7 +208,7 @@ zones<a class="anchor" aria-label="anchor" href="#apply-natural-breaks-to-the-re
 <span>           model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    5.11    0.64   25.02</span></span>
+<span><span class="co">##    3.23    0.72   22.76</span></span>
 <span><span class="va">g1</span></span>
 <span><span class="co">## ***           Enhanced Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -252,7 +252,7 @@ zones<a class="anchor" aria-label="anchor" href="#apply-natural-breaks-to-the-re
 <span>           yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'lag'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    8.86    1.35  254.83</span></span>
+<span><span class="co">##    6.27    0.63  251.26</span></span>
 <span><span class="va">g2</span></span>
 <span><span class="co">## ***           Enhanced Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -296,7 +296,7 @@ zones<a class="anchor" aria-label="anchor" href="#apply-natural-breaks-to-the-re
 <span>           yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'error'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    6.09    0.68  145.31</span></span>
+<span><span class="co">##    9.61    1.11  136.83</span></span>
 <span><span class="va">g3</span></span>
 <span><span class="co">## ***           Enhanced Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -340,7 +340,7 @@ zones<a class="anchor" aria-label="anchor" href="#apply-natural-breaks-to-the-re
 <span>           model <span class="op">=</span> <span class="st">'lag'</span>, durbin <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    6.11    0.85  255.84</span></span>
+<span><span class="co">##   12.19    1.31  270.23</span></span>
 <span><span class="va">g4</span></span>
 <span><span class="co">## ***           Enhanced Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -385,7 +385,7 @@ Regression<a class="anchor" aria-label="anchor" href="#enhanced-stratified-power
 <span>           yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'gwr'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    9.00    0.98  136.94</span></span>
+<span><span class="co">##    6.47    0.42  142.88</span></span>
 <span><span class="va">g5</span></span>
 <span><span class="co">## ***           Enhanced Stratified Power     </span></span>
 <span><span class="co">## </span></span>
