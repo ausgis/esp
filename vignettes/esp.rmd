@@ -14,7 +14,7 @@ vignette: >
 ```r
 install.packages(c("sf","gdverse"), dep = T)
 # install.packages("devtools")
-devtools::install_github("stscl/esp",
+devtools::install_github("ausgis/esp",
                          build_vignettes = TRUE,
                          dep = TRUE)
 ```
