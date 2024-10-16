@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# esp <a href="https://stscl.github.io/esp/"><img src="man/figures/logo.png" align="right" height="139" alt="esp website" /></a>
+# esp <a href="https://ausgis.github.io/esp/"><img src="man/figures/logo.png" align="right" height="139" alt="esp website" /></a>
 
 <!-- badges: start -->
 
@@ -21,21 +21,21 @@ install.packages("esp")
 ```
 
 - Install development binary version from
-  [R-universe](https://stscl.r-universe.dev/esp) with:
+  [R-universe](https://ausgis.r-universe.dev/esp) with:
 
 ``` r
 install.packages('esp',
-                 repos = c("https://stscl.r-universe.dev",
+                 repos = c("https://ausgis.r-universe.dev",
                            "https://cloud.r-project.org"),
                  dep = TRUE)
 ```
 
 - Install development source version from
-  [GitHub](https://github.com/stscl/esp) with:
+  [GitHub](https://github.com/ausgis/esp) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("stscl/esp",
+devtools::install_github("ausgis/esp",
                          build_vignettes = TRUE,
                          dep = TRUE)
 ```
