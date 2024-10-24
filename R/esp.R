@@ -20,7 +20,7 @@
 #' @param alpha (optional) Controlling the strength of spatial soft constraints, the larger the `alpha`,
 #' the stronger the spatial soft constraint. Default is `0.75`.
 #' @param bw (optional) The bandwidth used in selecting models. The optimal bandwidth can be
-#' selected using one of two methods: `AIC`, and `CV`. Default will use `AIC`.
+#' selected using one of two methods: `AIC`, and `CV`. Default is `AIC`.
 #' @param adaptive (optional) Whether the bandwidth value is adaptive or not. Default is `TRUE`.
 #' @param kernel (optional) Kernel function. Default is `gaussian`.
 #' @param increase_rate (optional) The critical increase rate of the number of discretization.

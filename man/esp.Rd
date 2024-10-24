@@ -52,7 +52,7 @@ be discretized.}
 the stronger the spatial soft constraint. Default is \code{0.75}.}
 
 \item{bw}{(optional) The bandwidth used in selecting models. The optimal bandwidth can be
-selected using one of two methods: \code{AIC}, and \code{CV}. Default will use \code{AIC}.}
+selected using one of two methods: \code{AIC}, and \code{CV}. Default is \code{AIC}.}
 
 \item{adaptive}{(optional) Whether the bandwidth value is adaptive or not. Default is \code{TRUE}.}
 
