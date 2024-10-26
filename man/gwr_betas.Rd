@@ -2,7 +2,7 @@
 % Please edit documentation in R/gwr_betas.R
 \name{gwr_betas}
 \alias{gwr_betas}
-\title{estimate \code{gwr} model coefficients}
+\title{Estimate \code{gwr} model coefficients}
 \usage{
 gwr_betas(
   formula,
@@ -31,7 +31,7 @@ selected using one of two methods: \code{AIC}, and \code{CV}. Default will use \
 A \code{tibble}
 }
 \description{
-estimate \code{gwr} model coefficients
+Estimate \code{gwr} model coefficients
 }
 \examples{
 \donttest{

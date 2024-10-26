@@ -2,7 +2,7 @@
 % Please edit documentation in R/esp.R
 \name{esp}
 \alias{esp}
-\title{enhanced stratified power}
+\title{Enhanced Stratified Power (\strong{ESP}) model}
 \usage{
 esp(
   formula,

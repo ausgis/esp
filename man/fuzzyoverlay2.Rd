@@ -2,7 +2,7 @@
 % Please edit documentation in R/fuzzyoverlay2.R
 \name{fuzzyoverlay2}
 \alias{fuzzyoverlay2}
-\title{spatial fuzzy overlay between variables pairwise}
+\title{Spatial fuzzy overlay between variables pairwise}
 \usage{
 fuzzyoverlay2(formula, data, method = "and")
 }
@@ -22,7 +22,7 @@ A list
 }
 }
 \description{
-spatial fuzzy overlay between variables pairwise
+Spatial fuzzy overlay between variables pairwise
 }
 \examples{
 sim = tibble::tibble(y = stats::runif(7,0,10),

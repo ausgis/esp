@@ -1,4 +1,4 @@
-#' @title enhanced stratified power
+#' @title Enhanced Stratified Power (**ESP**) model
 #' @description
 #' Equivalent geographical detector q-statistic under a spatial linear regression framework.
 #'

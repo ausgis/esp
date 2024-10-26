@@ -1,4 +1,4 @@
-#' spatial fuzzy overlay between variables pairwise
+#' Spatial fuzzy overlay between variables pairwise
 #'
 #' @param formula A formula.
 #' @param data A `data.frame` or `tibble` of discretized data.
