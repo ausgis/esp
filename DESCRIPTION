@@ -9,11 +9,7 @@ Authors@R: c(
       person(given = "Yongze", family = "Song",
              email = "yongze.song@outlook.com", 
              role = c("aut"),
-             comment = c(ORCID = "0000-0003-3420-9622")),
-      person(given = "Wufan", family = "Zhao",
-             email = "wufanzhao@hkust-gz.edu.cn", 
-             role = c("aut"),
-             comment = c(ORCID = "0000-0002-0265-3465"))
+             comment = c(ORCID = "0000-0003-3420-9622"))
       )
 Description: Assessing the spatial association between variables through an equivalent geographical detector q-statistic within a regression framework.
 License: GPL-3
