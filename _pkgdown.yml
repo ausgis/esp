@@ -28,11 +28,11 @@ authors:
     href: https://wufan-zhao.github.io/
 
 reference:
-- title: enhanced stratified power model
+- title: Enhanced Stratified Power Model
   contents:
   - esp
 
-- title: utility functions
+- title: Utility Functions
   contents:
   - fuzzyoverlay2
   - gwr_betas
