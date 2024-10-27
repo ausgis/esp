@@ -13,7 +13,7 @@ navbar:
     articles:
       text: Vignettes
       menu:
-      - text: Spatially Explicit Stratified Power
+      - text: Spatially Explicit Stratified Power Model
         href: articles/sesp.html
 
 home:
