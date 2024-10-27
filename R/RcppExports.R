@@ -2,50 +2,50 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 QuantileDisc <- function(x, n) {
-    .Call(`_esp_QuantileDisc`, x, n)
+    .Call(`_sesp_QuantileDisc`, x, n)
 }
 
 ArmaRunique <- function(x) {
-    .Call(`_esp_ArmaRunique`, x)
+    .Call(`_sesp_ArmaRunique`, x)
 }
 
 ArmaDummyVec <- function(vec) {
-    .Call(`_esp_ArmaDummyVec`, vec)
+    .Call(`_sesp_ArmaDummyVec`, vec)
 }
 
 ArmaDummyMat <- function(mat) {
-    .Call(`_esp_ArmaDummyMat`, mat)
+    .Call(`_sesp_ArmaDummyMat`, mat)
 }
 
 InteractionType <- function(qv12, qv1, qv2) {
-    .Call(`_esp_InteractionType`, qv12, qv1, qv2)
+    .Call(`_sesp_InteractionType`, qv12, qv1, qv2)
 }
 
 GenTau <- function(n) {
-    .Call(`_esp_GenTau`, n)
+    .Call(`_sesp_GenTau`, n)
 }
 
 ComputeR2 <- function(y, y_pred) {
-    .Call(`_esp_ComputeR2`, y, y_pred)
+    .Call(`_sesp_ComputeR2`, y, y_pred)
 }
 
 ComputeLocalR2 <- function(y, y_pred, Ymean) {
-    .Call(`_esp_ComputeLocalR2`, y, y_pred, Ymean)
+    .Call(`_sesp_ComputeLocalR2`, y, y_pred, Ymean)
 }
 
 SLMQ <- function(Y, FitY) {
-    .Call(`_esp_SLMQ`, Y, FitY)
+    .Call(`_sesp_SLMQ`, Y, FitY)
 }
 
 SLMLocalQ <- function(Y, FitY, Zones) {
-    .Call(`_esp_SLMLocalQ`, Y, FitY, Zones)
+    .Call(`_sesp_SLMLocalQ`, Y, FitY, Zones)
 }
 
 PrintGlobalQ <- function(df) {
-    invisible(.Call(`_esp_PrintGlobalQ`, df))
+    invisible(.Call(`_sesp_PrintGlobalQ`, df))
 }
 
 SLMUsed <- function(model, durbin) {
-    .Call(`_esp_SLMUsed`, model, durbin)
+    .Call(`_sesp_SLMUsed`, model, durbin)
 }
 

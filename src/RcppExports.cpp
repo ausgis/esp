@@ -13,7 +13,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // QuantileDisc
 Rcpp::IntegerVector QuantileDisc(const arma::vec& x, int n);
-RcppExport SEXP _esp_QuantileDisc(SEXP xSEXP, SEXP nSEXP) {
+RcppExport SEXP _sesp_QuantileDisc(SEXP xSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -25,7 +25,7 @@ END_RCPP
 }
 // ArmaRunique
 arma::ivec ArmaRunique(const arma::ivec& x);
-RcppExport SEXP _esp_ArmaRunique(SEXP xSEXP) {
+RcppExport SEXP _sesp_ArmaRunique(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -36,7 +36,7 @@ END_RCPP
 }
 // ArmaDummyVec
 arma::mat ArmaDummyVec(const arma::vec& vec);
-RcppExport SEXP _esp_ArmaDummyVec(SEXP vecSEXP) {
+RcppExport SEXP _sesp_ArmaDummyVec(SEXP vecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -47,7 +47,7 @@ END_RCPP
 }
 // ArmaDummyMat
 arma::mat ArmaDummyMat(const arma::imat& mat);
-RcppExport SEXP _esp_ArmaDummyMat(SEXP matSEXP) {
+RcppExport SEXP _sesp_ArmaDummyMat(SEXP matSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -58,7 +58,7 @@ END_RCPP
 }
 // InteractionType
 std::string InteractionType(double qv12, double qv1, double qv2);
-RcppExport SEXP _esp_InteractionType(SEXP qv12SEXP, SEXP qv1SEXP, SEXP qv2SEXP) {
+RcppExport SEXP _sesp_InteractionType(SEXP qv12SEXP, SEXP qv1SEXP, SEXP qv2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -71,7 +71,7 @@ END_RCPP
 }
 // GenTau
 Rcpp::NumericVector GenTau(double n);
-RcppExport SEXP _esp_GenTau(SEXP nSEXP) {
+RcppExport SEXP _sesp_GenTau(SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -82,7 +82,7 @@ END_RCPP
 }
 // ComputeR2
 double ComputeR2(const arma::vec& y, const arma::vec& y_pred);
-RcppExport SEXP _esp_ComputeR2(SEXP ySEXP, SEXP y_predSEXP) {
+RcppExport SEXP _sesp_ComputeR2(SEXP ySEXP, SEXP y_predSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -94,7 +94,7 @@ END_RCPP
 }
 // ComputeLocalR2
 double ComputeLocalR2(const arma::vec& y, const arma::vec& y_pred, double Ymean);
-RcppExport SEXP _esp_ComputeLocalR2(SEXP ySEXP, SEXP y_predSEXP, SEXP YmeanSEXP) {
+RcppExport SEXP _sesp_ComputeLocalR2(SEXP ySEXP, SEXP y_predSEXP, SEXP YmeanSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -107,7 +107,7 @@ END_RCPP
 }
 // SLMQ
 Rcpp::NumericVector SLMQ(const arma::vec& Y, const arma::mat& FitY);
-RcppExport SEXP _esp_SLMQ(SEXP YSEXP, SEXP FitYSEXP) {
+RcppExport SEXP _sesp_SLMQ(SEXP YSEXP, SEXP FitYSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -119,7 +119,7 @@ END_RCPP
 }
 // SLMLocalQ
 Rcpp::DataFrame SLMLocalQ(const arma::vec& Y, const arma::mat& FitY, const arma::ivec& Zones);
-RcppExport SEXP _esp_SLMLocalQ(SEXP YSEXP, SEXP FitYSEXP, SEXP ZonesSEXP) {
+RcppExport SEXP _sesp_SLMLocalQ(SEXP YSEXP, SEXP FitYSEXP, SEXP ZonesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -132,7 +132,7 @@ END_RCPP
 }
 // PrintGlobalQ
 void PrintGlobalQ(DataFrame df);
-RcppExport SEXP _esp_PrintGlobalQ(SEXP dfSEXP) {
+RcppExport SEXP _sesp_PrintGlobalQ(SEXP dfSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type df(dfSEXP);
@@ -142,7 +142,7 @@ END_RCPP
 }
 // SLMUsed
 std::string SLMUsed(std::string model, bool durbin);
-RcppExport SEXP _esp_SLMUsed(SEXP modelSEXP, SEXP durbinSEXP) {
+RcppExport SEXP _sesp_SLMUsed(SEXP modelSEXP, SEXP durbinSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -154,22 +154,22 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_esp_QuantileDisc", (DL_FUNC) &_esp_QuantileDisc, 2},
-    {"_esp_ArmaRunique", (DL_FUNC) &_esp_ArmaRunique, 1},
-    {"_esp_ArmaDummyVec", (DL_FUNC) &_esp_ArmaDummyVec, 1},
-    {"_esp_ArmaDummyMat", (DL_FUNC) &_esp_ArmaDummyMat, 1},
-    {"_esp_InteractionType", (DL_FUNC) &_esp_InteractionType, 3},
-    {"_esp_GenTau", (DL_FUNC) &_esp_GenTau, 1},
-    {"_esp_ComputeR2", (DL_FUNC) &_esp_ComputeR2, 2},
-    {"_esp_ComputeLocalR2", (DL_FUNC) &_esp_ComputeLocalR2, 3},
-    {"_esp_SLMQ", (DL_FUNC) &_esp_SLMQ, 2},
-    {"_esp_SLMLocalQ", (DL_FUNC) &_esp_SLMLocalQ, 3},
-    {"_esp_PrintGlobalQ", (DL_FUNC) &_esp_PrintGlobalQ, 1},
-    {"_esp_SLMUsed", (DL_FUNC) &_esp_SLMUsed, 2},
+    {"_sesp_QuantileDisc", (DL_FUNC) &_sesp_QuantileDisc, 2},
+    {"_sesp_ArmaRunique", (DL_FUNC) &_sesp_ArmaRunique, 1},
+    {"_sesp_ArmaDummyVec", (DL_FUNC) &_sesp_ArmaDummyVec, 1},
+    {"_sesp_ArmaDummyMat", (DL_FUNC) &_sesp_ArmaDummyMat, 1},
+    {"_sesp_InteractionType", (DL_FUNC) &_sesp_InteractionType, 3},
+    {"_sesp_GenTau", (DL_FUNC) &_sesp_GenTau, 1},
+    {"_sesp_ComputeR2", (DL_FUNC) &_sesp_ComputeR2, 2},
+    {"_sesp_ComputeLocalR2", (DL_FUNC) &_sesp_ComputeLocalR2, 3},
+    {"_sesp_SLMQ", (DL_FUNC) &_sesp_SLMQ, 2},
+    {"_sesp_SLMLocalQ", (DL_FUNC) &_sesp_SLMLocalQ, 3},
+    {"_sesp_PrintGlobalQ", (DL_FUNC) &_sesp_PrintGlobalQ, 1},
+    {"_sesp_SLMUsed", (DL_FUNC) &_sesp_SLMUsed, 2},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_esp(DllInfo *dll) {
+RcppExport void R_init_sesp(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
