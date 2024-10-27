@@ -1,0 +1,147 @@
+---
+title: "Spatially Explicit Stratified Power Model"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{sesp}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "##",
+  fig.path = "man/figures/sesp/"
+)
+```
+
+## Install and load R packages
+
+```r
+install.packages(c("sf","gdverse"), dep = T)
+# install.packages("devtools")
+devtools::install_github("ausgis/sesp",
+                         build_vignettes = TRUE,
+                         dep = TRUE)
+```
+
+
+```{r}
+library(sf)
+library(sesp)
+library(gdverse)
+```
+
+## Equivalence of Q Values in the Native Geographical Detector and Linear Regression Framework
+
+```{r}
+NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
+
+system.time({
+go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
+           model = 'ols', overlay = 'intersection')
+})
+
+system.time({
+go2 = gd(incidence ~ ., data = NTDs,
+         type = c('factor','interaction'))
+})
+```
+
+### Factor detector
+
+```{r}
+go1$factor
+go2$factor
+```
+
+### Interaction detector
+
+```{r}
+go1$interaction
+go2$interaction
+```
+
+## Spatially Explicit Stratified Power Model Under The Spatial Linear Regression Framework
+
+Using the same data as [the gdverse idsa vignette](https://stscl.github.io/gdverse/articles/idsa.html):
+
+```{r}
+depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
+  readr::read_csv() |>
+  sf::st_as_sf(coords = c('X','Y'), crs = 4326)
+depression
+```
+
+### Apply natural breaks to the response variable to generate 3 local zones
+
+```{r Depression_prevelence,fig.width=6.5,fig.height=4}
+yzone = sdsfun::discretize_vector(depression$Depression_prevelence,3,method = 'natural')
+depressionmap = sf::st_sf(zones = yzone,geom = sf::st_geometry(depression))
+
+ggplot2::ggplot(data = depressionmap) +
+    ggplot2::geom_sf(ggplot2::aes(color = factor(zones)), alpha = .65) +
+    ggplot2::labs(color = 'zones') +
+    ggplot2::theme_bw()
+```
+
+### Spatially Explicit Stratified Power Model With Linear Regression
+
+```{r}
+system.time({
+  g1 = sesp(Depression_prevelence ~ ., data = depression, yzone = yzone,
+            model = 'ols', overlay = 'intersection', cores = 8)
+})
+g1
+```
+
+### Spatially Explicit Stratified Power Model With Spatial Lag Regression
+
+```{r}
+system.time({
+  g2 = sesp(Depression_prevelence ~ ., data = depression,
+            yzone = yzone, model = 'lag', cores = 8)
+})
+g2
+```
+
+### Spatially Explicit Stratified Power Model With Spatial Error Regression
+
+```{r}
+system.time({
+  g3 = sesp(Depression_prevelence ~ ., data = depression,
+            yzone = yzone, model = 'error', cores = 8)
+})
+g3
+```
+
+### Spatially Explicit Stratified Power Model With Spatial Durbin Regression
+
+```{r}
+system.time({
+  g4 = sesp(Depression_prevelence ~ ., data = depression, yzone = yzone,
+            model = 'lag', durbin = TRUE, cores = 8)
+})
+g4
+```
+
+### Spatially Explicit Stratified Power Model With Geographically Weighted Regression
+
+```{r}
+system.time({
+  g5 = sesp(Depression_prevelence ~ ., data = depression,
+            yzone = yzone, model = 'gwr', cores = 8)
+})
+g5
+```
+
+### Results of local zones-based power of determinat
+
+```{r}
+g1$localq
+g2$localq
+g3$localq
+g4$localq
+g5$localq
+```
+

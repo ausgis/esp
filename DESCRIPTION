@@ -1,15 +1,51 @@
 Package: sesp
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person("Wenbo", "Lv", , "lyu.geosocial@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0009-0002-6003-3800"))
-Description: What the package does (one paragraph).
+Title: Spatially Explicit Stratified Power
+Version: 0.1.0
+Authors@R: c(
+      person(given = "Wenbo", family = "Lv",
+             email = "lyu.geosocial@gmail.com", 
+             role = c("aut", "cre", "cph"),
+             comment = c(ORCID = "0009-0002-6003-3800")),
+      person(given = "Yongze", family = "Song",
+             email = "yongze.song@outlook.com", 
+             role = c("aut"),
+             comment = c(ORCID = "0000-0003-3420-9622"))
+      )
+Description: Assessing the spatial association between variables through an equivalent geographical detector q-statistic within a regression framework.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-LinkingTo: 
-    Rcpp
+URL: https://ausgis.github.io/sesp/, https://github.com/ausgis/sesp
+BugReports: https://github.com/ausgis/sesp/issues
+Depends: 
+    R (>= 4.1.0)
 Imports: 
-    Rcpp
+    ClustGeo,
+    dplyr,
+    GWmodel3,
+    magrittr,
+    parallel,
+    purrr,
+    sdsfun,
+    sf,
+    spatialreg,
+    spdep,
+    stats,
+    tibble,
+    tidyr,
+    utils
+Suggests: 
+    gdverse,
+    knitr,
+    Rcpp,
+    RcppArmadillo,
+    readr,
+    rmarkdown
+Remotes:
+    stscl/sdsfun,
+    GWmodel-Lab/GWmodel3
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
+VignetteBuilder: knitr
