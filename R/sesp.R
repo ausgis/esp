@@ -125,7 +125,7 @@ sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3
       undiscdf = NULL
     }
 
-    gwrcoefs = esp::gwr_betas(paste0(yname," ~ ."),discdf,bw,adaptive,kernel)
+    gwrcoefs = sesp::gwr_betas(paste0(yname," ~ ."),discdf,bw,adaptive,kernel)
     gwr_hclust = \(n,discnum,alpha,...) {
       D0 = stats::dist(gwrcoefs[,n,drop = TRUE])
       resh = ClustGeo::hclustgeo(D0,stats::as.dist(gdist),alpha,...)
@@ -306,7 +306,7 @@ sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3
   }
 
   fdf = dplyr::bind_cols(tibble::tibble(y = yvec),opt_discdf)
-  fdfres = esp::fuzzyoverlay2("y ~ .",fdf,overlay)[[1]]
+  fdfres = sesp::fuzzyoverlay2("y ~ .",fdf,overlay)[[1]]
   idvdf = dplyr::bind_cols(opt_discdf,fdfres)
   idvvar = names(idvdf)
   dummyidvdf = sdsfun::dummy_tbl(idvdf)
