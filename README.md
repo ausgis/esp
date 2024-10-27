@@ -10,7 +10,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-cyan.svg)](htt
 [![cran](https://www.r-pkg.org/badges/version/sesp)](https://CRAN.R-project.org/package=sesp)
 <!-- badges: end -->
 
-**Spatially Explicit Stratified Power**
+**Spatially Explicit Stratified Power Model**
 
 ## Installation
 

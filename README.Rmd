@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 [![cran](https://www.r-pkg.org/badges/version/sesp)](https://CRAN.R-project.org/package=sesp)
 <!-- badges: end -->
 
-**Spatially Explicit Stratified Power**
+**Spatially Explicit Stratified Power Model**
 
 ## Installation
 
