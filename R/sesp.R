@@ -29,7 +29,7 @@
 #' multi-core parallel computing.
 #' @param ... (optional) Other arguments passed to `ClustGeo::hclustgeo()`.
 #'
-#' @return A list with `espm` class.
+#' @return A list with `sespm` class.
 #' \describe{
 #' \item{\code{factor}}{global factor detection result}
 #' \item{\code{interaction}}{global interactive detection results}
@@ -44,7 +44,7 @@
 #' @examples
 #' NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
 #' g = sesp(incidence ~ ., data = NTDs, discvar = 'none',
-#'         model = 'ols', overlay = 'intersection', cores = 1)
+#'          model = 'ols', overlay = 'intersection', cores = 1)
 #' g
 #'
 sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:8,
