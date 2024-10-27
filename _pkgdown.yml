@@ -1,4 +1,4 @@
-url: https://ausgis.github.io/esp/
+url: https://ausgis.github.io/sesp/
 template:
   bootstrap: 5
   math-rendering: mathjax
@@ -13,12 +13,12 @@ navbar:
     articles:
       text: Vignettes
       menu:
-      - text: Enhanced Stratified Power
-        href: articles/esp.html
+      - text: Spatially Explicit Stratified Power
+        href: articles/sesp.html
 
 home:
   title: |
-    esp | Enhanced Stratified Power
+    sesp | Spatially Explicit Stratified Power
 authors:
   Wenbo Lv:
     href: https://spatlyu.github.io/
@@ -26,9 +26,9 @@ authors:
     href: https://yongzesong.com/
 
 reference:
-- title: Enhanced Stratified Power Model
+- title: Spatially Explicit Stratified Power Model
   contents:
-  - esp
+  - sesp
 
 - title: Utility Functions
   contents:
