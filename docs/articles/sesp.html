@@ -84,7 +84,12 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="co">## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ausgis.github.io/sesp/">sesp</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/gdverse/" class="external-link">gdverse</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/gdverse/" class="external-link">gdverse</a></span><span class="op">)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Attaching package: 'gdverse'</span></span>
+<span><span class="co">## The following object is masked _by_ '.GlobalEnv':</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##     NTDs</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="equivalence-of-q-values-in-the-native-geographical-detector-and-linear-regression-framework">Equivalence of Q Values in the Native Geographical Detector and
@@ -98,14 +103,14 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 <span>           model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.44    0.00    0.55</span></span>
+<span><span class="co">##    0.30    0.00    0.44</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://stscl.github.io/gdverse/reference/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
 <span>         type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'factor'</span>,<span class="st">'interaction'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.06    0.02    0.09</span></span></code></pre></div>
+<span><span class="co">##    0.08    0.00    0.07</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="factor-detector">Factor detector<a class="anchor" aria-label="anchor" href="#factor-detector"></a>
 </h3>
@@ -209,7 +214,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    6.17    1.29   21.65</span></span>
+<span><span class="co">##    5.39    0.97   23.88</span></span>
 <span><span class="va">g1</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -254,7 +259,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'lag'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    6.89    0.77  268.46</span></span>
+<span><span class="co">##    9.54    1.20  250.61</span></span>
 <span><span class="va">g2</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -299,7 +304,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'error'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    7.55    1.08  136.93</span></span>
+<span><span class="co">##    7.96    0.88  136.92</span></span>
 <span><span class="va">g3</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -344,7 +349,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            model <span class="op">=</span> <span class="st">'lag'</span>, durbin <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##   10.22    1.74  246.28</span></span>
+<span><span class="co">##    8.53    1.16  269.28</span></span>
 <span><span class="va">g4</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -389,7 +394,7 @@ Weighted Regression<a class="anchor" aria-label="anchor" href="#spatially-explic
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'gwr'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    9.42    1.81  134.97</span></span>
+<span><span class="co">##    8.89    1.18  144.00</span></span>
 <span><span class="va">g5</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
