@@ -1,9 +1,0 @@
-pandoc: '3.2'
-pkgdown: 2.1.1
-pkgdown_sha: ~
-articles:
-  esp: esp.html
-last_built: 2024-10-26T11:55Z
-urls:
-  reference: https://ausgis.github.io/esp/reference
-  article: https://ausgis.github.io/esp/articles
