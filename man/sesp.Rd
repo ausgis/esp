@@ -67,7 +67,7 @@ multi-core parallel computing.}
 \item{...}{(optional) Other arguments passed to \code{ClustGeo::hclustgeo()}.}
 }
 \value{
-A list with \code{espm} class.
+A list.
 \describe{
 \item{\code{factor}}{global factor detection result}
 \item{\code{interaction}}{global interactive detection results}
@@ -84,7 +84,7 @@ Equivalent geographical detector q-statistic under a spatial linear regression f
 \examples{
 NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
 g = sesp(incidence ~ ., data = NTDs, discvar = 'none',
-        model = 'ols', overlay = 'intersection', cores = 1)
+         model = 'ols', overlay = 'intersection', cores = 1)
 g
 
 }

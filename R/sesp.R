@@ -29,7 +29,7 @@
 #' multi-core parallel computing.
 #' @param ... (optional) Other arguments passed to `ClustGeo::hclustgeo()`.
 #'
-#' @return A list with `sespm` class.
+#' @return A list.
 #' \describe{
 #' \item{\code{factor}}{global factor detection result}
 #' \item{\code{interaction}}{global interactive detection results}
