@@ -26,6 +26,11 @@ library(sf)
 ## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(sesp)
 library(gdverse)
+## 
+## Attaching package: 'gdverse'
+## The following object is masked _by_ '.GlobalEnv':
+## 
+##     NTDs
 ```
 
 ## Equivalence of Q Values in the Native Geographical Detector and Linear Regression Framework
@@ -39,14 +44,14 @@ go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
            model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    0.44    0.00    0.55
+##    0.30    0.00    0.44
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.06    0.02    0.09
+##    0.08    0.00    0.07
 ```
 
 ### Factor detector
@@ -154,7 +159,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    6.17    1.29   21.65
+##    5.39    0.97   23.88
 g1
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -199,7 +204,7 @@ system.time({
             yzone = yzone, model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    6.89    0.77  268.46
+##    9.54    1.20  250.61
 g2
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -244,7 +249,7 @@ system.time({
             yzone = yzone, model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    7.55    1.08  136.93
+##    7.96    0.88  136.92
 g3
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -289,7 +294,7 @@ system.time({
             model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##   10.22    1.74  246.28
+##    8.53    1.16  269.28
 g4
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -334,7 +339,7 @@ system.time({
             yzone = yzone, model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    9.42    1.81  134.97
+##    8.89    1.18  144.00
 g5
 ## ***          Spatially Explicit Stratified Power     
 ## 
