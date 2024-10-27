@@ -26,11 +26,6 @@ library(sf)
 ## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(sesp)
 library(gdverse)
-## 
-## Attaching package: 'gdverse'
-## The following object is masked _by_ '.GlobalEnv':
-## 
-##     NTDs
 ```
 
 ## Equivalence of Q Values in the Native Geographical Detector and Linear Regression Framework
@@ -44,14 +39,14 @@ go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
            model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    0.30    0.00    0.44
+##    0.41    0.00    0.53
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.08    0.00    0.07
+##    0.08    0.00    0.08
 ```
 
 ### Factor detector
@@ -148,7 +143,7 @@ ggplot2::ggplot(data = depressionmap) +
     ggplot2::theme_bw()
 ```
 
-![](../man/figures/sesp/Depression_prevelence-1.png)
+![**Figure 1**. Zones of Depression Prevelence](../man/figures/sesp/Depression_prevelence-1.png)
 
 ### Spatially Explicit Stratified Power Model With Linear Regression
 
@@ -159,7 +154,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    5.39    0.97   23.88
+##    2.97    0.45   21.31
 g1
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -204,7 +199,7 @@ system.time({
             yzone = yzone, model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    9.54    1.20  250.61
+##    8.98    1.30  247.72
 g2
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -249,7 +244,7 @@ system.time({
             yzone = yzone, model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    7.96    0.88  136.92
+##    7.82    0.95  134.80
 g3
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -294,7 +289,7 @@ system.time({
             model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##    8.53    1.16  269.28
+##    9.50    1.19  245.88
 g4
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -339,7 +334,7 @@ system.time({
             yzone = yzone, model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    8.89    1.18  144.00
+##    7.83    0.61  134.89
 g5
 ## ***          Spatially Explicit Stratified Power     
 ## 
