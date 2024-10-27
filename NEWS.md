@@ -1,3 +1,3 @@
-# esp 0.1.0
+# sesp 0.1.0
 
 * First stable release.
