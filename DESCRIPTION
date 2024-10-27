@@ -27,7 +27,7 @@ Imports:
     magrittr,
     parallel,
     purrr,
-    sdsfun,
+    sdsfun (>= 0.4.0),
     sf,
     spatialreg,
     spdep,
@@ -43,7 +43,6 @@ Suggests:
     readr,
     rmarkdown
 Remotes:
-    stscl/sdsfun,
     GWmodel-Lab/GWmodel3
 LinkingTo: 
     Rcpp,
