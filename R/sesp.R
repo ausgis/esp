@@ -1,4 +1,4 @@
-#' @title Enhanced Stratified Power (**ESP**) model
+#' @title Spatially Explicit Stratified Power (**SESP**) model
 #' @description
 #' Equivalent geographical detector q-statistic under a spatial linear regression framework.
 #'
@@ -43,13 +43,13 @@
 #'
 #' @examples
 #' NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
-#' g = esp(incidence ~ ., data = NTDs, discvar = 'none',
+#' g = sesp(incidence ~ ., data = NTDs, discvar = 'none',
 #'         model = 'ols', overlay = 'intersection', cores = 1)
 #' g
 #'
-esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:8,
-        model = 'ols', durbin = FALSE, overlay = 'and', alpha = 0.75, bw = "AIC",
-        adaptive = TRUE, kernel = "gaussian", increase_rate = 0.05, cores = 1, ...) {
+sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:8,
+         model = 'ols', durbin = FALSE, overlay = 'and', alpha = 0.75, bw = "AIC",
+         adaptive = TRUE, kernel = "gaussian", increase_rate = 0.05, cores = 1, ...) {
   if (!(model %in% c("ols","gwr","lag","error"))){
     stop("`model` must be one of `ols`,`gwr`,`lag` or `error`!")
   }
@@ -503,19 +503,19 @@ esp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:
              "zone" = yzone,
              "allfactor" = fdv,
              "model" = SLMUsed(model,durbin))
-  class(res) = "espm"
+  class(res) = "sespm"
   return(res)
 }
 
-#' @title print esp model
+#' @title print sesp model
 #' @export
 #' @noRd
-print.espm = \(x, ...) {
-  cat("***           Enhanced Stratified Power     \n")
+print.sespm = \(x, ...) {
+  cat("***          Spatially Explicit Stratified Power     \n")
   cat(paste0("\n Q values are estimated using *",x$model,"* \n"))
-  cat("\n ------------- Global Power of Determinat : ------------\n")
+  cat("\n -------------- Global Power of Determinat : ------------\n")
   PrintGlobalQ(utils::head(x$factor,10))
-  cat("\n ------------ Global Variable Interaction : ------------\n")
+  cat("\n ------------- Global Variable Interaction : ------------\n")
   PrintGlobalQ(utils::head(dplyr::select(x$interaction,1:2),10))
   cat("\n! Only the top ten items of global scale are displayed.")
   cat("\n! The others can be accessed through specific subsets.\n")

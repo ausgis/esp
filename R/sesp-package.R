@@ -1,4 +1,4 @@
 ## usethis namespace: start
-#' @useDynLib esp, .registration = TRUE
+#' @useDynLib sesp, .registration = TRUE
 ## usethis namespace: end
 NULL
