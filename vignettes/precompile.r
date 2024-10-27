@@ -1,4 +1,4 @@
 devtools::load_all()
 
-knitr::knit("vignettes/esp.rmd.orig",
-            "vignettes/esp.rmd")
+knitr::knit("vignettes/sesp.rmd.orig",
+            "vignettes/sesp.rmd")
