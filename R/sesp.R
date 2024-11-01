@@ -1,6 +1,6 @@
 #' @title Spatially Explicit Stratified Power (**SESP**) model
 #' @description
-#' Equivalent geographical detector q-statistic under a spatial linear regression framework.
+#' Equivalent geographical detector \eqn{q}-values under a spatial linear regression framework.
 #'
 #' @param formula A formula for enhanced stratified power model.
 #' @param data An `sf` object of observation data. Please note that the column names of the independent

@@ -79,7 +79,7 @@ A list.
 }
 }
 \description{
-Equivalent geographical detector q-statistic under a spatial linear regression framework.
+Equivalent geographical detector \eqn{q}-values under a spatial linear regression framework.
 }
 \examples{
 NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
