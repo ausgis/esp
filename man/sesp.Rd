@@ -2,7 +2,7 @@
 % Please edit documentation in R/sesp.R
 \name{sesp}
 \alias{sesp}
-\title{Spatially Explicit Stratified Power (\strong{SESP}) model}
+\title{Spatially Explicit Stratified Power (\strong{SESP}) Model}
 \usage{
 sesp(
   formula,
