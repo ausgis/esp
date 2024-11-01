@@ -1,4 +1,4 @@
-#' @title Spatially Explicit Stratified Power (**SESP**) model
+#' @title Spatially Explicit Stratified Power (**SESP**) Model
 #' @description
 #' Equivalent geographical detector \eqn{q}-values under a spatial linear regression framework.
 #'
