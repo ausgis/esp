@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   sesp: sesp.html
-last_built: 2024-11-01T10:57Z
+last_built: 2024-11-01T11:03Z
 urls:
   reference: https://ausgis.github.io/sesp/reference
   article: https://ausgis.github.io/sesp/articles
