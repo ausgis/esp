@@ -39,14 +39,14 @@ go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
            model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    0.41    0.00    0.53
+##    0.43    0.03    0.54
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.08    0.00    0.08
+##    0.05    0.00    0.06
 ```
 
 ### Factor detector
@@ -154,7 +154,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    2.97    0.45   21.31
+##    3.57    0.38   21.73
 g1
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -199,7 +199,7 @@ system.time({
             yzone = yzone, model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    8.98    1.30  247.72
+##    5.61    0.27  253.36
 g2
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -244,7 +244,7 @@ system.time({
             yzone = yzone, model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    7.82    0.95  134.80
+##    7.83    1.01  143.67
 g3
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -289,7 +289,7 @@ system.time({
             model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##    9.50    1.19  245.88
+##    8.12    0.82  261.33
 g4
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -334,7 +334,7 @@ system.time({
             yzone = yzone, model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    7.83    0.61  134.89
+##    7.94    0.77  134.89
 g5
 ## ***          Spatially Explicit Stratified Power     
 ## 
