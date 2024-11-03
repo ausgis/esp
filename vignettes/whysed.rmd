@@ -69,32 +69,32 @@ ggplot() +
   ggplot2::theme_bw()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/real_stratification_x-1.png)
+![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/real_stratification_x-1.png)
 
 
 ``` r
 zone1 = tibble::tibble(
   x = c(0,0,3.5,10,10),
   y = c(15,9.5,6,12.5,15)
-) |> 
-  sf::st_as_sf(coords = c("x","y"), crs = 4326) |> 
-  sf::st_combine() |> 
+) |>
+  sf::st_as_sf(coords = c("x","y"), crs = 4326) |>
+  sf::st_combine() |>
   sf::st_cast("POLYGON")
 
 zone2 = tibble::tibble(
   x = c(0,0,3.5,10,10,13.5),
   y = c(0,9.5,6,12.5,3.5,0)
-) |> 
-  sf::st_as_sf(coords = c("x","y"), crs = 4326) |> 
-  sf::st_combine() |> 
+) |>
+  sf::st_as_sf(coords = c("x","y"), crs = 4326) |>
+  sf::st_combine() |>
   sf::st_cast("POLYGON")
 
 zone3 = tibble::tibble(
   x = c(15,15,10,10,13.5),
   y = c(0,15,15,3.5,0)
-) |> 
-  sf::st_as_sf(coords = c("x","y"), crs = 4326) |> 
-  sf::st_combine() |> 
+) |>
+  sf::st_as_sf(coords = c("x","y"), crs = 4326) |>
+  sf::st_combine() |>
   sf::st_cast("POLYGON")
 
 zone = sf::st_sf(zones = c(1,2,3),
@@ -166,8 +166,8 @@ ggplot() +
           color = 'grey10', lwd = 0.75) +
   geom_sf(data = simx, aes(color = simxv)) +
   viridis::scale_color_viridis(option = "magma", direction = -1,name = "simx") +
-  ggplot2::theme_bw()
+  ggplot2::theme_void()
 ```
 
-![**Figure 2**. Simulated independent variable X](man/figures/whysed/sim_x-1.png)
+![**Figure 2**. Simulated independent variable X](../man/figures/whysed/sim_x-1.png)
 
