@@ -98,14 +98,14 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 <span>           model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.43    0.03    0.54</span></span>
+<span><span class="co">##    0.19    0.03    0.59</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://stscl.github.io/gdverse/reference/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
 <span>         type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'factor'</span>,<span class="st">'interaction'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.05    0.00    0.06</span></span></code></pre></div>
+<span><span class="co">##    0.05    0.02    0.09</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="factor-detector">Factor detector<a class="anchor" aria-label="anchor" href="#factor-detector"></a>
 </h3>
@@ -213,7 +213,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    3.57    0.38   21.73</span></span>
+<span><span class="co">##    5.88    1.24   24.00</span></span>
 <span><span class="va">g1</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -258,7 +258,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'lag'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    5.61    0.27  253.36</span></span>
+<span><span class="co">##    8.03    0.98  253.75</span></span>
 <span><span class="va">g2</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -303,7 +303,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'error'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    7.83    1.01  143.67</span></span>
+<span><span class="co">##    7.77    0.66  141.25</span></span>
 <span><span class="va">g3</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -348,7 +348,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            model <span class="op">=</span> <span class="st">'lag'</span>, durbin <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    8.12    0.82  261.33</span></span>
+<span><span class="co">##    8.85    1.00  253.50</span></span>
 <span><span class="va">g4</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -393,7 +393,7 @@ Weighted Regression<a class="anchor" aria-label="anchor" href="#spatially-explic
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'gwr'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    7.94    0.77  134.89</span></span>
+<span><span class="co">##    9.19    1.05  136.19</span></span>
 <span><span class="va">g5</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -507,6 +507,69 @@ Weighted Regression<a class="anchor" aria-label="anchor" href="#spatially-explic
 <span><span class="co">##  9 DrinkingPlaces        0.0849  668.     3</span></span>
 <span><span class="co">## 10 X.HouseRent           0.133   660.     3</span></span>
 <span><span class="co">## # ℹ 20 more rows</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="results-of-optimal-spatial-discretization">Results of optimal spatial discretization<a class="anchor" aria-label="anchor" href="#results-of-optimal-spatial-discretization"></a>
+</h3>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plot_optdisc</span> <span class="op">=</span> \<span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">{</span></span>
+<span> <span class="va">gmap</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_set_geometry</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">optdisc</span>,<span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">depression</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span> <span class="va">fig1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">optdisc</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>   <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">.x</span><span class="op">)</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">gmap</span><span class="op">)</span> <span class="op">+</span></span>
+<span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">optdisc</span><span class="op">[</span>,<span class="va">.x</span>,drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                                 alpha <span class="op">=</span> <span class="fl">.65</span><span class="op">)</span> <span class="op">+</span></span>
+<span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">'zones'</span><span class="op">)</span> <span class="op">+</span></span>
+<span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>                  legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
+<span>                <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>   <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">3</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span></span>
+<span>     tag_levels <span class="op">=</span> <span class="st">'a'</span>,</span>
+<span>     tag_prefix <span class="op">=</span> <span class="st">'('</span>,</span>
+<span>     tag_suffix <span class="op">=</span> <span class="st">')'</span>,</span>
+<span>     tag_sep <span class="op">=</span> <span class="st">''</span>,</span>
+<span>     theme <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.tag <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>family <span class="op">=</span> <span class="st">"serif"</span><span class="op">)</span>,</span>
+<span>                            plot.tag.position <span class="op">=</span> <span class="st">"topleft"</span><span class="op">)</span><span class="op">)</span></span>
+<span> <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">fig1</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">plot_optdisc</span><span class="op">(</span><span class="va">g1</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="../reference/figures/sesp/optdisc1-1.png" alt="Figure 2. Optimal spatial discretization result with linear regression operator"><div class="figcaption">
+<strong>Figure 2</strong>. Optimal spatial
+discretization result with linear regression operator</div>
+</div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">plot_optdisc</span><span class="op">(</span><span class="va">g2</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="../reference/figures/sesp/optdisc2-1.png" alt="Figure 3. Optimal spatial discretization result with spatial lag regression operator"><div class="figcaption">
+<strong>Figure 3</strong>. Optimal spatial
+discretization result with spatial lag regression operator</div>
+</div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">plot_optdisc</span><span class="op">(</span><span class="va">g3</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="../reference/figures/sesp/optdisc3-1.png" alt="Figure 4. Optimal spatial discretization result with spatial error regression operator"><div class="figcaption">
+<strong>Figure 4</strong>. Optimal spatial
+discretization result with spatial error regression operator</div>
+</div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">plot_optdisc</span><span class="op">(</span><span class="va">g4</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="../reference/figures/sesp/optdisc4-1.png" alt="Figure 5. Optimal spatial discretization result with spatial durbin regression operator"><div class="figcaption">
+<strong>Figure 5</strong>. Optimal spatial
+discretization result with spatial durbin regression operator</div>
+</div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">plot_optdisc</span><span class="op">(</span><span class="va">g5</span><span class="op">)</span></span></code></pre></div>
+<div class="float">
+<img src="../reference/figures/sesp/optdisc5-1.png" alt="Figure 6. Optimal spatial discretization result with geographically weighted regression operator"><div class="figcaption">
+<strong>Figure 6</strong>. Optimal spatial
+discretization result with geographically weighted regression
+operator</div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
