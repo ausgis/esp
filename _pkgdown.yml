@@ -15,6 +15,8 @@ navbar:
       menu:
       - text: Spatially Explicit Stratified Power Model
         href: articles/sesp.html
+      - text: Why Is spatially Explicit Discretization Necessary?
+        href: articles/whysed.html
 
 home:
   title: |
