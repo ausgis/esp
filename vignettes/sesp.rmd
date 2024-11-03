@@ -39,14 +39,14 @@ go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
            model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    0.43    0.03    0.54
+##    0.19    0.03    0.59
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.05    0.00    0.06
+##    0.05    0.02    0.09
 ```
 
 ### Factor detector
@@ -154,7 +154,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    3.57    0.38   21.73
+##    5.88    1.24   24.00
 g1
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -199,7 +199,7 @@ system.time({
             yzone = yzone, model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    5.61    0.27  253.36
+##    8.03    0.98  253.75
 g2
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -244,7 +244,7 @@ system.time({
             yzone = yzone, model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    7.83    1.01  143.67
+##    7.77    0.66  141.25
 g3
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -289,7 +289,7 @@ system.time({
             model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##    8.12    0.82  261.33
+##    8.85    1.00  253.50
 g4
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -334,7 +334,7 @@ system.time({
             yzone = yzone, model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    7.94    0.77  134.89
+##    9.19    1.05  136.19
 g5
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -451,3 +451,65 @@ g5$localq
 ## # ℹ 20 more rows
 ```
 
+### Results of optimal spatial discretization
+
+
+``` r
+plot_optdisc = \(g){
+ gmap = sf::st_set_geometry(g$optdisc,sf::st_geometry(depression))
+
+ fig1 = seq_along(g$optdisc) |>
+   purrr::map(\(.x) ggplot2::ggplot(data = gmap) +
+                ggplot2::geom_sf(ggplot2::aes(color = factor(g$optdisc[,.x,drop = TRUE])),
+                                 alpha = .65) +
+                ggplot2::labs(color = 'zones') +
+                ggplot2::theme_void() +
+                ggplot2::theme(
+                  legend.position = "none")
+                ) %>%
+   patchwork::wrap_plots(ncol = 3, byrow = TRUE) +
+   patchwork::plot_annotation(
+     tag_levels = 'a',
+     tag_prefix = '(',
+     tag_suffix = ')',
+     tag_sep = '',
+     theme = ggplot2::theme(plot.tag = ggplot2::element_text(family = "serif"),
+                            plot.tag.position = "topleft"))
+ return(fig1)
+}
+```
+
+
+``` r
+plot_optdisc(g1)
+```
+
+![**Figure 2**. Optimal spatial discretization result with linear regression operator](../man/figures/sesp/optdisc1-1.png)
+
+
+``` r
+plot_optdisc(g2)
+```
+
+![**Figure 3**. Optimal spatial discretization result with spatial lag regression operator](../man/figures/sesp/optdisc2-1.png)
+
+
+``` r
+plot_optdisc(g3)
+```
+
+![**Figure 4**. Optimal spatial discretization result with spatial error regression operator](../man/figures/sesp/optdisc3-1.png)
+
+
+``` r
+plot_optdisc(g4)
+```
+
+![**Figure 5**. Optimal spatial discretization result with spatial durbin regression operator](../man/figures/sesp/optdisc4-1.png)
+
+
+``` r
+plot_optdisc(g5)
+```
+
+![**Figure 6**. Optimal spatial discretization result with geographically weighted regression operator](../man/figures/sesp/optdisc5-1.png)
