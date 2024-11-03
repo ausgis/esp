@@ -143,7 +143,7 @@ ggplot2::ggplot(data = depressionmap) +
     ggplot2::theme_bw()
 ```
 
-![**Figure 1**. Zones of Depression Prevelence](man/figures/sesp/Depression_prevelence-1.png)
+![**Figure 1**. Zones of Depression Prevelence](../man/figures/sesp/Depression_prevelence-1.png)
 
 ### Spatially Explicit Stratified Power Model With Linear Regression
 
@@ -484,32 +484,32 @@ plot_optdisc = \(g){
 plot_optdisc(g1)
 ```
 
-![**Figure 2**. Optimal spatial discretization result with linear regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](man/figures/sesp/optdisc1-1.png)
+![**Figure 2**. Optimal spatial discretization result with linear regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc1-1.png)
 
 
 ``` r
 plot_optdisc(g2)
 ```
 
-![**Figure 3**. Optimal spatial discretization result with spatial lag regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](man/figures/sesp/optdisc2-1.png)
+![**Figure 3**. Optimal spatial discretization result with spatial lag regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc2-1.png)
 
 
 ``` r
 plot_optdisc(g3)
 ```
 
-![**Figure 4**. Optimal spatial discretization result with spatial error regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](man/figures/sesp/optdisc3-1.png)
+![**Figure 4**. Optimal spatial discretization result with spatial error regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc3-1.png)
 
 
 ``` r
 plot_optdisc(g4)
 ```
 
-![**Figure 5**. Optimal spatial discretization result with spatial durbin regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](man/figures/sesp/optdisc4-1.png)
+![**Figure 5**. Optimal spatial discretization result with spatial durbin regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc4-1.png)
 
 
 ``` r
 plot_optdisc(g5)
 ```
 
-![**Figure 6**. Optimal spatial discretization result with geographically weighted regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](man/figures/sesp/optdisc5-1.png)
+![**Figure 6**. Optimal spatial discretization result with geographically weighted regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc5-1.png)
