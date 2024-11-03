@@ -14,21 +14,17 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-cyan.svg)](htt
 
 ## Installation
 
-- Install from [CRAN](https://CRAN.R-project.org/package=sesp) with:
-
-``` r
-install.packages("sesp")
-```
-
-- Install development binary version from
-  [R-universe](https://ausgis.r-universe.dev/sesp) with:
-
-``` r
-install.packages('sesp',
-                 repos = c("https://ausgis.r-universe.dev",
-                           "https://cloud.r-project.org"),
-                 dep = TRUE)
-```
+<!-- - Install from [CRAN](https://CRAN.R-project.org/package=sesp) with: -->
+<!-- ``` r -->
+<!-- install.packages("sesp") -->
+<!-- ``` -->
+<!-- - Install development binary version from [R-universe](https://ausgis.r-universe.dev/sesp) with: -->
+<!-- ``` r -->
+<!-- install.packages('sesp', -->
+<!--                  repos = c("https://ausgis.r-universe.dev", -->
+<!--                            "https://cloud.r-project.org"), -->
+<!--                  dep = TRUE) -->
+<!-- ``` -->
 
 - Install development source version from
   [GitHub](https://github.com/ausgis/sesp) with:
