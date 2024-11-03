@@ -77,6 +77,9 @@ sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3
   if (any(c("all","none") %in% xname)) {
     stop("The column names of the independent variables should not be `all` or `none`.")
   }
+  if (length(xname) <= 1) {
+    stop("At least two independent variables are required.")
+  }
 
   if (is.null(listw)){
     globallw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
