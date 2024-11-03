@@ -32,7 +32,7 @@ pak::pak("josiahparry/spdgp")
 
 ### Real Stratification of X
 
-```{r real_stratification_x,fig.width=3.2,fig.height=2.7,fig.cap=knitr::asis_output("**Figure 1**. Strata of simulated independent variable X")}
+```{r real_stratification_x,fig.width=3.75,fig.height=3,fig.cap=knitr::asis_output("**Figure 1**. Strata of simulated independent variable X")}
 m = matrix(2,nrow = 15, ncol = 15)
 zone1_indice = c(6:9,seq(8,by = -1,length.out = 6))
 for (i in seq_along(zone1_indice)) {
@@ -61,25 +61,25 @@ ggplot() +
 zone1 = tibble::tibble(
   x = c(0,0,3.5,10,10),
   y = c(15,9.5,6,12.5,15)
-) |> 
-  sf::st_as_sf(coords = c("x","y"), crs = 4326) |> 
-  sf::st_combine() |> 
+) |>
+  sf::st_as_sf(coords = c("x","y"), crs = 4326) |>
+  sf::st_combine() |>
   sf::st_cast("POLYGON")
 
 zone2 = tibble::tibble(
   x = c(0,0,3.5,10,10,13.5),
   y = c(0,9.5,6,12.5,3.5,0)
-) |> 
-  sf::st_as_sf(coords = c("x","y"), crs = 4326) |> 
-  sf::st_combine() |> 
+) |>
+  sf::st_as_sf(coords = c("x","y"), crs = 4326) |>
+  sf::st_combine() |>
   sf::st_cast("POLYGON")
 
 zone3 = tibble::tibble(
   x = c(15,15,10,10,13.5),
   y = c(0,15,15,3.5,0)
-) |> 
-  sf::st_as_sf(coords = c("x","y"), crs = 4326) |> 
-  sf::st_combine() |> 
+) |>
+  sf::st_as_sf(coords = c("x","y"), crs = 4326) |>
+  sf::st_combine() |>
   sf::st_cast("POLYGON")
 
 zone = sf::st_sf(zones = c(1,2,3),
@@ -89,7 +89,7 @@ zone = sf::st_sf(zones = c(1,2,3),
 
 ### Generate three sets of continuous data with different properties through stratification of X
 
-```{r sim_x,fig.width=3.2,fig.height=2.7,fig.cap=knitr::asis_output("**Figure 2**. Simulated independent variable X")}
+```{r sim_x,fig.width=3.75,fig.height=3,fig.cap=knitr::asis_output("**Figure 2**. Simulated independent variable X")}
 table(simx$simx_zone)
 
 set.seed(123)
@@ -130,6 +130,6 @@ ggplot() +
           color = 'grey10', lwd = 0.75) +
   geom_sf(data = simx, aes(color = simxv)) +
   viridis::scale_color_viridis(option = "magma", direction = -1,name = "simx") +
-  ggplot2::theme_bw()
+  ggplot2::theme_void()
 ```
 
