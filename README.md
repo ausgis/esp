@@ -30,7 +30,9 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-cyan.svg)](htt
   [GitHub](https://github.com/ausgis/sesp) with:
 
 ``` r
-# install.packages("devtools")
+if (!requireNamespace("devtools")) {
+    install.packages("devtools")
+}
 devtools::install_github("ausgis/sesp",
                          build_vignettes = TRUE,
                          dep = TRUE)

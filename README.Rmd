@@ -43,8 +43,10 @@ knitr::opts_chunk$set(
 
 - Install development source version from [GitHub](https://github.com/ausgis/sesp) with:
 
-``` r
-# install.packages("devtools")
+```r
+if (!requireNamespace("devtools")) {
+    install.packages("devtools")
+}
 devtools::install_github("ausgis/sesp",
                          build_vignettes = TRUE,
                          dep = TRUE)
