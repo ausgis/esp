@@ -10,8 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "##",
-  fig.path = "man/figures/sesp/"
+  fig.path = "man/figures/sesp/",
+  fig.dpi = 150
 )
 ```
 
@@ -145,3 +145,49 @@ g4$localq
 g5$localq
 ```
 
+### Results of optimal spatial discretization
+
+```{r}
+plot_optdisc = \(g){
+ gmap = sf::st_set_geometry(g$optdisc,sf::st_geometry(depression))
+
+ fig1 = seq_along(g$optdisc) |>
+   purrr::map(\(.x) ggplot2::ggplot(data = gmap) +
+                ggplot2::geom_sf(ggplot2::aes(color = factor(g$optdisc[,.x,drop = TRUE])),
+                                 alpha = .65) +
+                ggplot2::labs(color = 'zones') +
+                ggplot2::theme_void() +
+                ggplot2::theme(
+                  legend.position = "none")
+                ) %>%
+   patchwork::wrap_plots(ncol = 3, byrow = TRUE) +
+   patchwork::plot_annotation(
+     tag_levels = 'a',
+     tag_prefix = '(',
+     tag_suffix = ')',
+     tag_sep = '',
+     theme = ggplot2::theme(plot.tag = ggplot2::element_text(family = "serif"),
+                            plot.tag.position = "topleft"))
+ return(fig1)
+}
+```
+
+```{r optdisc1,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 2**. Optimal spatial discretization result with linear regression operator")}
+plot_optdisc(g1)
+```
+
+```{r optdisc2,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 3**. Optimal spatial discretization result with spatial lag regression operator")}
+plot_optdisc(g2)
+```
+
+```{r optdisc3,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 4**. Optimal spatial discretization result with spatial error regression operator")}
+plot_optdisc(g3)
+```
+
+```{r optdisc4,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 5**. Optimal spatial discretization result with spatial durbin regression operator")}
+plot_optdisc(g4)
+```
+
+```{r optdisc5,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 6**. Optimal spatial discretization result with geographically weighted regression operator")}
+plot_optdisc(g5)
+```
