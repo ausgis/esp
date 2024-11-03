@@ -1,5 +1,5 @@
 ---
-title: "Why Is spatially Explicit Discretization Necessary?"
+title: "Why Is Spatially Explicit Discretization Necessary?"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{whysed}
@@ -76,11 +76,11 @@ u2 = rnorm(93,0,1)
 set.seed(123)
 u3 = rnorm(69,0,1)
 
-listw1 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==1),]), 
+listw1 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==1),]),
                          style = "W", zero.policy = TRUE)
-listw2 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==2),]), 
+listw2 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==2),]),
                          style = "W", zero.policy = TRUE)
-listw3 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==3),]), 
+listw3 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==3),]),
                          style = "W", zero.policy = TRUE)
 
 v1 = spdgp::sim_sar(u1, v1, listw1, rho = 0.1)

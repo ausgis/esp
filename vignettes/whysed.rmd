@@ -1,5 +1,5 @@
 ---
-title: "Why Is spatially Explicit Discretization Necessary?"
+title: "Why Is Spatially Explicit Discretization Necessary?"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{whysed}
@@ -39,6 +39,7 @@ m[14,11:12] = 2
 m[15,11:13] = 2
 
 library(sf)
+## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(terra)
 ## terra 1.7.83
 r = terra::rast(m, crs = "EPSG:4326")
@@ -70,7 +71,7 @@ ggplot() +
   ggplot2::theme_bw()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/real_stratification_x-1.png)
+![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/real_stratification_x-1.png)
 
 ### Generate three sets of continuous data with different properties through stratification of X
 
@@ -95,11 +96,11 @@ u2 = rnorm(93,0,1)
 set.seed(123)
 u3 = rnorm(69,0,1)
 
-listw1 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==1),]), 
+listw1 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==1),]),
                          style = "W", zero.policy = TRUE)
-listw2 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==2),]), 
+listw2 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==2),]),
                          style = "W", zero.policy = TRUE)
-listw3 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==3),]), 
+listw3 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==3),]),
                          style = "W", zero.policy = TRUE)
 
 v1 = spdgp::sim_sar(u1, v1, listw1, rho = 0.1)
@@ -137,5 +138,5 @@ ggplot() +
   ggplot2::theme_bw()
 ```
 
-![**Figure 2**. Simulated independent variable X](../man/figures/whysed/sim_x-1.png)
+![**Figure 2**. Simulated independent variable X](man/figures/whysed/sim_x-1.png)
 
