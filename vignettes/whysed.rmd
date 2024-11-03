@@ -71,7 +71,7 @@ ggplot() +
   ggplot2::theme_bw()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/real_stratification_x-1.png)
+![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/real_stratification_x-1.png)
 
 ### Generate three sets of continuous data with different properties through stratification of X
 
@@ -138,5 +138,5 @@ ggplot() +
   ggplot2::theme_bw()
 ```
 
-![**Figure 2**. Simulated independent variable X](man/figures/whysed/sim_x-1.png)
+![**Figure 2**. Simulated independent variable X](../man/figures/whysed/sim_x-1.png)
 
