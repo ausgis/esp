@@ -136,12 +136,12 @@ v1 = spdgp::sim_sar(u1, v1, listw1, rho = 0.1)
 v2 = spdgp::sim_sar(u2, v2, listw2, rho = 0.3)
 v3 = spdgp::sim_sar(u3, v3, listw3, rho = 0.5)
 
-simx_zone = simx$simx_zone
-simx_zone[which(simx_zone==1)] = v1
-simx_zone[which(simx_zone==2)] = v2
-simx_zone[which(simx_zone==3)] = v3
+simx_value = simx$simx_zone
+simx_value[which(simx_value==1)] = v1
+simx_value[which(simx_value==2)] = v2
+simx_value[which(simx_value==3)] = v3
 
-simx$simxv = simx_zone
+simx$simxv = simx_value
 simx
 ## Simple feature collection with 225 features and 2 fields
 ## Geometry type: POINT
