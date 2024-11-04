@@ -21,7 +21,7 @@ We use simulated data comprising 225 cells organized in a 15-row by 15-column gr
 ## Install the necessary R packages
 
 ```r
-install.packages(c("sf","terra","gstat","gdverse"),dep = TRUE)
+install.packages(c("sf","terra","sdsfun","gdverse"),dep = TRUE)
 # install.packages("devtools")
 devtools::install_github("ausgis/sesp",build_vignettes = TRUE,dep = TRUE)
 # install.packages("pak")
@@ -89,15 +89,17 @@ zone = sf::st_sf(zones = c(1,2,3),
 
 ### Generate three sets of continuous data with different properties through stratification of X
 
+Generate data for three strata(stratified groups) from normal distributions as follows: \( x_1 \sim \mathcal{N}(3, 1) \), \( x_2 \sim \mathcal{N}(4, 1.2) \), and \( x_3 \sim \mathcal{N}(5, 1.5) \). For each region, generate random error terms following a standard normal distribution: \( \epsilon_i \sim \mathcal{N}(0, 1) \) for \( i = 1, 2, 3 \). Finally, for the three regions, combine the simulated \( x \) and random error terms with spatial lag coefficients \( \rho \) of \( 0.1, 0.3, \) and \( 0.5 \) using a spatial lag process to simulate the final \( y_i \) as \( y_i = \rho \cdot W y + x_i + \epsilon_i \), where \( W \) is the spatial weights matrix and \( \rho \) is the spatial lag coefficient.
+
 ```{r sim_x,fig.width=3.75,fig.height=3,fig.cap=knitr::asis_output("**Figure 2**. Simulated independent variable X")}
 table(simx$simx_zone)
 
 set.seed(123)
 v1 = rnorm(63,3,1)
 set.seed(123)
-v2 = rnorm(93,4,1.44)
+v2 = rnorm(93,4,1.2)
 set.seed(123)
-v3 = rnorm(69,5,1.96)
+v3 = rnorm(69,5,1.5)
 
 set.seed(123)
 u1 = rnorm(63,0,1)
@@ -129,7 +131,17 @@ ggplot() +
   geom_sf(data = zone, fill = 'transparent',
           color = 'grey10', lwd = 0.75) +
   geom_sf(data = simx, aes(color = simxv)) +
-  viridis::scale_color_viridis(option = "magma", direction = -1,name = "simx") +
+  viridis::scale_color_viridis(option = "magma", direction = -1, name = "simx", 
+                               breaks = c(range(simx$simxv)[1],5,10,range(simx$simxv)[2]),
+                               labels = c(-1,seq(5,15,by = 5))) +
   ggplot2::theme_void()
 ```
+
+### The spatial autocorrelation of the simulated X  
+
+```{r moran_simx}
+sdsfun::moran_test(simx)
+```
+
+
 
