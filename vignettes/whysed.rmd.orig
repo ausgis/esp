@@ -7,7 +7,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.path = "man/figures/whysed/",
+  fig.dpi = 150
+)
+```
 
 
 We use simulated data comprising 225 cells organized in a 15-row by 15-column grid to illustrate the rationale for employing spatially explicit discretization methods. This simulated dataset is constructed by combining data from three distinct spatial process models, resulting in a stratification with three differentiated strata. In subsequent analyses, all discretization methods applied will discretize the dataset into three strata for the calculation of the q-values. The simulation of spatial data is conducted using the `spdgp` package in R. We compare the q-value estimates obtained through spatially explicit discretization in the SESP model, robust discretization in the Robust Geographical Detector, and conventional natural breaks discretization with the Geodetector. The spatially explicit discretization in the SESP model is implemented using the `sesp` package, robust discretization is achieved using the `gdverse` package, and natural breaks are implemented with the `sdsfun` package.
@@ -26,8 +32,7 @@ pak::pak("josiahparry/spdgp")
 
 ### Real Stratification of X
 
-
-``` r
+```{r real_stratification_x,fig.width=3.75,fig.height=3,fig.cap=knitr::asis_output("**Figure 1**. Strata of simulated independent variable X")}
 m = matrix(2,nrow = 15, ncol = 15)
 zone1_indice = c(6:9,seq(8,by = -1,length.out = 6))
 for (i in seq_along(zone1_indice)) {
@@ -44,23 +49,6 @@ r = terra::rast(m, crs = "EPSG:4326")
 names(r) = 'simx_zone'
 simx = sf::st_as_sf(terra::as.points(r))
 simx
-## Simple feature collection with 225 features and 1 field
-## Geometry type: POINT
-## Dimension:     XY
-## Bounding box:  xmin: 0.5 ymin: 0.5 xmax: 14.5 ymax: 14.5
-## Geodetic CRS:  WGS 84
-## First 10 features:
-##    simx_zone         geometry
-## 1          1 POINT (0.5 14.5)
-## 2          1 POINT (1.5 14.5)
-## 3          1 POINT (2.5 14.5)
-## 4          1 POINT (3.5 14.5)
-## 5          1 POINT (4.5 14.5)
-## 6          1 POINT (5.5 14.5)
-## 7          1 POINT (6.5 14.5)
-## 8          1 POINT (7.5 14.5)
-## 9          1 POINT (8.5 14.5)
-## 10         1 POINT (9.5 14.5)
 
 ggplot2::ggplot() +
   ggplot2::geom_sf(data = simx,
@@ -69,10 +57,7 @@ ggplot2::ggplot() +
   ggplot2::theme_bw()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/real_stratification_x-1.png)
-
-
-``` r
+```{r}
 zone1 = tibble::tibble(
   x = c(0,0,3.5,10,10),
   y = c(15,9.5,6,12.5,15)
@@ -106,12 +91,8 @@ zone = sf::st_sf(zones = c(1,2,3),
 
 Generate data for three strata(stratified groups) from normal distributions as follows: \( x_1 \sim \mathcal{N}(3, 1) \), \( x_2 \sim \mathcal{N}(4, 1.2) \), and \( x_3 \sim \mathcal{N}(5, 1.5) \). For each region, generate random error terms following a standard normal distribution: \( \epsilon_i \sim \mathcal{N}(0, 1) \) for \( i = 1, 2, 3 \). Finally, for the three regions, combine the simulated \( x \) and random error terms with spatial lag coefficients \( \rho \) of \( 0.1, 0.3, \) and \( 0.5 \) using a spatial lag process to simulate the final \( X_i \).
 
-
-``` r
+```{r sim_x,fig.width=3.75,fig.height=3,fig.cap=knitr::asis_output("**Figure 2**. Simulated independent variable X")}
 table(simx$simx_zone)
-## 
-##  1  2  3 
-## 63 93 69
 
 set.seed(123)
 v1 = rnorm(63,3,1)
@@ -145,23 +126,6 @@ simx_value[which(simx_value==3)] = v3
 
 simx$simxv = simx_value
 simx
-## Simple feature collection with 225 features and 2 fields
-## Geometry type: POINT
-## Dimension:     XY
-## Bounding box:  xmin: 0.5 ymin: 0.5 xmax: 14.5 ymax: 14.5
-## Geodetic CRS:  WGS 84
-## First 10 features:
-##    simx_zone         geometry     simxv
-## 1          1 POINT (0.5 14.5) 2.0080426
-## 2          1 POINT (1.5 14.5) 2.9242074
-## 3          1 POINT (2.5 14.5) 6.4744873
-## 4          1 POINT (3.5 14.5) 3.6863108
-## 5          1 POINT (4.5 14.5) 3.6830112
-## 6          1 POINT (5.5 14.5) 6.8021666
-## 7          1 POINT (6.5 14.5) 4.3612989
-## 8          1 POINT (7.5 14.5) 0.9602127
-## 9          1 POINT (8.5 14.5) 1.9754552
-## 10         1 POINT (9.5 14.5) 2.3657828
 
 ggplot2::ggplot() +
   ggplot2::geom_sf(data = zone, fill = 'transparent',
@@ -173,26 +137,11 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 2**. Simulated independent variable X](../man/figures/whysed/sim_x-1.png)
-
 ### The spatial autocorrelation of the simulated X
 
-
-``` r
+```{r moran_simx}
 sdsfun::moran_test(simx)
-## ***                 global moran test
 ```
-
-
---------------------------------------------------------------------
- Variable      MoranI         EI         VarI      zI        pI     
------------ ------------- ----------- ---------- ------- -----------
- simx_zone   0.308731***   -0.004464   0.001493   8.105   2.634e-16 
-
-   simxv     0.159677***   -0.004464   0.001493   4.248   1.079e-05 
---------------------------------------------------------------------
-
-
 
 
 
