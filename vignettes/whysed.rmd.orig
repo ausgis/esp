@@ -155,7 +155,7 @@ lw = spdep::nb2listw(sdsfun::spdep_nb(simx),
 The spatial autoregressive coefficients for different true strata of \( x \) are sequentially set to 0.1, 0.2, and 0.3. The random disturbance term is randomly generated using a normal distribution with mean 0 and variance 1. The spatial lag value \( \rho \in \text{sequence}( \text{min} = 0.05, \, \text{max} = 0.95, \, \text{interval} = 0.05) \). Repeated 100 times for each \( \rho \).
 
 ```{r simy_sdp}
-simx = dplyr::mutate(simx,wx = simx_zone * 0.1)
+simx = dplyr::mutate(simx,wx = 1)
 simx$naturaldisc = sdsfun::discretize_vector(simx$simxv,3,method = 'natural')
 rho = seq(0,1,by = 0.05)
 us = vector("list",100)

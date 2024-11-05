@@ -39,7 +39,9 @@ m[14,11:12] = 2
 m[15,11:13] = 2
 
 library(sf)
+## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(terra)
+## terra 1.7.83
 r = terra::rast(m, crs = "EPSG:4326")
 names(r) = 'simx_zone'
 simx = sf::st_as_sf(terra::as.points(r))
@@ -69,7 +71,7 @@ ggplot2::ggplot() +
   ggplot2::theme_bw()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/real_stratification_x-1.png)
+![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/real_stratification_x-1.png)
 
 
 ``` r
@@ -173,7 +175,7 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 2**. Simulated independent variable X](man/figures/whysed/sim_x-1.png)
+![**Figure 2**. Simulated independent variable X](../man/figures/whysed/sim_x-1.png)
 
 ### The spatial autocorrelation of the simulated X
 
@@ -208,7 +210,7 @@ The spatial autoregressive coefficients for different true strata of \( x \) are
 
 
 ``` r
-simx = dplyr::mutate(simx,wx = simx_zone * 0.1)
+simx = dplyr::mutate(simx,wx = 1)
 simx$naturaldisc = sdsfun::discretize_vector(simx$simxv,3,method = 'natural')
 rho = seq(0,1,by = 0.05)
 us = vector("list",100)
@@ -246,7 +248,7 @@ mc_simq = \(cores = 6){
     )
     dt$y = spdgp::sim_durbin(us[[u_i]], simx$simxv, simx$wx, lw, rho = rhov)
     dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
-    qv = sesp::sesp(y ~ ., data = sf::st_set_geometry(dt,sf::st_geometry(simx)), listw = lw,
+    qv = sesp::sesp(y ~ ., data = sf::st_set_geometry(dt,sf::st_geometry(simx)), listw = list(lw),
                     discvar = "xv", discnum = 3, model = 'ols', overlay = 'intersection', cores = 1)
     return(dplyr::mutate(qv[[1]],rho = rhov))
   }
@@ -262,5 +264,4 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
-## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: The listw needs to be preserved in a list.
 ```
