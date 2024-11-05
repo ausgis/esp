@@ -39,7 +39,9 @@ m[14,11:12] = 2
 m[15,11:13] = 2
 
 library(sf)
+## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(terra)
+## terra 1.7.83
 r = terra::rast(m, crs = "EPSG:4326")
 names(r) = 'simx_zone'
 simx = sf::st_as_sf(terra::as.points(r))
@@ -69,7 +71,7 @@ ggplot2::ggplot() +
   ggplot2::theme_bw()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/real_stratification_x-1.png)
+![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/real_stratification_x-1.png)
 
 
 ``` r
@@ -173,7 +175,7 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 2**. Simulated independent variable X](../man/figures/whysed/sim_x-1.png)
+![**Figure 2**. Simulated independent variable X](man/figures/whysed/sim_x-1.png)
 
 ### The spatial autocorrelation of the simulated X
 
@@ -222,16 +224,45 @@ for (i in seq_along(us)) {
 
 
 ``` r
-sim_q = \(rhov,u_i){
-  dt = tibble::tibble(
-    realdisc = simx$simx_zone,
-    naturaldisc = simx$naturaldisc,
-    xv = simx$simxv
-  )
-  dt$y = spdgp::sim_durbin(us[[u_i]], simx$simxv, simx$wx, lw, rho = rhov)
-  dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
-  qv = sesp::sesp(y~.,data = dt,listw = lw, discvar = "xv",discnum = 3,
-                  model = 'ols', overlay = 'intersection', cores = 1)
-  return(qv[[1]])
+mc_simq = \(cores = 6){
+  doclust = FALSE
+  if (inherits(cores, "cluster")) {
+    doclust = TRUE
+  } else if (cores > 1) {
+    doclust = TRUE
+    cores = parallel::makeCluster(cores)
+    on.exit(parallel::stopCluster(cores), add = TRUE)
+  }
+
+  paradf = tidyr::crossing("rho" = rho,
+                           "ui" = 1:100)
+  parak = split(paradf, seq_len(nrow(paradf)))
+
+  calcul_q = \(paramgd){
+    rhov = paramgd[[1]]
+    u_i = paramgd[[2]]
+    dt = tibble::tibble(
+      realdisc = simx$simx_zone,
+      naturaldisc = simx$naturaldisc,
+      xv = simx$simxv
+    )
+    dt$y = spdgp::sim_durbin(us[[u_i]], simx$simxv, simx$wx, lw, rho = rhov)
+    dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
+    qv = sesp::sesp(y~.,data = dt,listw = lw,discvar = "xv",discnum = 3,
+                    model = 'ols', overlay = 'intersection', cores = 1)
+    return(dplyr::mutate(qv[[1]],rho = rhov))
+  }
+
+  if (doclust) {
+    parallel::clusterExport(cores)
+    out_g = parallel::parLapply(cores,parak,calcul_q)
+    out_g = tibble::as_tibble(do.call(rbind, out_g))
+  } else {
+    out_g = purrr::map_dfr(parak,calcul_q)
+  }
+  return(out_g)
 }
+
+qv = mc_simq(cores = 12)
+## Error in parallel::clusterExport(cores): argument "varlist" is missing, with no default
 ```
