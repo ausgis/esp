@@ -119,14 +119,14 @@ mc_simq = \(cores = 6){
   gdist = stats::as.dist(sdsfun::sf_distance_matrix(simx))
   hclustgeo_disc = \(xv){
     D0 = stats::dist(xv)
-    resh = ClustGeo::hclustgeo(D0,gdist,alpha = 0.75)
+    resh = ClustGeo::hclustgeo(D0,gdist,alpha = 0.5)
     return(stats::cutree(resh,3))
   }
 
   calcul_q = \(paramgd){
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
-    y = spdgp::sim_sar(us[[u_i]], simx$simx_strata, lw, rho = rhov)
+    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata, simx$simx_strata, lw, rho = rhov)
     sed = hclustgeo_disc(y)
     sid = sdsfun::discretize_vector(y,3,method = 'natural')
     qv1 = gdverse::factor_detector(y,sed)[[1]]
@@ -147,4 +147,5 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
+qv
 ```
