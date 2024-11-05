@@ -37,9 +37,7 @@ m[14,11:12] = 2
 m[15,11:13] = 2
 
 library(sf)
-## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(terra)
-## terra 1.7.83
 r = terra::rast(m, crs = "EPSG:4326")
 names(r) = 'simx_strata'
 simx = sf::st_as_sf(terra::as.points(r))
@@ -98,7 +96,7 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/x_strata-1.png)
+![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/x_strata-1.png)
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
@@ -145,10 +143,13 @@ mc_simq = \(cores = 6){
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
     y = spdgp::sim_sar(us[[u_i]], simx$simx_strata, lw, rho = rhov)
-    dt = tibble::tibble(y = y, sed = hclustgeo_disc(y),
-                        sid = sdsfun::discretize_vector(y,3,method = 'natural'))
-    qv = gdverse::gd(y~.,data = dt)
-    return(dplyr::mutate(qv[[1]],rho = rhov))
+    sed = hclustgeo_disc(y)
+    sid = sdsfun::discretize_vector(y,3,method = 'natural')
+    qv1 = gdverse::factor_detector(y,sed)[[1]]
+    qv2 = gdverse::factor_detector(y,sed)[[1]]
+    res = tibble::tibble(qv_sed = qv1, qv_sid = qv2,
+                         qv_bias = qv1 - qv2,rho = rhov)
+    return(res)
   }
 
   if (doclust) {
@@ -163,4 +164,3 @@ mc_simq = \(cores = 6){
 
 qv = mc_simq(cores = 12)
 ```
-
