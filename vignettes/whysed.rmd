@@ -209,6 +209,7 @@ The spatial autoregressive coefficients for different true strata of \( x \) are
 
 ``` r
 simx = dplyr::mutate(simx,wx = simx_zone * 0.1)
+simx$naturaldisc = sdsfun::discretize_vector(simx$simxv,3,method = 'natural')
 rho = seq(0,1,by = 0.05)
 us = vector("list",100)
 
@@ -217,4 +218,20 @@ for (i in seq_along(us)) {
 }
 ```
 
+## A Monte Carlo experiment to demonstrate the advantages of spatially explicit discretization.
 
+
+``` r
+sim_q = \(rhov,u_i){
+  dt = tibble::tibble(
+    realdisc = simx$simx_zone,
+    naturaldisc = simx$naturaldisc,
+    xv = simx$simxv
+  )
+  dt$y = spdgp::sim_durbin(us[[u_i]], simx$simxv, simx$wx, lw, rho = rhov)
+  dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
+  qv = sesp::sesp(y~.,data = dt,listw = lw, discvar = "xv",discnum = 3,
+                  model = 'ols', overlay = 'intersection', cores = 1)
+  return(qv[[1]])
+}
+```
