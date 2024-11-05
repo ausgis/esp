@@ -10,7 +10,7 @@ vignette: >
 
 
 
-We use simulated data comprising 225 cells organized in a 15-row by 15-column grid to illustrate the rationale for employing spatially explicit discretization methods. We pre-constructed a grid-based simulated dataset with three strata, and then simulated Y under different spatial autocorrelation scenarios to explore the differences between explicit spatial discretization and implicit spatial discretization. The simulation of spatial data is conducted using the `spdgp` package in R. We selected hierarchical clustering with spatial constraints and the natural breaks method to represent explicit and implicit spatial discretization, respectively. The hierarchical clustering with spatial constraints was implemented using the `ClustGeo` package, while the natural breaks method was implemented based on the `sdsfun` package. In subsequent analyses, all discretization methods applied will discretize the dataset into three strata for the calculation of the q-values.
+We use simulated data comprising 225 cells organized in a 15-row by 15-column grid to illustrate the rationale for employing spatially explicit discretization methods. We pre-constructed a grid-based simulated dataset with three strata, and then simulated Y under different spatial autocorrelation scenarios to explore the differences between explicit spatial discretization and implicit spatial discretization. The simulation of spatial data is conducted using the `spdgp` package in R. We selected hierarchical clustering with spatial constraints and hierarchical clustering method to represent explicit and implicit spatial discretization, respectively. The hierarchical clustering with spatial constraints and hierarchical clustering methods were implemented using the `ClustGeo` package. In subsequent analyses, all discretization methods applied will discretize the dataset into three strata for the calculation of the q-values.
 
 ## Install Necessary R Packages
 
@@ -96,7 +96,7 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/x_strata-1.png)
+![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/x_strata-1.png)
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
@@ -133,9 +133,9 @@ mc_simq = \(cores = 6){
   parak = split(paradf, seq_len(nrow(paradf)))
 
   gdist = stats::as.dist(sdsfun::sf_distance_matrix(simx))
-  hclustgeo_disc = \(xv){
+  hclustgeo_disc = \(xv,alpha = 0.5){
     D0 = stats::dist(xv)
-    resh = ClustGeo::hclustgeo(D0,gdist,alpha = 0.5)
+    resh = ClustGeo::hclustgeo(D0,gdist,alpha = alpha)
     return(stats::cutree(resh,3))
   }
 
@@ -143,8 +143,8 @@ mc_simq = \(cores = 6){
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
     y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata*2, simx$simx_strata, lw, rho = rhov)
-    sed = hclustgeo_disc(y)
-    sid = sdsfun::discretize_vector(y,3,method = 'natural')
+    sed = hclustgeo_disc(y,alpha = 0.75)
+    sid = hclustgeo_disc(y,alpha = 0)
     qv1 = gdverse::factor_detector(y,sed)[[1]]
     qv2 = gdverse::factor_detector(y,sid)[[1]]
     res = tibble::tibble(qv_sed = qv1, qv_sid = qv2,
@@ -167,15 +167,22 @@ qv
 ## # A tibble: 1,900 × 4
 ##    qv_sed qv_sid qv_bias   rho
 ##     <dbl>  <dbl>   <dbl> <dbl>
-##  1  0.998  0.986  0.0118  0.05
-##  2  0.998  0.986  0.0122  0.05
-##  3  0.998  0.985  0.0126  0.05
-##  4  0.998  0.985  0.0121  0.05
-##  5  0.997  0.985  0.0118  0.05
-##  6  0.998  0.986  0.0118  0.05
-##  7  0.997  0.985  0.0123  0.05
-##  8  0.998  0.986  0.0119  0.05
-##  9  0.997  0.986  0.0114  0.05
-## 10  0.997  0.985  0.0123  0.05
+##  1  0.998  0.998       0  0.05
+##  2  0.998  0.998       0  0.05
+##  3  0.997  0.997       0  0.05
+##  4  0.998  0.998       0  0.05
+##  5  0.998  0.998       0  0.05
+##  6  0.998  0.998       0  0.05
+##  7  0.998  0.998       0  0.05
+##  8  0.998  0.998       0  0.05
+##  9  0.998  0.998       0  0.05
+## 10  0.998  0.998       0  0.05
 ## # ℹ 1,890 more rows
+tapply(qv$qv_bias, qv$rho, mean)
+##         0.05          0.1         0.15          0.2         0.25          0.3         0.35 
+## -0.003730299 -0.004598168 -0.008629568 -0.009083803 -0.013027071 -0.020524905 -0.034507171 
+##          0.4         0.45          0.5         0.55          0.6         0.65          0.7 
+## -0.036417126 -0.035733490 -0.042590039 -0.050666891 -0.069836797 -0.093104122 -0.095702926 
+##         0.75          0.8         0.85          0.9         0.95 
+## -0.111785462 -0.130288998 -0.171257233 -0.228723769 -0.237107745
 ```

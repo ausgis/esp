@@ -127,7 +127,7 @@ mc_simq = \(cores = 6){
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
     y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata*2, simx$simx_strata, lw, rho = rhov)
-    sed = hclustgeo_disc(y,alpha = 0.5)
+    sed = hclustgeo_disc(y,alpha = 0.75)
     sid = hclustgeo_disc(y,alpha = 0)
     qv1 = gdverse::factor_detector(y,sed)[[1]]
     qv2 = gdverse::factor_detector(y,sid)[[1]]
@@ -148,4 +148,5 @@ mc_simq = \(cores = 6){
 
 qv = mc_simq(cores = 12)
 qv
+tapply(qv$qv_bias, qv$rho, mean)
 ```
