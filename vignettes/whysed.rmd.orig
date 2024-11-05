@@ -206,4 +206,6 @@ mc_simq = \(cores = 6){
   }
   return(out_g)
 }
+
+qv = mc_simq(cores = 12)
 ```
