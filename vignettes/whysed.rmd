@@ -39,9 +39,7 @@ m[14,11:12] = 2
 m[15,11:13] = 2
 
 library(sf)
-## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(terra)
-## terra 1.7.83
 r = terra::rast(m, crs = "EPSG:4326")
 names(r) = 'simx_zone'
 simx = sf::st_as_sf(terra::as.points(r))
@@ -248,9 +246,8 @@ mc_simq = \(cores = 6){
     )
     dt$y = spdgp::sim_durbin(us[[u_i]], simx$simxv, simx$wx, lw, rho = rhov)
     dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
-    qv = sesp::sesp(y ~ ., data = sf::sf::st_set_geometry(dt,sf::st_geometry(simx)),
-                    listw = lw, discvar = "xv", discnum = 3,
-                    model = 'ols', overlay = 'intersection', cores = 1)
+    qv = sesp::sesp(y ~ ., data = sf::st_set_geometry(dt,sf::st_geometry(simx)), listw = lw,
+                    discvar = "xv", discnum = 3, model = 'ols', overlay = 'intersection', cores = 1)
     return(dplyr::mutate(qv[[1]],rho = rhov))
   }
 
@@ -265,8 +262,5 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
-## Error in parse(text = input): <text>:25:41: unexpected '::'
-## 24:     dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
-## 25:     qv = sesp::sesp(y ~ ., data = sf::sf::
-##                                             ^
+## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: The listw needs to be preserved in a list.
 ```

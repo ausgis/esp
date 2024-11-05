@@ -192,7 +192,7 @@ mc_simq = \(cores = 6){
     )
     dt$y = spdgp::sim_durbin(us[[u_i]], simx$simxv, simx$wx, lw, rho = rhov)
     dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
-    qv = sesp::sesp(y ~ ., data = sf::st_set_geometry(dt,sf::st_geometry(simx)), listw = lw,
+    qv = sesp::sesp(y ~ ., data = sf::st_set_geometry(dt,sf::st_geometry(simx)), listw = list(lw),
                     discvar = "xv", discnum = 3, model = 'ols', overlay = 'intersection', cores = 1)
     return(dplyr::mutate(qv[[1]],rho = rhov))
   }
