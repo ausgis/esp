@@ -100,7 +100,7 @@ ggplot2::ggplot() +
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to match the stratification levels, i.e., 1, 2, and 3. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 100 times.
+The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to twice the stratification levels, i.e., stratifications 1, 2, and 3 correspond to autoregressive coefficients of 2, 4, and 6, respectively. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 100 times.
 
 
 ``` r
@@ -142,7 +142,7 @@ mc_simq = \(cores = 6){
   calcul_q = \(paramgd){
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
-    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata, simx$simx_strata, lw, rho = rhov)
+    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata*2, simx$simx_strata, lw, rho = rhov)
     sed = hclustgeo_disc(y)
     sid = sdsfun::discretize_vector(y,3,method = 'natural')
     qv1 = gdverse::factor_detector(y,sed)[[1]]
@@ -167,15 +167,15 @@ qv
 ## # A tibble: 1,900 × 4
 ##    qv_sed qv_sid qv_bias   rho
 ##     <dbl>  <dbl>   <dbl> <dbl>
-##  1  0.995  0.984  0.0110  0.05
-##  2  0.995  0.984  0.0109  0.05
-##  3  0.995  0.984  0.0113  0.05
-##  4  0.994  0.983  0.0112  0.05
-##  5  0.995  0.984  0.0105  0.05
-##  6  0.996  0.984  0.0119  0.05
-##  7  0.996  0.985  0.0112  0.05
-##  8  0.995  0.983  0.0118  0.05
-##  9  0.996  0.986  0.0100  0.05
-## 10  0.995  0.984  0.0107  0.05
+##  1  0.998  0.986  0.0118  0.05
+##  2  0.998  0.986  0.0122  0.05
+##  3  0.998  0.985  0.0126  0.05
+##  4  0.998  0.985  0.0121  0.05
+##  5  0.997  0.985  0.0118  0.05
+##  6  0.998  0.986  0.0118  0.05
+##  7  0.997  0.985  0.0123  0.05
+##  8  0.998  0.986  0.0119  0.05
+##  9  0.997  0.986  0.0114  0.05
+## 10  0.997  0.985  0.0123  0.05
 ## # ℹ 1,890 more rows
 ```

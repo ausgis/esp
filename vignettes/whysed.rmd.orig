@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 ```
 
 
-We use simulated data comprising 225 cells organized in a 15-row by 15-column grid to illustrate the rationale for employing spatially explicit discretization methods. We pre-constructed a grid-based simulated dataset with three strata, and then simulated Y under different spatial autocorrelation scenarios to explore the differences between explicit spatial discretization and implicit spatial discretization. The simulation of spatial data is conducted using the `spdgp` package in R. We selected hierarchical clustering with spatial constraints and the natural breaks method to represent explicit and implicit spatial discretization, respectively. The hierarchical clustering with spatial constraints was implemented using the `ClustGeo` package, while the natural breaks method was implemented based on the `sdsfun` package. In subsequent analyses, all discretization methods applied will discretize the dataset into three strata for the calculation of the q-values.
+We use simulated data comprising 225 cells organized in a 15-row by 15-column grid to illustrate the rationale for employing spatially explicit discretization methods. We pre-constructed a grid-based simulated dataset with three strata, and then simulated Y under different spatial autocorrelation scenarios to explore the differences between explicit spatial discretization and implicit spatial discretization. The simulation of spatial data is conducted using the `spdgp` package in R. We selected hierarchical clustering with spatial constraints and hierarchical clustering method to represent explicit and implicit spatial discretization, respectively. The hierarchical clustering with spatial constraints and hierarchical clustering methods were implemented using the `ClustGeo` package. In subsequent analyses, all discretization methods applied will discretize the dataset into three strata for the calculation of the q-values.
 
 ## Install Necessary R Packages
 
@@ -117,9 +117,9 @@ mc_simq = \(cores = 6){
   parak = split(paradf, seq_len(nrow(paradf)))
 
   gdist = stats::as.dist(sdsfun::sf_distance_matrix(simx))
-  hclustgeo_disc = \(xv){
+  hclustgeo_disc = \(xv,alpha = 0.5){
     D0 = stats::dist(xv)
-    resh = ClustGeo::hclustgeo(D0,gdist,alpha = 0.5)
+    resh = ClustGeo::hclustgeo(D0,gdist,alpha = alpha)
     return(stats::cutree(resh,3))
   }
 
@@ -127,8 +127,8 @@ mc_simq = \(cores = 6){
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
     y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata*2, simx$simx_strata, lw, rho = rhov)
-    sed = hclustgeo_disc(y)
-    sid = sdsfun::discretize_vector(y,3,method = 'natural')
+    sed = hclustgeo_disc(y,alpha = 0.5)
+    sid = hclustgeo_disc(y,alpha = 0)
     qv1 = gdverse::factor_detector(y,sed)[[1]]
     qv2 = gdverse::factor_detector(y,sid)[[1]]
     res = tibble::tibble(qv_sed = qv1, qv_sid = qv2,
