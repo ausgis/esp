@@ -84,95 +84,22 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-
-### Generate three sets of continuous data with different properties through stratification of X
-
-Generate data for three strata(stratified groups) from normal distributions as follows: \( x_1 \sim \mathcal{N}(3, 1) \), \( x_2 \sim \mathcal{N}(4, 1.2) \), and \( x_3 \sim \mathcal{N}(5, 1.5) \). For each region, generate random error terms following a standard normal distribution: \( \epsilon_i \sim \mathcal{N}(0, 1) \) for \( i = 1, 2, 3 \). Finally, for the three regions, combine the simulated \( x \) and random error terms with spatial lag coefficients \( \rho \) of \( 0.1, 0.3, \) and \( 0.5 \) using a spatial lag process to simulate the final \( X_i \).
-
-```{r sim_x,fig.width=3.75,fig.height=3,fig.cap=knitr::asis_output("**Figure 2**. Simulated independent variable X")}
-table(simx$simx_zone)
-
-set.seed(123)
-v1 = rnorm(63,3,1)
-set.seed(123)
-v2 = rnorm(93,4,1.2)
-set.seed(123)
-v3 = rnorm(69,5,1.5)
-
-set.seed(123)
-u1 = rnorm(63,0,1)
-set.seed(123)
-u2 = rnorm(93,0,1)
-set.seed(123)
-u3 = rnorm(69,0,1)
-
-listw1 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==1),]),
-                         style = "W", zero.policy = TRUE)
-listw2 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==2),]),
-                         style = "W", zero.policy = TRUE)
-listw3 = spdep::nb2listw(sdsfun::spdep_nb(simx[which(simx$simx_zone==3),]),
-                         style = "W", zero.policy = TRUE)
-
-v1 = spdgp::sim_sar(u1, v1, listw1, rho = 0.1)
-v2 = spdgp::sim_sar(u2, v2, listw2, rho = 0.3)
-v3 = spdgp::sim_sar(u3, v3, listw3, rho = 0.5)
-
-simx_value = simx$simx_zone
-simx_value[which(simx_value==1)] = v1
-simx_value[which(simx_value==2)] = v2
-simx_value[which(simx_value==3)] = v3
-
-simx$simxv = simx_value
-simx
-
-ggplot2::ggplot() +
-  ggplot2::geom_sf(data = zone, fill = 'transparent',
-                   color = 'grey10', lwd = 0.75) +
-  ggplot2::geom_sf(data = simx, ggplot2::aes(color = simxv)) +
-  viridis::scale_color_viridis(option = "magma", direction = -1, name = "simx",
-                               breaks = c(range(simx$simxv)[1],5,10,range(simx$simxv)[2]),
-                               labels = c(-1,seq(5,15,by = 5))) +
-  ggplot2::theme_void()
-```
-
-### The spatial autocorrelation of the simulated X
-
-```{r moran_simx}
-sdsfun::moran_test(simx)
-```
-
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
+The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial lag process. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 100 times. 
+
 ```{r}
-nd = sdsfun::discretize_vector(simx$simxv,3,method = 'natural')
-rd = 
-```
+us = vector("list",100)
+for (i in seq_along(us)) {
+  us[[i]] = rnorm(nrow(simx),0,0.1)
+}
 
+rho = seq(0.05,0.95,by = 0.05)
 
-
-## Simulated dependent variable Y with spatial durbin process
-
-```{r simy_setting}
 lw = spdep::nb2listw(sdsfun::spdep_nb(simx),
                      style = "W",
                      zero.policy = TRUE)
 ```
-
-
-The spatial autoregressive coefficients for different true strata of \( x \) are sequentially set to 0.1, 0.2, and 0.3. The random disturbance term is randomly generated using a normal distribution with mean 0 and variance 1. The spatial lag value \( \rho \in \text{sequence}( \text{min} = 0.05, \, \text{max} = 0.95, \, \text{interval} = 0.05) \). Repeated 100 times for each \( \rho \).
-
-```{r simy_sdp}
-simx = dplyr::mutate(simx,wx = 1)
-simx$naturaldisc = sdsfun::discretize_vector(simx$simxv,3,method = 'natural')
-rho = seq(0,1,by = 0.05)
-us = vector("list",100)
-
-for (i in seq_along(us)) {
-  us[[i]] = rnorm(nrow(simx),0,1)
-}
-```
-
-## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
 ```{r}
 mc_simq = \(cores = 6){
@@ -188,24 +115,26 @@ mc_simq = \(cores = 6){
   paradf = tidyr::crossing("rho" = rho,
                            "ui" = 1:100)
   parak = split(paradf, seq_len(nrow(paradf)))
+  
+  gdist = stats::as.dist(sdsfun::sf_distance_matrix(data))
+  hclustgeo_disc = \(xv){
+    D0 = stats::dist(xv)
+    resh = ClustGeo::hclustgeo(D0,gdist,alpha = 0.75)
+    return(stats::cutree(resh,3))
+  }
 
   calcul_q = \(paramgd){
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
-    dt = tibble::tibble(
-      realdisc = simx$simx_zone,
-      naturaldisc = simx$naturaldisc,
-      xv = simx$simxv
-    )
-    dt$y = spdgp::sim_durbin(us[[u_i]], simx$simxv, simx$wx, lw, rho = rhov)
-    dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
-    qv = sesp::sesp(y ~ ., data = sf::st_set_geometry(dt,sf::st_geometry(simx)), listw = list(lw),
-                    discvar = "xv", discnum = 3, model = 'ols', overlay = 'intersection', cores = 1)
+    y = spdgp::sim_sar(us[[u_i]], simx$simx_strata, lw, rho = rhov)
+    dt = tibble::tibble(y = y, sed = hclustgeo_disc(y), 
+                        sid = sdsfun::discretize_vector(y,3,method = 'natural'))
+    qv = gdverse::gd(y~.,data = dt)
     return(dplyr::mutate(qv[[1]],rho = rhov))
   }
 
   if (doclust) {
-    parallel::clusterExport(cores, varlist = c("simx","us","lw"))
+    parallel::clusterExport(cores, varlist = c("simx","us","rho","lw"))
     out_g = parallel::parLapply(cores,parak,calcul_q)
     out_g = tibble::as_tibble(do.call(rbind, out_g))
   } else {
