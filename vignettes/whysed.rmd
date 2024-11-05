@@ -248,7 +248,8 @@ mc_simq = \(cores = 6){
     )
     dt$y = spdgp::sim_durbin(us[[u_i]], simx$simxv, simx$wx, lw, rho = rhov)
     dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
-    qv = sesp::sesp(y~.,data = dt,listw = lw,discvar = "xv",discnum = 3,
+    qv = sesp::sesp(y ~ ., data = sf::sf::st_set_geometry(dt,sf::st_geometry(simx)),
+                    listw = lw, discvar = "xv", discnum = 3,
                     model = 'ols', overlay = 'intersection', cores = 1)
     return(dplyr::mutate(qv[[1]],rho = rhov))
   }
@@ -264,5 +265,8 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
-## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: no applicable method for 'st_geometry' applied to an object of class "c('tbl_df', 'tbl', 'data.frame')"
+## Error in parse(text = input): <text>:25:41: unexpected '::'
+## 24:     dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
+## 25:     qv = sesp::sesp(y ~ ., data = sf::sf::
+##                                             ^
 ```
