@@ -74,21 +74,21 @@
     
 <p>We use simulated data comprising 225 cells organized in a 15-row by
 15-column grid to illustrate the rationale for employing spatially
-explicit discretization methods. This simulated dataset is constructed
-by combining data from three distinct spatial process models, resulting
-in a stratification with three differentiated strata. In subsequent
-analyses, all discretization methods applied will discretize the dataset
-into three strata for the calculation of the q-values. The simulation of
-spatial data is conducted using the <code>spdgp</code> package in R. We
-compare the q-value estimates obtained through spatially explicit
-discretization in the SESP model, robust discretization in the Robust
-Geographical Detector, and conventional natural breaks discretization
-with the Geodetector. The spatially explicit discretization in the SESP
-model is implemented using the <code>sesp</code> package, robust
-discretization is achieved using the <code>gdverse</code> package, and
-natural breaks are implemented with the <code>sdsfun</code> package.</p>
+explicit discretization methods. We pre-constructed a grid-based
+simulated dataset with three strata, and then simulated Y under
+different spatial autocorrelation scenarios to explore the differences
+between explicit spatial discretization and implicit spatial
+discretization. The simulation of spatial data is conducted using the
+<code>spdgp</code> package in R. We selected hierarchical clustering
+with spatial constraints and hierarchical clustering method to represent
+explicit and implicit spatial discretization, respectively. The
+hierarchical clustering with spatial constraints and hierarchical
+clustering methods were implemented using the <code>ClustGeo</code>
+package. In subsequent analyses, all discretization methods applied will
+discretize the dataset into three strata for the calculation of the
+q-values.</p>
 <div class="section level2">
-<h2 id="install-the-necessary-r-packages">Install the necessary R packages<a class="anchor" aria-label="anchor" href="#install-the-necessary-r-packages"></a>
+<h2 id="install-necessary-r-packages">Install Necessary R Packages<a class="anchor" aria-label="anchor" href="#install-necessary-r-packages"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sf"</span>,<span class="st">"terra"</span>,<span class="st">"sdsfun"</span>,<span class="st">"gdverse"</span><span class="op">)</span>,dep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -98,11 +98,8 @@ natural breaks are implemented with the <code>sdsfun</code> package.</p>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"josiahparry/spdgp"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="simulated-independent-variable-x">Simulated independent variable X<a class="anchor" aria-label="anchor" href="#simulated-independent-variable-x"></a>
+<h2 id="simulated-independent-strata-x">Simulated Independent Strata X<a class="anchor" aria-label="anchor" href="#simulated-independent-strata-x"></a>
 </h2>
-<div class="section level3">
-<h3 id="real-stratification-of-x">Real Stratification of X<a class="anchor" aria-label="anchor" href="#real-stratification-of-x"></a>
-</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">2</span>,nrow <span class="op">=</span> <span class="fl">15</span>, ncol <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
 <span><span class="va">zone1_indice</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">6</span><span class="op">:</span><span class="fl">9</span>,<span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">8</span>,by <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,length.out <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
@@ -115,11 +112,9 @@ natural breaks are implemented with the <code>sdsfun</code> package.</p>
 <span><span class="va">m</span><span class="op">[</span><span class="fl">15</span>,<span class="fl">11</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span> <span class="op">=</span> <span class="fl">2</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span><span class="co">## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
-<span><span class="co">## terra 1.7.83</span></span>
 <span><span class="va">r</span> <span class="op">=</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">m</span>, crs <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span> <span class="op">=</span> <span class="st">'simx_zone'</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span> <span class="op">=</span> <span class="st">'simx_strata'</span></span>
 <span><span class="va">simx</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/as.points.html" class="external-link">as.points</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">simx</span></span>
 <span><span class="co">## Simple feature collection with 225 features and 1 field</span></span>
@@ -128,30 +123,19 @@ natural breaks are implemented with the <code>sdsfun</code> package.</p>
 <span><span class="co">## Bounding box:  xmin: 0.5 ymin: 0.5 xmax: 14.5 ymax: 14.5</span></span>
 <span><span class="co">## Geodetic CRS:  WGS 84</span></span>
 <span><span class="co">## First 10 features:</span></span>
-<span><span class="co">##    simx_zone         geometry</span></span>
-<span><span class="co">## 1          1 POINT (0.5 14.5)</span></span>
-<span><span class="co">## 2          1 POINT (1.5 14.5)</span></span>
-<span><span class="co">## 3          1 POINT (2.5 14.5)</span></span>
-<span><span class="co">## 4          1 POINT (3.5 14.5)</span></span>
-<span><span class="co">## 5          1 POINT (4.5 14.5)</span></span>
-<span><span class="co">## 6          1 POINT (5.5 14.5)</span></span>
-<span><span class="co">## 7          1 POINT (6.5 14.5)</span></span>
-<span><span class="co">## 8          1 POINT (7.5 14.5)</span></span>
-<span><span class="co">## 9          1 POINT (8.5 14.5)</span></span>
-<span><span class="co">## 10         1 POINT (9.5 14.5)</span></span>
+<span><span class="co">##    simx_strata         geometry</span></span>
+<span><span class="co">## 1            1 POINT (0.5 14.5)</span></span>
+<span><span class="co">## 2            1 POINT (1.5 14.5)</span></span>
+<span><span class="co">## 3            1 POINT (2.5 14.5)</span></span>
+<span><span class="co">## 4            1 POINT (3.5 14.5)</span></span>
+<span><span class="co">## 5            1 POINT (4.5 14.5)</span></span>
+<span><span class="co">## 6            1 POINT (5.5 14.5)</span></span>
+<span><span class="co">## 7            1 POINT (6.5 14.5)</span></span>
+<span><span class="co">## 8            1 POINT (7.5 14.5)</span></span>
+<span><span class="co">## 9            1 POINT (8.5 14.5)</span></span>
+<span><span class="co">## 10           1 POINT (9.5 14.5)</span></span>
 <span></span>
-<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">simx</span>,</span>
-<span>                   <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">simx_zone</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">'zones'</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="float">
-<img src="../reference/figures/whysed/real_stratification_x-1.png" alt="Figure 1. Strata of simulated independent variable X"><div class="figcaption">
-<strong>Figure 1</strong>. Strata of simulated
-independent variable X</div>
-</div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">zone1</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span><span class="va">strata1</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">3.5</span>,<span class="fl">10</span>,<span class="fl">10</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">15</span>,<span class="fl">9.5</span>,<span class="fl">6</span>,<span class="fl">12.5</span>,<span class="fl">15</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -159,7 +143,7 @@ independent variable X</div>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">st_combine</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html" class="external-link">st_cast</a></span><span class="op">(</span><span class="st">"POLYGON"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">zone2</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span><span class="va">strata2</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">3.5</span>,<span class="fl">10</span>,<span class="fl">10</span>,<span class="fl">13.5</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">9.5</span>,<span class="fl">6</span>,<span class="fl">12.5</span>,<span class="fl">3.5</span>,<span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -167,7 +151,7 @@ independent variable X</div>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">st_combine</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html" class="external-link">st_cast</a></span><span class="op">(</span><span class="st">"POLYGON"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">zone3</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span><span class="va">strata3</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">15</span>,<span class="fl">15</span>,<span class="fl">10</span>,<span class="fl">10</span>,<span class="fl">13.5</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">15</span>,<span class="fl">15</span>,<span class="fl">3.5</span>,<span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -175,167 +159,45 @@ independent variable X</div>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">st_combine</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_cast.html" class="external-link">st_cast</a></span><span class="op">(</span><span class="st">"POLYGON"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">zone</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sf.html" class="external-link">st_sf</a></span><span class="op">(</span>zones <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
-<span>                 geometry <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">c</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">zone1</span>,<span class="va">zone2</span>,<span class="va">zone3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="generate-three-sets-of-continuous-data-with-different-properties-through-stratification-of-x">Generate three sets of continuous data with different properties
-through stratification of X<a class="anchor" aria-label="anchor" href="#generate-three-sets-of-continuous-data-with-different-properties-through-stratification-of-x"></a>
-</h3>
-<p>Generate data for three strata(stratified groups) from normal
-distributions as follows: <span class="math inline">\(x_1 \sim
-\mathcal{N}(3, 1)\)</span>, <span class="math inline">\(x_2 \sim
-\mathcal{N}(4, 1.2)\)</span>, and <span class="math inline">\(x_3 \sim
-\mathcal{N}(5, 1.5)\)</span>. For each region, generate random error
-terms following a standard normal distribution: <span class="math inline">\(\epsilon_i \sim \mathcal{N}(0, 1)\)</span> for
-<span class="math inline">\(i = 1, 2, 3\)</span>. Finally, for the three
-regions, combine the simulated <span class="math inline">\(x\)</span>
-and random error terms with spatial lag coefficients <span class="math inline">\(\rho\)</span> of <span class="math inline">\(0.1,
-0.3,\)</span> and <span class="math inline">\(0.5\)</span> using a
-spatial lag process to simulate the final <span class="math inline">\(X_i\)</span>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">simx</span><span class="op">$</span><span class="va">simx_zone</span><span class="op">)</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##  1  2  3 </span></span>
-<span><span class="co">## 63 93 69</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">v1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">63</span>,<span class="fl">3</span>,<span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">v2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">93</span>,<span class="fl">4</span>,<span class="fl">1.2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">v3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">69</span>,<span class="fl">5</span>,<span class="fl">1.5</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">u1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">63</span>,<span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">u2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">93</span>,<span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span><span class="va">u3</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">69</span>,<span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">listw1</span> <span class="op">=</span> <span class="fu">spdep</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html" class="external-link">nb2listw</a></span><span class="op">(</span><span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/spdep_nb.html" class="external-link">spdep_nb</a></span><span class="op">(</span><span class="va">simx</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">simx</span><span class="op">$</span><span class="va">simx_zone</span><span class="op">==</span><span class="fl">1</span><span class="op">)</span>,<span class="op">]</span><span class="op">)</span>,</span>
-<span>                         style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">listw2</span> <span class="op">=</span> <span class="fu">spdep</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html" class="external-link">nb2listw</a></span><span class="op">(</span><span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/spdep_nb.html" class="external-link">spdep_nb</a></span><span class="op">(</span><span class="va">simx</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">simx</span><span class="op">$</span><span class="va">simx_zone</span><span class="op">==</span><span class="fl">2</span><span class="op">)</span>,<span class="op">]</span><span class="op">)</span>,</span>
-<span>                         style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">listw3</span> <span class="op">=</span> <span class="fu">spdep</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html" class="external-link">nb2listw</a></span><span class="op">(</span><span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/spdep_nb.html" class="external-link">spdep_nb</a></span><span class="op">(</span><span class="va">simx</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">simx</span><span class="op">$</span><span class="va">simx_zone</span><span class="op">==</span><span class="fl">3</span><span class="op">)</span>,<span class="op">]</span><span class="op">)</span>,</span>
-<span>                         style <span class="op">=</span> <span class="st">"W"</span>, zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">v1</span> <span class="op">=</span> <span class="fu">spdgp</span><span class="fu">::</span><span class="fu"><a href="https://josiahparry.github.io/spdgp/reference/sim_sar.html" class="external-link">sim_sar</a></span><span class="op">(</span><span class="va">u1</span>, <span class="va">v1</span>, <span class="va">listw1</span>, rho <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
-<span><span class="va">v2</span> <span class="op">=</span> <span class="fu">spdgp</span><span class="fu">::</span><span class="fu"><a href="https://josiahparry.github.io/spdgp/reference/sim_sar.html" class="external-link">sim_sar</a></span><span class="op">(</span><span class="va">u2</span>, <span class="va">v2</span>, <span class="va">listw2</span>, rho <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span></span>
-<span><span class="va">v3</span> <span class="op">=</span> <span class="fu">spdgp</span><span class="fu">::</span><span class="fu"><a href="https://josiahparry.github.io/spdgp/reference/sim_sar.html" class="external-link">sim_sar</a></span><span class="op">(</span><span class="va">u3</span>, <span class="va">v3</span>, <span class="va">listw3</span>, rho <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">simx_value</span> <span class="op">=</span> <span class="va">simx</span><span class="op">$</span><span class="va">simx_zone</span></span>
-<span><span class="va">simx_value</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">simx_value</span><span class="op">==</span><span class="fl">1</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="va">v1</span></span>
-<span><span class="va">simx_value</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">simx_value</span><span class="op">==</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="va">v2</span></span>
-<span><span class="va">simx_value</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">simx_value</span><span class="op">==</span><span class="fl">3</span><span class="op">)</span><span class="op">]</span> <span class="op">=</span> <span class="va">v3</span></span>
-<span></span>
-<span><span class="va">simx</span><span class="op">$</span><span class="va">simxv</span> <span class="op">=</span> <span class="va">simx_value</span></span>
-<span><span class="va">simx</span></span>
-<span><span class="co">## Simple feature collection with 225 features and 2 fields</span></span>
-<span><span class="co">## Geometry type: POINT</span></span>
-<span><span class="co">## Dimension:     XY</span></span>
-<span><span class="co">## Bounding box:  xmin: 0.5 ymin: 0.5 xmax: 14.5 ymax: 14.5</span></span>
-<span><span class="co">## Geodetic CRS:  WGS 84</span></span>
-<span><span class="co">## First 10 features:</span></span>
-<span><span class="co">##    simx_zone         geometry     simxv</span></span>
-<span><span class="co">## 1          1 POINT (0.5 14.5) 2.0080426</span></span>
-<span><span class="co">## 2          1 POINT (1.5 14.5) 2.9242074</span></span>
-<span><span class="co">## 3          1 POINT (2.5 14.5) 6.4744873</span></span>
-<span><span class="co">## 4          1 POINT (3.5 14.5) 3.6863108</span></span>
-<span><span class="co">## 5          1 POINT (4.5 14.5) 3.6830112</span></span>
-<span><span class="co">## 6          1 POINT (5.5 14.5) 6.8021666</span></span>
-<span><span class="co">## 7          1 POINT (6.5 14.5) 4.3612989</span></span>
-<span><span class="co">## 8          1 POINT (7.5 14.5) 0.9602127</span></span>
-<span><span class="co">## 9          1 POINT (8.5 14.5) 1.9754552</span></span>
-<span><span class="co">## 10         1 POINT (9.5 14.5) 2.3657828</span></span>
+<span><span class="va">strata</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/sf.html" class="external-link">st_sf</a></span><span class="op">(</span>stratas <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,</span>
+<span>                   geometry <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">c</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">strata1</span>,<span class="va">strata2</span>,<span class="va">strata3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">zone</span>, fill <span class="op">=</span> <span class="st">'transparent'</span>,</span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">strata</span>, fill <span class="op">=</span> <span class="st">'transparent'</span>,</span>
 <span>                   color <span class="op">=</span> <span class="st">'grey10'</span>, lwd <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">simx</span>, <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">simxv</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridis/reference/scale_viridis.html" class="external-link">scale_color_viridis</a></span><span class="op">(</span>option <span class="op">=</span> <span class="st">"magma"</span>, direction <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, name <span class="op">=</span> <span class="st">"simx"</span>,</span>
-<span>                               breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">simx</span><span class="op">$</span><span class="va">simxv</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,<span class="fl">5</span>,<span class="fl">10</span>,<span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">simx</span><span class="op">$</span><span class="va">simxv</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>,</span>
-<span>                               labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">15</span>,by <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">simx</span>,</span>
+<span>                   <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">simx_strata</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">'Strata'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
-<img src="../reference/figures/whysed/sim_x-1.png" alt="Figure 2. Simulated independent variable X"><div class="figcaption">
-<strong>Figure 2</strong>. Simulated independent
-variable X</div>
-</div>
-</div>
-<div class="section level3">
-<h3 id="the-spatial-autocorrelation-of-the-simulated-x">The spatial autocorrelation of the simulated X<a class="anchor" aria-label="anchor" href="#the-spatial-autocorrelation-of-the-simulated-x"></a>
-</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/moran_test.html" class="external-link">moran_test</a></span><span class="op">(</span><span class="va">simx</span><span class="op">)</span></span>
-<span><span class="co">## ***                 global moran test</span></span></code></pre></div>
-<table style="width:96%;" class="table">
-<colgroup>
-<col width="16%">
-<col width="19%">
-<col width="16%">
-<col width="15%">
-<col width="11%">
-<col width="16%">
-</colgroup>
-<thead><tr class="header">
-<th align="center">Variable</th>
-<th align="center">MoranI</th>
-<th align="center">EI</th>
-<th align="center">VarI</th>
-<th align="center">zI</th>
-<th align="center">pI</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="center">simx_zone</td>
-<td align="center">0.308731***</td>
-<td align="center">-0.004464</td>
-<td align="center">0.001493</td>
-<td align="center">8.105</td>
-<td align="center">2.634e-16</td>
-</tr>
-<tr class="even">
-<td align="center">simxv</td>
-<td align="center">0.159677***</td>
-<td align="center">-0.004464</td>
-<td align="center">0.001493</td>
-<td align="center">4.248</td>
-<td align="center">1.079e-05</td>
-</tr>
-</tbody>
-</table>
+<img src="../reference/figures/whysed/x_strata-1.png" alt="Figure 1. Strata of simulated independent variable X"><div class="figcaption">
+<strong>Figure 1</strong>. Strata of simulated
+independent variable X</div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="simulated-dependent-variable-y-with-spatial-durbin-process">Simulated dependent variable Y with spatial durbin process<a class="anchor" aria-label="anchor" href="#simulated-dependent-variable-y-with-spatial-durbin-process"></a>
+<h2 id="a-monte-carlo-simulation-experiment-demonstrating-the-necessity-of-spatial-explicit-discretization">A Monte Carlo simulation experiment demonstrating the necessity of
+spatial explicit discretization<a class="anchor" aria-label="anchor" href="#a-monte-carlo-simulation-experiment-demonstrating-the-necessity-of-spatial-explicit-discretization"></a>
 </h2>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">lw</span> <span class="op">=</span> <span class="fu">spdep</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html" class="external-link">nb2listw</a></span><span class="op">(</span><span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/spdep_nb.html" class="external-link">spdep_nb</a></span><span class="op">(</span><span class="va">simx</span><span class="op">)</span>,</span>
+<p>The error term is specified as <span class="math inline">\(\mu \sim
+\mathcal{N}(0, 0.1)\)</span>, and the corresponding <span class="math inline">\(Y\)</span> is simulated using the spatial durbin
+process. The autoregressive coefficients of X are set to twice the
+stratification levels, i.e., stratifications 1, 2, and 3 correspond to
+autoregressive coefficients of 2, 4, and 6, respectively. The spatial
+lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05.
+For each spatial lag coefficient <span class="math inline">\(\rho\)</span>, we randomly simulate 100 times.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">us</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">vector</a></span><span class="op">(</span><span class="st">"list"</span>,<span class="fl">100</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">us</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">us</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">simx</span><span class="op">)</span>,<span class="fl">0</span>,<span class="fl">0.1</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">rho</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.05</span>,<span class="fl">0.95</span>,by <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">lw</span> <span class="op">=</span> <span class="fu">spdep</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html" class="external-link">nb2listw</a></span><span class="op">(</span><span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/spdep_nb.html" class="external-link">spdep_nb</a></span><span class="op">(</span><span class="va">simx</span><span class="op">)</span>,</span>
 <span>                     style <span class="op">=</span> <span class="st">"W"</span>,</span>
 <span>                     zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>The spatial autoregressive coefficients for different true strata of
-<span class="math inline">\(x\)</span> are sequentially set to 0.1, 0.2,
-and 0.3. The random disturbance term is randomly generated using a
-normal distribution with mean 0 and variance 1. The spatial lag value
-<span class="math inline">\(\rho \in \text{sequence}( \text{min} = 0.05,
-\, \text{max} = 0.95, \, \text{interval} = 0.05)\)</span>. Repeated 100
-times for each <span class="math inline">\(\rho\)</span>.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">simx</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">simx</span>,wx <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">simx</span><span class="op">$</span><span class="va">naturaldisc</span> <span class="op">=</span> <span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/discretize_vector.html" class="external-link">discretize_vector</a></span><span class="op">(</span><span class="va">simx</span><span class="op">$</span><span class="va">simxv</span>,<span class="fl">3</span>,method <span class="op">=</span> <span class="st">'natural'</span><span class="op">)</span></span>
-<span><span class="va">rho</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,by <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></span>
-<span><span class="va">us</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">vector</a></span><span class="op">(</span><span class="st">"list"</span>,<span class="fl">100</span><span class="op">)</span></span>
-<span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">us</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">us</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">simx</span><span class="op">)</span>,<span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="a-monte-carlo-experiment-to-demonstrate-the-advantages-of-spatially-explicit-discretization-">A Monte Carlo experiment to demonstrate the advantages of spatially
-explicit discretization.<a class="anchor" aria-label="anchor" href="#a-monte-carlo-experiment-to-demonstrate-the-advantages-of-spatially-explicit-discretization-"></a>
-</h2>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mc_simq</span> <span class="op">=</span> \<span class="op">(</span><span class="va">cores</span> <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">doclust</span> <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">cores</span>, <span class="st">"cluster"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -350,23 +212,28 @@ explicit discretization.<a class="anchor" aria-label="anchor" href="#a-monte-car
 <span>                           <span class="st">"ui"</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span></span>
 <span>  <span class="va">parak</span> <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">paradf</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">paradf</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
+<span>  <span class="va">gdist</span> <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/sf_distance_matrix.html" class="external-link">sf_distance_matrix</a></span><span class="op">(</span><span class="va">simx</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">hclustgeo_disc</span> <span class="op">=</span> \<span class="op">(</span><span class="va">xv</span>,<span class="va">alpha</span> <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">{</span></span>
+<span>    <span class="va">D0</span> <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">xv</span><span class="op">)</span></span>
+<span>    <span class="va">resh</span> <span class="op">=</span> <span class="fu">ClustGeo</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ClustGeo/man/hclustgeo.html" class="external-link">hclustgeo</a></span><span class="op">(</span><span class="va">D0</span>,<span class="va">gdist</span>,alpha <span class="op">=</span> <span class="va">alpha</span><span class="op">)</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></span><span class="op">(</span><span class="va">resh</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
 <span>  <span class="va">calcul_q</span> <span class="op">=</span> \<span class="op">(</span><span class="va">paramgd</span><span class="op">)</span><span class="op">{</span></span>
 <span>    <span class="va">rhov</span> <span class="op">=</span> <span class="va">paramgd</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span>    <span class="va">u_i</span> <span class="op">=</span> <span class="va">paramgd</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
-<span>    <span class="va">dt</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>      realdisc <span class="op">=</span> <span class="va">simx</span><span class="op">$</span><span class="va">simx_zone</span>,</span>
-<span>      naturaldisc <span class="op">=</span> <span class="va">simx</span><span class="op">$</span><span class="va">naturaldisc</span>,</span>
-<span>      xv <span class="op">=</span> <span class="va">simx</span><span class="op">$</span><span class="va">simxv</span></span>
-<span>    <span class="op">)</span></span>
-<span>    <span class="va">dt</span><span class="op">$</span><span class="va">y</span> <span class="op">=</span> <span class="fu">spdgp</span><span class="fu">::</span><span class="fu"><a href="https://josiahparry.github.io/spdgp/reference/sim_durbin.html" class="external-link">sim_durbin</a></span><span class="op">(</span><span class="va">us</span><span class="op">[[</span><span class="va">u_i</span><span class="op">]</span><span class="op">]</span>, <span class="va">simx</span><span class="op">$</span><span class="va">simxv</span>, <span class="va">simx</span><span class="op">$</span><span class="va">wx</span>, <span class="va">lw</span>, rho <span class="op">=</span> <span class="va">rhov</span><span class="op">)</span></span>
-<span>    <span class="va">dt</span><span class="op">$</span><span class="va">robustdisc</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/robust_disc.html" class="external-link">robust_disc</a></span><span class="op">(</span><span class="va">y</span><span class="op">~</span><span class="va">xv</span>,data <span class="op">=</span> <span class="va">dt</span>,discnum <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>,<span class="fl">1</span><span class="op">)</span></span>
-<span>    <span class="va">qv</span> <span class="op">=</span> <span class="fu">sesp</span><span class="fu">::</span><span class="fu"><a href="../reference/sesp.html">sesp</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_set_geometry</a></span><span class="op">(</span><span class="va">dt</span>,<span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">simx</span><span class="op">)</span><span class="op">)</span>, listw <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">lw</span><span class="op">)</span>,</span>
-<span>                    discvar <span class="op">=</span> <span class="st">"xv"</span>, discnum <span class="op">=</span> <span class="fl">3</span>, model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">qv</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,rho <span class="op">=</span> <span class="va">rhov</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">y</span> <span class="op">=</span> <span class="fu">spdgp</span><span class="fu">::</span><span class="fu"><a href="https://josiahparry.github.io/spdgp/reference/sim_durbin.html" class="external-link">sim_durbin</a></span><span class="op">(</span><span class="va">us</span><span class="op">[[</span><span class="va">u_i</span><span class="op">]</span><span class="op">]</span>, <span class="va">simx</span><span class="op">$</span><span class="va">simx_strata</span><span class="op">*</span><span class="fl">2</span>, <span class="va">simx</span><span class="op">$</span><span class="va">simx_strata</span>, <span class="va">lw</span>, rho <span class="op">=</span> <span class="va">rhov</span><span class="op">)</span></span>
+<span>    <span class="va">sed</span> <span class="op">=</span> <span class="fu">hclustgeo_disc</span><span class="op">(</span><span class="va">y</span>,alpha <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span></span>
+<span>    <span class="va">sid</span> <span class="op">=</span> <span class="fu">hclustgeo_disc</span><span class="op">(</span><span class="va">y</span>,alpha <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span>    <span class="va">qv1</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/factor_detector.html" class="external-link">factor_detector</a></span><span class="op">(</span><span class="va">y</span>,<span class="va">sed</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span>    <span class="va">qv2</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/factor_detector.html" class="external-link">factor_detector</a></span><span class="op">(</span><span class="va">y</span>,<span class="va">sid</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span>    <span class="va">res</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>qv_sed <span class="op">=</span> <span class="va">qv1</span>, qv_sid <span class="op">=</span> <span class="va">qv2</span>,</span>
+<span>                         qv_bias <span class="op">=</span> <span class="va">qv1</span> <span class="op">-</span> <span class="va">qv2</span>,rho <span class="op">=</span> <span class="va">rhov</span><span class="op">)</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="va">doclust</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterExport</a></span><span class="op">(</span><span class="va">cores</span>, varlist <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"simx"</span>,<span class="st">"us"</span>,<span class="st">"lw"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">clusterExport</a></span><span class="op">(</span><span class="va">cores</span>, varlist <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"simx"</span>,<span class="st">"us"</span>,<span class="st">"rho"</span>,<span class="st">"lw"</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="va">out_g</span> <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/clusterApply.html" class="external-link">parLapply</a></span><span class="op">(</span><span class="va">cores</span>,<span class="va">parak</span>,<span class="va">calcul_q</span><span class="op">)</span></span>
 <span>    <span class="va">out_g</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="va">out_g</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
@@ -375,7 +242,29 @@ explicit discretization.<a class="anchor" aria-label="anchor" href="#a-monte-car
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">out_g</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">qv</span> <span class="op">=</span> <span class="fu">mc_simq</span><span class="op">(</span>cores <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">qv</span> <span class="op">=</span> <span class="fu">mc_simq</span><span class="op">(</span>cores <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
+<span><span class="va">qv</span></span>
+<span><span class="co">## # A tibble: 1,900 × 4</span></span>
+<span><span class="co">##    qv_sed qv_sid qv_bias   rho</span></span>
+<span><span class="co">##     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span><span class="co">##  1  0.998  0.998       0  0.05</span></span>
+<span><span class="co">##  2  0.998  0.998       0  0.05</span></span>
+<span><span class="co">##  3  0.997  0.997       0  0.05</span></span>
+<span><span class="co">##  4  0.998  0.998       0  0.05</span></span>
+<span><span class="co">##  5  0.998  0.998       0  0.05</span></span>
+<span><span class="co">##  6  0.998  0.998       0  0.05</span></span>
+<span><span class="co">##  7  0.998  0.998       0  0.05</span></span>
+<span><span class="co">##  8  0.998  0.998       0  0.05</span></span>
+<span><span class="co">##  9  0.998  0.998       0  0.05</span></span>
+<span><span class="co">## 10  0.998  0.998       0  0.05</span></span>
+<span><span class="co">## # ℹ 1,890 more rows</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span><span class="va">qv</span><span class="op">$</span><span class="va">qv_bias</span>, <span class="va">qv</span><span class="op">$</span><span class="va">rho</span>, <span class="va">mean</span><span class="op">)</span></span>
+<span><span class="co">##         0.05          0.1         0.15          0.2         0.25          0.3         0.35 </span></span>
+<span><span class="co">## -0.003730299 -0.004598168 -0.008629568 -0.009083803 -0.013027071 -0.020524905 -0.034507171 </span></span>
+<span><span class="co">##          0.4         0.45          0.5         0.55          0.6         0.65          0.7 </span></span>
+<span><span class="co">## -0.036417126 -0.035733490 -0.042590039 -0.050666891 -0.069836797 -0.093104122 -0.095702926 </span></span>
+<span><span class="co">##         0.75          0.8         0.85          0.9         0.95 </span></span>
+<span><span class="co">## -0.111785462 -0.130288998 -0.171257233 -0.228723769 -0.237107745</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
