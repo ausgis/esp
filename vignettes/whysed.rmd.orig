@@ -127,10 +127,13 @@ mc_simq = \(cores = 6){
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
     y = spdgp::sim_sar(us[[u_i]], simx$simx_strata, lw, rho = rhov)
-    dt = tibble::tibble(y = y, sed = hclustgeo_disc(y),
-                        sid = sdsfun::discretize_vector(y,3,method = 'natural'))
-    qv = gdverse::gd(y~.,data = dt)
-    return(dplyr::mutate(qv[[1]],rho = rhov))
+    sed = hclustgeo_disc(y)
+    sid = sdsfun::discretize_vector(y,3,method = 'natural')
+    qv1 = gdverse::factor_detector(y,sed)[[1]]
+    qv2 = gdverse::factor_detector(y,sed)[[1]]
+    res = tibble::tibble(qv_sed = qv1, qv_sid = qv2,
+                         qv_bias = qv1 - qv2,rho = rhov)
+    return(res)
   }
 
   if (doclust) {
