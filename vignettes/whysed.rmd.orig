@@ -168,16 +168,42 @@ for (i in seq_along(us)) {
 ## A Monte Carlo experiment to demonstrate the advantages of spatially explicit discretization.
 
 ```{r}
-sim_q = \(rhov,u_i){
-  dt = tibble::tibble(
-    realdisc = simx$simx_zone,
-    naturaldisc = simx$naturaldisc,
-    xv = simx$simxv
-  )
-  dt$y = spdgp::sim_durbin(us[[u_i]], simx$simxv, simx$wx, lw, rho = rhov)
-  dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
-  qv = sesp::sesp(y~.,data = dt,listw = lw, discvar = "xv",discnum = 3,
-                  model = 'ols', overlay = 'intersection', cores = 1)
-  return(qv[[1]])
+mc_simq = \(cores = 6){
+  doclust = FALSE
+  if (inherits(cores, "cluster")) {
+    doclust = TRUE
+  } else if (cores > 1) {
+    doclust = TRUE
+    cores = parallel::makeCluster(cores)
+    on.exit(parallel::stopCluster(cores), add = TRUE)
+  }
+
+  paradf = tidyr::crossing("rho" = rho,
+                           "ui" = 1:100)
+  parak = split(paradf, seq_len(nrow(paradf)))
+
+  calcul_q = \(paramgd){
+    rhov = paramgd[[1]]
+    u_i = paramgd[[2]]
+    dt = tibble::tibble(
+      realdisc = simx$simx_zone,
+      naturaldisc = simx$naturaldisc,
+      xv = simx$simxv
+    )
+    dt$y = spdgp::sim_durbin(us[[u_i]], simx$simxv, simx$wx, lw, rho = rhov)
+    dt$robustdisc = dplyr::pull(gdverse::robust_disc(y~xv,data = dt,discnum = 3),1)
+    qv = sesp::sesp(y~.,data = dt,listw = lw,discvar = "xv",discnum = 3,
+                    model = 'ols', overlay = 'intersection', cores = 1)
+    return(dplyr::mutate(qv[[1]],rho = rhov))
+  }
+
+  if (doclust) {
+    parallel::clusterExport(cores)
+    out_g = parallel::parLapply(cores,parak,calcul_q)
+    out_g = tibble::as_tibble(do.call(rbind, out_g))
+  } else {
+    out_g = purrr::map_dfr(parak,calcul_q)
+  }
+  return(out_g)
 }
 ```
