@@ -254,7 +254,7 @@ mc_simq = \(cores = 6){
   }
 
   if (doclust) {
-    parallel::clusterExport(cores)
+    parallel::clusterExport(cores, varlist = c("simx","us","lw"))
     out_g = parallel::parLapply(cores,parak,calcul_q)
     out_g = tibble::as_tibble(do.call(rbind, out_g))
   } else {
@@ -264,5 +264,5 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
-## Error in parallel::clusterExport(cores): argument "varlist" is missing, with no default
+## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: no applicable method for 'st_geometry' applied to an object of class "c('tbl_df', 'tbl', 'data.frame')"
 ```
