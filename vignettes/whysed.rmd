@@ -37,7 +37,9 @@ m[14,11:12] = 2
 m[15,11:13] = 2
 
 library(sf)
+## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(terra)
+## terra 1.7.83
 r = terra::rast(m, crs = "EPSG:4326")
 names(r) = 'simx_strata'
 simx = sf::st_as_sf(terra::as.points(r))
@@ -96,11 +98,11 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/x_strata-1.png)
+![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/x_strata-1.png)
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to the reciprocal of the stratification levels., i.e., stratifications 1, 2, and 3 correspond to autoregressive coefficients of 1, 1/2, and 1/3, respectively. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
+The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to `0.5`. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
 
 
 ``` r
@@ -114,6 +116,7 @@ rho = seq(0.05,0.95,by = 0.05)
 lw = spdep::nb2listw(sdsfun::spdep_nb(simx),
                      style = "W",
                      zero.policy = TRUE)
+wxg = spdgp::make_wxg(spdgp::make_wx(as.data.frame(simx$simx_strata), lw), 0.5)
 ```
 
 
@@ -139,10 +142,10 @@ mc_simq = \(cores = 6){
     return(stats::cutree(resh,3))
   }
 
-  calcul_q = \(paramgd){
+  calcul_q = \(paramgd) {
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
-    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata, exp(simx$simx_strata), lw, rho = rhov)
+    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata, wxg, lw, rho = rhov)
     sed = hclustgeo_disc(y,alpha = 0.75)
     sid = hclustgeo_disc(y,alpha = 0)
     qv1 = gdverse::factor_detector(y,sed)[[1]]
@@ -163,26 +166,9 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
+## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: object lengths differ
 qv
-## # A tibble: 19,000 × 4
-##    qv_sed qv_sid qv_bias   rho
-##     <dbl>  <dbl>   <dbl> <dbl>
-##  1  0.999  0.999  0       0.05
-##  2  0.999  0.999  0       0.05
-##  3  0.966  0.999 -0.0331  0.05
-##  4  0.999  0.999  0       0.05
-##  5  0.999  0.999  0       0.05
-##  6  0.999  0.999  0       0.05
-##  7  0.973  0.999 -0.0264  0.05
-##  8  0.999  0.999  0       0.05
-##  9  0.999  0.999  0       0.05
-## 10  0.999  0.999  0       0.05
-## # ℹ 18,990 more rows
+## Error: object 'qv' not found
 tapply(qv$qv_bias, qv$rho, mean)
-##         0.05          0.1         0.15          0.2         0.25          0.3         0.35 
-## -0.006195154 -0.007691539 -0.006688538 -0.007260694 -0.010368283 -0.014385674 -0.018045189 
-##          0.4         0.45          0.5         0.55          0.6         0.65          0.7 
-## -0.021676860 -0.029801638 -0.048700673 -0.067570568 -0.115112654 -0.166718545 -0.150917664 
-##         0.75          0.8         0.85          0.9         0.95 
-## -0.150196322 -0.148094893 -0.204090984 -0.279575884 -0.332942619
+## Error: object 'qv' not found
 ```
