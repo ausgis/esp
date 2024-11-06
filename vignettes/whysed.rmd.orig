@@ -86,7 +86,7 @@ ggplot2::ggplot() +
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to twice the stratification levels, i.e., stratifications 1, 2, and 3 correspond to autoregressive coefficients of 2, 4, and 6, respectively. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 100 times.
+The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the Spatially Lagged X Error Process. The spatial lag coefficients of the error terms are set to twice the stratification levels, i.e., stratifications 1, 2, and 3 correspond to spatial lag coefficients of 2, 4, and 6, respectively. The autoregressive coefficients take values from 0.05 to 0.95 with an interval of 0.05. For each spatial autoregressive coefficient $\lambad$, we randomly simulate 1000 times.
 
 ```{r}
 us = vector("list",100)
@@ -94,7 +94,7 @@ for (i in seq_along(us)) {
   us[[i]] = rnorm(nrow(simx),0,0.1)
 }
 
-rho = seq(0.05,0.95,by = 0.05)
+lambda = seq(0.05,0.95,by = 0.05)
 
 lw = spdep::nb2listw(sdsfun::spdep_nb(simx),
                      style = "W",
@@ -112,8 +112,8 @@ mc_simq = \(cores = 6){
     on.exit(parallel::stopCluster(cores), add = TRUE)
   }
 
-  paradf = tidyr::crossing("rho" = rho,
-                           "ui" = 1:100)
+  paradf = tidyr::crossing("lambda" = lambda,
+                           "ui" = 1:1000)
   parak = split(paradf, seq_len(nrow(paradf)))
 
   gdist = stats::as.dist(sdsfun::sf_distance_matrix(simx))
@@ -124,9 +124,9 @@ mc_simq = \(cores = 6){
   }
 
   calcul_q = \(paramgd){
-    rhov = paramgd[[1]]
+    lambdav = paramgd[[1]]
     u_i = paramgd[[2]]
-    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata*2, simx$simx_strata, lw, rho = rhov)
+    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata, simx$simx_strata*2, lw, lambda = lambdav)
     sed = hclustgeo_disc(y,alpha = 0.75)
     sid = hclustgeo_disc(y,alpha = 0)
     qv1 = gdverse::factor_detector(y,sed)[[1]]
@@ -137,7 +137,7 @@ mc_simq = \(cores = 6){
   }
 
   if (doclust) {
-    parallel::clusterExport(cores, varlist = c("simx","us","rho","lw"))
+    parallel::clusterExport(cores, varlist = c("simx","us","lambda","lw"))
     out_g = parallel::parLapply(cores,parak,calcul_q)
     out_g = tibble::as_tibble(do.call(rbind, out_g))
   } else {
@@ -148,5 +148,5 @@ mc_simq = \(cores = 6){
 
 qv = mc_simq(cores = 12)
 qv
-tapply(qv$qv_bias, qv$rho, mean)
+tapply(qv$qv_bias, qv$lambda, mean)
 ```
