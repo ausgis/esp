@@ -89,7 +89,7 @@ ggplot2::ggplot() +
 The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the Spatially Lagged X Error Process. The spatial lag coefficients of the error terms are set to twice the stratification levels, i.e., stratifications 1, 2, and 3 correspond to spatial lag coefficients of 2, 4, and 6, respectively. The autoregressive coefficients take values from 0.05 to 0.95 with an interval of 0.05. For each spatial autoregressive coefficient $\lambad$, we randomly simulate 1000 times.
 
 ```{r}
-us = vector("list",100)
+us = vector("list",1000)
 for (i in seq_along(us)) {
   us[[i]] = rnorm(nrow(simx),0,0.1)
 }

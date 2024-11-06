@@ -151,7 +151,8 @@ mc_simq = \(cores = 6){
     qv1 = gdverse::factor_detector(y,sed)[[1]]
     qv2 = gdverse::factor_detector(y,sid)[[1]]
     res = tibble::tibble(qv_sed = qv1, qv_sid = qv2,
-                         qv_bias = qv1 - qv2,rho = rhov)
+                         qv_bias = qv1 - qv2,
+                         lambda = lambdav)
     return(res)
   }
 
@@ -166,7 +167,7 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
-## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: object 'rhov' not found
+## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: subscript out of bounds
 qv
 ## Error: object 'qv' not found
 tapply(qv$qv_bias, qv$lambda, mean)
