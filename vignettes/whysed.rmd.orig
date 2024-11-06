@@ -133,7 +133,8 @@ mc_simq = \(cores = 6){
     qv1 = gdverse::factor_detector(y,sed)[[1]]
     qv2 = gdverse::factor_detector(y,sid)[[1]]
     res = tibble::tibble(qv_sed = qv1, qv_sid = qv2,
-                         qv_bias = qv1 - qv2,rho = rhov)
+                         qv_bias = qv1 - qv2,
+                         lambda = lambdav)
     return(res)
   }
 

@@ -144,7 +144,8 @@ mc_simq = \(cores = 6){
   calcul_q = \(paramgd){
     lambdav = paramgd[[1]]
     u_i = paramgd[[2]]
-    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata, simx$simx_strata*2, lw, lambda = lambdav)
+    y = spdgp::sim_slx_error(us[[u_i]], simx$simx_strata, simx$simx_strata*2,
+                             lw, lambda = lambdav)
     sed = hclustgeo_disc(y,alpha = 0.75)
     sid = hclustgeo_disc(y,alpha = 0)
     qv1 = gdverse::factor_detector(y,sed)[[1]]
@@ -165,7 +166,7 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
-## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: unused argument (lambda = lambdav)
+## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: object 'rhov' not found
 qv
 ## Error: object 'qv' not found
 tapply(qv$qv_bias, qv$lambda, mean)
