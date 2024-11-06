@@ -92,7 +92,7 @@ sdsfun::moran_test(simx)
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to `0.35`. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
+The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to `1`. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
 
 ```{r}
 us = vector("list",1000)
@@ -105,7 +105,7 @@ rho = seq(0.05,0.95,by = 0.05)
 lw = spdep::nb2listw(sdsfun::spdep_nb(simx),
                      style = "W",
                      zero.policy = TRUE)
-wxg = spdgp::make_wxg(spdgp::make_wx(as.data.frame(simx$simx_strata), lw), 0.35)
+wxg = spdgp::make_wxg(spdgp::make_wx(as.data.frame(simx$simx_strata), lw), 1)
 ```
 
 ```{r}
@@ -134,7 +134,7 @@ mc_simq = \(cores = 6){
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
     y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata, wxg, lw, rho = rhov)
-    sed = hclustgeo_disc(y,alpha = 0.75)
+    sed = hclustgeo_disc(y,alpha = rhov)
     sid = hclustgeo_disc(y,alpha = 0)
     qv1 = gdverse::factor_detector(y,sed)[[1]]
     qv2 = gdverse::factor_detector(y,sid)[[1]]
