@@ -3,7 +3,7 @@
 #' Equivalent geographical detector \eqn{q}-values under a spatial linear regression framework.
 #' @note
 #' Note that when the number of continuous independent variables is small (three or fewer), the built-in spatial explicit
-#' discretization in `sesp` may overestimate the variable Q value. In such cases, it is recommended to discretize the
+#' discretization in `sesp` may overestimate the variable q value. In such cases, it is recommended to discretize the
 #' variables beforehand and then input them into `sesp` for computation.
 #'
 #' @param formula A formula for enhanced stratified power model.
