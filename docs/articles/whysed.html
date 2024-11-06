@@ -174,6 +174,39 @@ q-values.</p>
 <strong>Figure 1</strong>. Strata of simulated
 independent variable X</div>
 </div>
+<div class="section level3">
+<h3 id="the-spatial-autocorrelation-of-the-simulated-x-strata">The spatial autocorrelation of the simulated X strata<a class="anchor" aria-label="anchor" href="#the-spatial-autocorrelation-of-the-simulated-x-strata"></a>
+</h3>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/moran_test.html" class="external-link">moran_test</a></span><span class="op">(</span><span class="va">simx</span><span class="op">)</span></span>
+<span><span class="co">## ***                 global moran test</span></span></code></pre></div>
+<table style="width:99%;" class="table">
+<colgroup>
+<col width="19%">
+<col width="19%">
+<col width="16%">
+<col width="15%">
+<col width="11%">
+<col width="16%">
+</colgroup>
+<thead><tr class="header">
+<th align="center">Variable</th>
+<th align="center">MoranI</th>
+<th align="center">EI</th>
+<th align="center">VarI</th>
+<th align="center">zI</th>
+<th align="center">pI</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="center">simx_strata</td>
+<td align="center">0.308731***</td>
+<td align="center">-0.004464</td>
+<td align="center">0.001493</td>
+<td align="center">8.105</td>
+<td align="center">2.634e-16</td>
+</tr></tbody>
+</table>
+</div>
 </div>
 <div class="section level2">
 <h2 id="a-monte-carlo-simulation-experiment-demonstrating-the-necessity-of-spatial-explicit-discretization">A Monte Carlo simulation experiment demonstrating the necessity of
@@ -181,11 +214,11 @@ spatial explicit discretization<a class="anchor" aria-label="anchor" href="#a-mo
 </h2>
 <p>The error term is specified as <span class="math inline">\(\mu \sim
 \mathcal{N}(0, 0.1)\)</span>, and the corresponding <span class="math inline">\(Y\)</span> is simulated using the spatial durbin
-process. The autoregressive coefficients of X are set to
-<code>0.5</code>. The spatial lag coefficient takes values from 0.05 to
-0.95 with an interval of 0.05. For each spatial lag coefficient <span class="math inline">\(\rho\)</span>, we randomly simulate 1000
+process. The autoregressive coefficients of X are set to <code>1</code>.
+The spatial lag coefficient takes values from 0.05 to 0.95 with an
+interval of 0.05. For each spatial lag coefficient <span class="math inline">\(\rho\)</span>, we randomly simulate 1000
 times.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">us</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html" class="external-link">vector</a></span><span class="op">(</span><span class="st">"list"</span>,<span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">us</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">us</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">simx</span><span class="op">)</span>,<span class="fl">0</span>,<span class="fl">0.1</span><span class="op">)</span></span>
@@ -196,8 +229,8 @@ times.</p>
 <span><span class="va">lw</span> <span class="op">=</span> <span class="fu">spdep</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html" class="external-link">nb2listw</a></span><span class="op">(</span><span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/spdep_nb.html" class="external-link">spdep_nb</a></span><span class="op">(</span><span class="va">simx</span><span class="op">)</span>,</span>
 <span>                     style <span class="op">=</span> <span class="st">"W"</span>,</span>
 <span>                     zero.policy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">wxg</span> <span class="op">=</span> <span class="fu">spdgp</span><span class="fu">::</span><span class="fu"><a href="https://josiahparry.github.io/spdgp/reference/make_wxg.html" class="external-link">make_wxg</a></span><span class="op">(</span><span class="fu">spdgp</span><span class="fu">::</span><span class="fu"><a href="https://josiahparry.github.io/spdgp/reference/make_wx.html" class="external-link">make_wx</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">simx</span><span class="op">$</span><span class="va">simx_strata</span><span class="op">)</span>, <span class="va">lw</span><span class="op">)</span>, <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<span><span class="va">wxg</span> <span class="op">=</span> <span class="fu">spdgp</span><span class="fu">::</span><span class="fu"><a href="https://josiahparry.github.io/spdgp/reference/make_wxg.html" class="external-link">make_wxg</a></span><span class="op">(</span><span class="fu">spdgp</span><span class="fu">::</span><span class="fu"><a href="https://josiahparry.github.io/spdgp/reference/make_wx.html" class="external-link">make_wx</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">simx</span><span class="op">$</span><span class="va">simx_strata</span><span class="op">)</span>, <span class="va">lw</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mc_simq</span> <span class="op">=</span> \<span class="op">(</span><span class="va">cores</span> <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">doclust</span> <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">cores</span>, <span class="st">"cluster"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -223,7 +256,7 @@ times.</p>
 <span>    <span class="va">rhov</span> <span class="op">=</span> <span class="va">paramgd</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span>    <span class="va">u_i</span> <span class="op">=</span> <span class="va">paramgd</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
 <span>    <span class="va">y</span> <span class="op">=</span> <span class="fu">spdgp</span><span class="fu">::</span><span class="fu"><a href="https://josiahparry.github.io/spdgp/reference/sim_durbin.html" class="external-link">sim_durbin</a></span><span class="op">(</span><span class="va">us</span><span class="op">[[</span><span class="va">u_i</span><span class="op">]</span><span class="op">]</span>, <span class="va">simx</span><span class="op">$</span><span class="va">simx_strata</span>, <span class="va">wxg</span>, <span class="va">lw</span>, rho <span class="op">=</span> <span class="va">rhov</span><span class="op">)</span></span>
-<span>    <span class="va">sed</span> <span class="op">=</span> <span class="fu">hclustgeo_disc</span><span class="op">(</span><span class="va">y</span>,alpha <span class="op">=</span> <span class="fl">0.75</span><span class="op">)</span></span>
+<span>    <span class="va">sed</span> <span class="op">=</span> <span class="fu">hclustgeo_disc</span><span class="op">(</span><span class="va">y</span>,alpha <span class="op">=</span> <span class="va">rhov</span><span class="op">)</span></span>
 <span>    <span class="va">sid</span> <span class="op">=</span> <span class="fu">hclustgeo_disc</span><span class="op">(</span><span class="va">y</span>,alpha <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span>    <span class="va">qv1</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/factor_detector.html" class="external-link">factor_detector</a></span><span class="op">(</span><span class="va">y</span>,<span class="va">sed</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span>    <span class="va">qv2</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/factor_detector.html" class="external-link">factor_detector</a></span><span class="op">(</span><span class="va">y</span>,<span class="va">sid</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
@@ -245,26 +278,26 @@ times.</p>
 <span><span class="va">qv</span> <span class="op">=</span> <span class="fu">mc_simq</span><span class="op">(</span>cores <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="va">qv</span></span>
 <span><span class="co">## # A tibble: 19,000 × 4</span></span>
-<span><span class="co">##    qv_sed qv_sid  qv_bias   rho</span></span>
-<span><span class="co">##     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span><span class="co">##  1  0.758  0.936 -0.178    0.05</span></span>
-<span><span class="co">##  2  0.853  0.935 -0.0823   0.05</span></span>
-<span><span class="co">##  3  0.936  0.933  0.00246  0.05</span></span>
-<span><span class="co">##  4  0.942  0.936  0.00614  0.05</span></span>
-<span><span class="co">##  5  0.881  0.927 -0.0454   0.05</span></span>
-<span><span class="co">##  6  0.878  0.919 -0.0417   0.05</span></span>
-<span><span class="co">##  7  0.935  0.940 -0.00432  0.05</span></span>
-<span><span class="co">##  8  0.934  0.932  0.00252  0.05</span></span>
-<span><span class="co">##  9  0.934  0.941 -0.00666  0.05</span></span>
-<span><span class="co">## 10  0.928  0.933 -0.00475  0.05</span></span>
+<span><span class="co">##    qv_sed qv_sid   qv_bias   rho</span></span>
+<span><span class="co">##     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span><span class="co">##  1  0.901  0.875  0.0259    0.05</span></span>
+<span><span class="co">##  2  0.912  0.913 -0.000710  0.05</span></span>
+<span><span class="co">##  3  0.889  0.906 -0.0168    0.05</span></span>
+<span><span class="co">##  4  0.865  0.879 -0.0141    0.05</span></span>
+<span><span class="co">##  5  0.899  0.911 -0.0127    0.05</span></span>
+<span><span class="co">##  6  0.864  0.900 -0.0366    0.05</span></span>
+<span><span class="co">##  7  0.888  0.902 -0.0136    0.05</span></span>
+<span><span class="co">##  8  0.866  0.888 -0.0226    0.05</span></span>
+<span><span class="co">##  9  0.886  0.904 -0.0185    0.05</span></span>
+<span><span class="co">## 10  0.892  0.897 -0.00425   0.05</span></span>
 <span><span class="co">## # ℹ 18,990 more rows</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></span><span class="op">(</span><span class="va">qv</span><span class="op">$</span><span class="va">qv_bias</span>, <span class="va">qv</span><span class="op">$</span><span class="va">rho</span>, <span class="va">mean</span><span class="op">)</span></span>
-<span><span class="co">##        0.05         0.1        0.15         0.2        0.25         0.3        0.35         0.4 </span></span>
-<span><span class="co">## -0.05682187 -0.06284893 -0.06126073 -0.06811650 -0.07483771 -0.08105812 -0.09004364 -0.09702247 </span></span>
-<span><span class="co">##        0.45         0.5        0.55         0.6        0.65         0.7        0.75         0.8 </span></span>
-<span><span class="co">## -0.10507023 -0.11487207 -0.11847570 -0.12709023 -0.13370683 -0.14249375 -0.15056883 -0.16725110 </span></span>
-<span><span class="co">##        0.85         0.9        0.95 </span></span>
-<span><span class="co">## -0.21084108 -0.23360922 -0.24126673</span></span></code></pre></div>
+<span><span class="co">##         0.05          0.1         0.15          0.2         0.25          0.3         0.35 </span></span>
+<span><span class="co">## -0.008037905 -0.020124687 -0.029447634 -0.037872126 -0.043468171 -0.051037123 -0.061271964 </span></span>
+<span><span class="co">##          0.4         0.45          0.5         0.55          0.6         0.65          0.7 </span></span>
+<span><span class="co">## -0.072263793 -0.080236929 -0.088409499 -0.101410817 -0.111902646 -0.124996450 -0.140628030 </span></span>
+<span><span class="co">##         0.75          0.8         0.85          0.9         0.95 </span></span>
+<span><span class="co">## -0.166978785 -0.219878847 -0.281338326 -0.332704575 -0.336235464</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
