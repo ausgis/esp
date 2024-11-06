@@ -86,10 +86,10 @@ ggplot2::ggplot() +
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to twice the stratification levels, i.e., stratifications 1, 2, and 3 correspond to autoregressive coefficients of 2, 4, and 6, respectively. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 100 times.
+The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to twice the stratification levels, i.e., stratifications 1, 2, and 3 correspond to autoregressive coefficients of 2, 4, and 6, respectively. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
 
 ```{r}
-us = vector("list",100)
+us = vector("list",1000)
 for (i in seq_along(us)) {
   us[[i]] = rnorm(nrow(simx),0,0.1)
 }
@@ -113,7 +113,7 @@ mc_simq = \(cores = 6){
   }
 
   paradf = tidyr::crossing("rho" = rho,
-                           "ui" = 1:100)
+                           "ui" = 1:1000)
   parak = split(paradf, seq_len(nrow(paradf)))
 
   gdist = stats::as.dist(sdsfun::sf_distance_matrix(simx))
@@ -126,7 +126,7 @@ mc_simq = \(cores = 6){
   calcul_q = \(paramgd){
     rhov = paramgd[[1]]
     u_i = paramgd[[2]]
-    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata*2, simx$simx_strata, lw, rho = rhov)
+    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata, simx$simx_strata*2, lw, rho = rhov)
     sed = hclustgeo_disc(y,alpha = 0.75)
     sid = hclustgeo_disc(y,alpha = 0)
     qv1 = gdverse::factor_detector(y,sed)[[1]]
