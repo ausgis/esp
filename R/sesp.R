@@ -67,6 +67,18 @@ sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3
   if (formula.vars[2] != "."){
     data = dplyr::select(data,dplyr::all_of(formula.vars))
   }
+  data = dplyr::mutate(data,
+                       dplyr::across(dplyr::everything(),
+                                     \(.x) {
+                                       if (inherits(.x, "factor")) {
+                                         .res = as.integer(.x)
+                                       } else if (inherits(.x, "character")){
+                                         .res = as.integer(as.factor(.x))
+                                       } else {
+                                         .res = .x
+                                       }
+                                       return(.res)
+                                     }))
   yname = formula.vars[1]
   yvec = data[, yname, drop = TRUE]
   geom = sf::st_geometry(data)
