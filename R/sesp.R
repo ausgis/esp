@@ -94,10 +94,10 @@ sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3
     }
   }
 
-  if (discvar == "all"){
+  if (any(discvar == "all")){
     xdiscname = xname
     xundiscname = NULL
-  } else if (discvar == "none"){
+  } else if (any(discvar == "none")){
     xdiscname = NULL
     xundiscname = xname
   } else {
