@@ -37,9 +37,7 @@ m[14,11:12] = 2
 m[15,11:13] = 2
 
 library(sf)
-## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(terra)
-## terra 1.7.83
 r = terra::rast(m, crs = "EPSG:4326")
 names(r) = 'simx_strata'
 simx = sf::st_as_sf(terra::as.points(r))
@@ -98,7 +96,7 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/x_strata-1.png)
+![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/x_strata-1.png)
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
@@ -106,7 +104,7 @@ The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the correspon
 
 
 ``` r
-us = vector("list",100)
+us = vector("list",1000)
 for (i in seq_along(us)) {
   us[[i]] = rnorm(nrow(simx),0,0.1)
 }
@@ -167,9 +165,26 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
-## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: subscript out of bounds
 qv
-## Error: object 'qv' not found
+## # A tibble: 19,000 × 4
+##    qv_sed qv_sid qv_bias lambda
+##     <dbl>  <dbl>   <dbl>  <dbl>
+##  1  0.998  0.998       0   0.05
+##  2  0.998  0.998       0   0.05
+##  3  0.998  0.998       0   0.05
+##  4  0.998  0.998       0   0.05
+##  5  0.998  0.998       0   0.05
+##  6  0.998  0.998       0   0.05
+##  7  0.998  0.998       0   0.05
+##  8  0.998  0.998       0   0.05
+##  9  0.998  0.998       0   0.05
+## 10  0.998  0.998       0   0.05
+## # ℹ 18,990 more rows
 tapply(qv$qv_bias, qv$lambda, mean)
-## Error: object 'qv' not found
+##          0.05           0.1          0.15           0.2          0.25           0.3          0.35 
+## -0.0025354649 -0.0019382277 -0.0017470161 -0.0017647568 -0.0009594560 -0.0009619311 -0.0014676121 
+##           0.4          0.45           0.5          0.55           0.6          0.65           0.7 
+## -0.0021630164 -0.0015483932 -0.0028933379 -0.0028576090 -0.0024635631 -0.0017643582 -0.0028554668 
+##          0.75           0.8          0.85           0.9          0.95 
+## -0.0038794885 -0.0044415341 -0.0070762746 -0.0071110826 -0.0118251243
 ```
