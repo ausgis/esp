@@ -7,7 +7,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.path = "man/figures/whysed/",
+  fig.dpi = 150
+)
+```
 
 
 We use simulated data comprising 225 cells organized in a 15-row by 15-column grid to illustrate the rationale for employing spatially explicit discretization methods. We pre-constructed a grid-based simulated dataset with three strata, and then simulated Y under different spatial autocorrelation scenarios to explore the differences between explicit spatial discretization and implicit spatial discretization. The simulation of spatial data is conducted using the `spdgp` package in R. We selected hierarchical clustering with spatial constraints and hierarchical clustering method to represent explicit and implicit spatial discretization, respectively. The hierarchical clustering with spatial constraints and hierarchical clustering methods were implemented using the `ClustGeo` package. In subsequent analyses, all discretization methods applied will discretize the dataset into three strata for the calculation of the q-values.
@@ -24,8 +30,7 @@ pak::pak("josiahparry/spdgp")
 
 ## Simulated Independent Strata X
 
-
-``` r
+```{r x_strata,fig.width=3.75,fig.height=3,fig.cap=knitr::asis_output("**Figure 1**. Strata of simulated independent variable X")}
 m = matrix(2,nrow = 15, ncol = 15)
 zone1_indice = c(6:9,seq(8,by = -1,length.out = 6))
 for (i in seq_along(zone1_indice)) {
@@ -37,30 +42,11 @@ m[14,11:12] = 2
 m[15,11:13] = 2
 
 library(sf)
-## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(terra)
-## terra 1.7.83
 r = terra::rast(m, crs = "EPSG:4326")
 names(r) = 'simx_strata'
 simx = sf::st_as_sf(terra::as.points(r))
 simx
-## Simple feature collection with 225 features and 1 field
-## Geometry type: POINT
-## Dimension:     XY
-## Bounding box:  xmin: 0.5 ymin: 0.5 xmax: 14.5 ymax: 14.5
-## Geodetic CRS:  WGS 84
-## First 10 features:
-##    simx_strata         geometry
-## 1            1 POINT (0.5 14.5)
-## 2            1 POINT (1.5 14.5)
-## 3            1 POINT (2.5 14.5)
-## 4            1 POINT (3.5 14.5)
-## 5            1 POINT (4.5 14.5)
-## 6            1 POINT (5.5 14.5)
-## 7            1 POINT (6.5 14.5)
-## 8            1 POINT (7.5 14.5)
-## 9            1 POINT (8.5 14.5)
-## 10           1 POINT (9.5 14.5)
 
 strata1 = tibble::tibble(
   x = c(0,0,3.5,10,10),
@@ -98,31 +84,17 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/x_strata-1.png)
-
 ### The spatial autocorrelation of the simulated X strata
 
-
-``` r
+```{r moran_simx}
 sdsfun::moran_test(simx)
-## ***                 global moran test
 ```
-
-
-----------------------------------------------------------------------
-  Variable       MoranI         EI         VarI      zI        pI     
-------------- ------------- ----------- ---------- ------- -----------
- simx_strata   0.308731***   -0.004464   0.001493   8.105   2.634e-16 
-----------------------------------------------------------------------
-
-
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
 The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to `1`. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
 
-
-``` r
+```{r}
 us = vector("list",1000)
 for (i in seq_along(us)) {
   us[[i]] = rnorm(nrow(simx),0,0.1)
@@ -136,8 +108,7 @@ lw = spdep::nb2listw(sdsfun::spdep_nb(simx),
 wxg = spdgp::make_wxg(spdgp::make_wx(as.data.frame(simx$simx_strata), lw), 1)
 ```
 
-
-``` r
+```{r}
 mc_simq = \(cores = 6){
   doclust = FALSE
   if (inherits(cores, "cluster")) {
@@ -184,25 +155,5 @@ mc_simq = \(cores = 6){
 
 qv = mc_simq(cores = 12)
 qv
-## # A tibble: 19,000 × 4
-##    qv_sed qv_sid   qv_bias   rho
-##     <dbl>  <dbl>     <dbl> <dbl>
-##  1  0.898  0.908 -0.0105    0.05
-##  2  0.907  0.909 -0.00163   0.05
-##  3  0.886  0.886 -0.000489  0.05
-##  4  0.900  0.907 -0.00753   0.05
-##  5  0.906  0.908 -0.00189   0.05
-##  6  0.897  0.898 -0.000722  0.05
-##  7  0.897  0.903 -0.00524   0.05
-##  8  0.910  0.867  0.0429    0.05
-##  9  0.892  0.879  0.0125    0.05
-## 10  0.902  0.891  0.0109    0.05
-## # ℹ 18,990 more rows
 tapply(qv$qv_bias, qv$rho, mean)
-##          0.05           0.1          0.15           0.2          0.25           0.3          0.35 
-## -0.0082227767 -0.0089564912 -0.0091277778 -0.0084446451 -0.0064021081 -0.0048766028 -0.0055300435 
-##           0.4          0.45           0.5          0.55           0.6          0.65           0.7 
-## -0.0058055970 -0.0040054351 -0.0037056563 -0.0054362348 -0.0053274560 -0.0029881156 -0.0024183158 
-##          0.75           0.8          0.85           0.9          0.95 
-## -0.0030483024 -0.0027802693 -0.0044212455 -0.0003914485 -0.0045970303
 ```
