@@ -96,11 +96,28 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/x_strata-1.png)
+![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/x_strata-1.png)
+
+### The spatial autocorrelation of the simulated X strata
+
+
+``` r
+sdsfun::moran_test(simx)
+## ***                 global moran test
+```
+
+
+----------------------------------------------------------------------
+  Variable       MoranI         EI         VarI      zI        pI     
+------------- ------------- ----------- ---------- ------- -----------
+ simx_strata   0.308731***   -0.004464   0.001493   8.105   2.634e-16 
+----------------------------------------------------------------------
+
+
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to `0.5`. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
+The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to `0.35`. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
 
 
 ``` r
@@ -114,7 +131,7 @@ rho = seq(0.05,0.95,by = 0.05)
 lw = spdep::nb2listw(sdsfun::spdep_nb(simx),
                      style = "W",
                      zero.policy = TRUE)
-wxg = spdgp::make_wxg(spdgp::make_wx(as.data.frame(simx$simx_strata), lw), 0.5)
+wxg = spdgp::make_wxg(spdgp::make_wx(as.data.frame(simx$simx_strata), lw), 0.35)
 ```
 
 
@@ -166,24 +183,24 @@ mc_simq = \(cores = 6){
 qv = mc_simq(cores = 12)
 qv
 ## # A tibble: 19,000 × 4
-##    qv_sed qv_sid  qv_bias   rho
-##     <dbl>  <dbl>    <dbl> <dbl>
-##  1  0.758  0.936 -0.178    0.05
-##  2  0.853  0.935 -0.0823   0.05
-##  3  0.936  0.933  0.00246  0.05
-##  4  0.942  0.936  0.00614  0.05
-##  5  0.881  0.927 -0.0454   0.05
-##  6  0.878  0.919 -0.0417   0.05
-##  7  0.935  0.940 -0.00432  0.05
-##  8  0.934  0.932  0.00252  0.05
-##  9  0.934  0.941 -0.00666  0.05
-## 10  0.928  0.933 -0.00475  0.05
+##    qv_sed qv_sid   qv_bias   rho
+##     <dbl>  <dbl>     <dbl> <dbl>
+##  1  0.953  0.957 -0.00399   0.05
+##  2  0.775  0.961 -0.186     0.05
+##  3  0.951  0.951 -0.000152  0.05
+##  4  0.827  0.956 -0.129     0.05
+##  5  0.955  0.954  0.000850  0.05
+##  6  0.890  0.957 -0.0674    0.05
+##  7  0.958  0.956  0.00153   0.05
+##  8  0.887  0.956 -0.0687    0.05
+##  9  0.887  0.958 -0.0706    0.05
+## 10  0.898  0.956 -0.0580    0.05
 ## # ℹ 18,990 more rows
 tapply(qv$qv_bias, qv$rho, mean)
 ##        0.05         0.1        0.15         0.2        0.25         0.3        0.35         0.4 
-## -0.05682187 -0.06284893 -0.06126073 -0.06811650 -0.07483771 -0.08105812 -0.09004364 -0.09702247 
+## -0.04942512 -0.04973972 -0.05588335 -0.05714212 -0.05829034 -0.06436342 -0.07409624 -0.08317897 
 ##        0.45         0.5        0.55         0.6        0.65         0.7        0.75         0.8 
-## -0.10507023 -0.11487207 -0.11847570 -0.12709023 -0.13370683 -0.14249375 -0.15056883 -0.16725110 
+## -0.08968615 -0.09808929 -0.10761798 -0.11693319 -0.12293627 -0.13167992 -0.14371166 -0.16074675 
 ##        0.85         0.9        0.95 
-## -0.21084108 -0.23360922 -0.24126673
+## -0.19978206 -0.23137667 -0.24043913
 ```

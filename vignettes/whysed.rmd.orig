@@ -84,9 +84,15 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
+### The spatial autocorrelation of the simulated X strata
+
+```{r moran_simx}
+sdsfun::moran_test(simx)
+```
+
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to `0.5`. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
+The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to `0.35`. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
 
 ```{r}
 us = vector("list",1000)
@@ -99,7 +105,7 @@ rho = seq(0.05,0.95,by = 0.05)
 lw = spdep::nb2listw(sdsfun::spdep_nb(simx),
                      style = "W",
                      zero.policy = TRUE)
-wxg = spdgp::make_wxg(spdgp::make_wx(as.data.frame(simx$simx_strata), lw), 0.5)
+wxg = spdgp::make_wxg(spdgp::make_wx(as.data.frame(simx$simx_strata), lw), 0.35)
 ```
 
 ```{r}
