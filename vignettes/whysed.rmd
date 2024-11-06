@@ -96,15 +96,20 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/x_strata-1.png)
+![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/x_strata-1.png)
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the Spatially Lagged X Error Process. The spatial lag coefficients of the error terms are set to twice the stratification levels, i.e., stratifications 1, 2, and 3 correspond to spatial lag coefficients of 2, 4, and 6, respectively. The autoregressive coefficients take values from 0.05 to 0.95 with an interval of 0.05. For each spatial autoregressive coefficient $\lambda$, we randomly simulate 1000 times.
+The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to twice the stratification levels, i.e., stratifications 1, 2, and 3 correspond to autoregressive coefficients of 2, 4, and 6, respectively. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 1000 times.
 
 
 ``` r
-lambda = seq(0.05,0.95,by = 0.05)
+us = vector("list",1000)
+for (i in seq_along(us)) {
+  us[[i]] = rnorm(nrow(simx),0,0.1)
+}
+
+rho = seq(0.05,0.95,by = 0.05)
 
 lw = spdep::nb2listw(sdsfun::spdep_nb(simx),
                      style = "W",
@@ -123,6 +128,10 @@ mc_simq = \(cores = 6){
     on.exit(parallel::stopCluster(cores), add = TRUE)
   }
 
+  paradf = tidyr::crossing("rho" = rho,
+                           "ui" = 1:1000)
+  parak = split(paradf, seq_len(nrow(paradf)))
+
   gdist = stats::as.dist(sdsfun::sf_distance_matrix(simx))
   hclustgeo_disc = \(xv,alpha = 0.5){
     D0 = stats::dist(xv)
@@ -130,55 +139,50 @@ mc_simq = \(cores = 6){
     return(stats::cutree(resh,3))
   }
 
-  calcul_q = \(lambdav){
-    u = rnorm(nrow(simx),0,0.1)
-    y = spdgp::sim_slx_error(u, simx$simx_strata, simx$simx_strata*2,
-                             lw, lambda = lambdav)
+  calcul_q = \(paramgd){
+    rhov = paramgd[[1]]
+    u_i = paramgd[[2]]
+    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata, simx$simx_strata*2, lw, rho = rhov)
     sed = hclustgeo_disc(y,alpha = 0.75)
     sid = hclustgeo_disc(y,alpha = 0)
     qv1 = gdverse::factor_detector(y,sed)[[1]]
     qv2 = gdverse::factor_detector(y,sid)[[1]]
     res = tibble::tibble(qv_sed = qv1, qv_sid = qv2,
-                         qv_bias = qv1 - qv2,
-                         lambda = lambdav)
+                         qv_bias = qv1 - qv2,rho = rhov)
     return(res)
   }
 
   if (doclust) {
-    parallel::clusterExport(cores, varlist = c("simx","lambda","lw"))
-    out_g = parallel::parLapply(cores,lambda,calcul_q)
+    parallel::clusterExport(cores, varlist = c("simx","us","rho","lw"))
+    out_g = parallel::parLapply(cores,parak,calcul_q)
     out_g = tibble::as_tibble(do.call(rbind, out_g))
   } else {
-    out_g = purrr::map_dfr(lambda,calcul_q)
+    out_g = purrr::map_dfr(parak,calcul_q)
   }
   return(out_g)
 }
 
 qv = mc_simq(cores = 12)
 qv
-## # A tibble: 19 × 4
-##    qv_sed qv_sid qv_bias lambda
-##     <dbl>  <dbl>   <dbl>  <dbl>
-##  1  0.998  0.998       0   0.05
-##  2  0.998  0.998       0   0.1 
-##  3  0.998  0.998       0   0.15
-##  4  0.998  0.998       0   0.2 
-##  5  0.998  0.998       0   0.25
-##  6  0.998  0.998       0   0.3 
-##  7  0.998  0.998       0   0.35
-##  8  0.998  0.998       0   0.4 
-##  9  0.998  0.998       0   0.45
-## 10  0.998  0.998       0   0.5 
-## 11  0.998  0.998       0   0.55
-## 12  0.998  0.998       0   0.6 
-## 13  0.996  0.996       0   0.65
-## 14  0.997  0.997       0   0.7 
-## 15  0.996  0.996       0   0.75
-## 16  0.994  0.994       0   0.8 
-## 17  0.996  0.996       0   0.85
-## 18  0.993  0.993       0   0.9 
-## 19  0.994  0.994       0   0.95
-tapply(qv$qv_bias, qv$lambda, mean)
-## 0.05  0.1 0.15  0.2 0.25  0.3 0.35  0.4 0.45  0.5 0.55  0.6 0.65  0.7 0.75  0.8 0.85  0.9 0.95 
-##    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0
+## # A tibble: 19,000 × 4
+##    qv_sed qv_sid qv_bias   rho
+##     <dbl>  <dbl>   <dbl> <dbl>
+##  1  0.997  0.997  0       0.05
+##  2  0.997  0.997  0       0.05
+##  3  0.998  0.998  0       0.05
+##  4  0.998  0.998  0       0.05
+##  5  0.998  0.998  0       0.05
+##  6  0.998  0.998  0       0.05
+##  7  0.998  0.998  0       0.05
+##  8  0.997  0.997  0       0.05
+##  9  0.997  0.997  0       0.05
+## 10  0.916  0.998 -0.0816  0.05
+## # ℹ 18,990 more rows
+tapply(qv$qv_bias, qv$rho, mean)
+##         0.05          0.1         0.15          0.2         0.25          0.3         0.35 
+## -0.002627495 -0.003894198 -0.006813370 -0.015434326 -0.020038122 -0.030602082 -0.040933804 
+##          0.4         0.45          0.5         0.55          0.6         0.65          0.7 
+## -0.044267231 -0.040083414 -0.036582043 -0.049289301 -0.066918405 -0.088894755 -0.097398026 
+##         0.75          0.8         0.85          0.9         0.95 
+## -0.112838765 -0.125296388 -0.169988507 -0.221233730 -0.238267946
 ```
