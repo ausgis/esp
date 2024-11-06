@@ -37,9 +37,7 @@ m[14,11:12] = 2
 m[15,11:13] = 2
 
 library(sf)
-## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(terra)
-## terra 1.7.83
 r = terra::rast(m, crs = "EPSG:4326")
 names(r) = 'simx_strata'
 simx = sf::st_as_sf(terra::as.points(r))
@@ -98,7 +96,7 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/x_strata-1.png)
+![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/x_strata-1.png)
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
@@ -156,7 +154,7 @@ mc_simq = \(cores = 6){
   }
 
   if (doclust) {
-    parallel::clusterExport(cores, varlist = c("simx","us","rho","lw"))
+    parallel::clusterExport(cores, varlist = c("simx","us","rho","lw","wxg"))
     out_g = parallel::parLapply(cores,parak,calcul_q)
     out_g = tibble::as_tibble(do.call(rbind, out_g))
   } else {
@@ -166,9 +164,26 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
-## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: object lengths differ
 qv
-## Error: object 'qv' not found
+## # A tibble: 19,000 × 4
+##    qv_sed qv_sid  qv_bias   rho
+##     <dbl>  <dbl>    <dbl> <dbl>
+##  1  0.758  0.936 -0.178    0.05
+##  2  0.853  0.935 -0.0823   0.05
+##  3  0.936  0.933  0.00246  0.05
+##  4  0.942  0.936  0.00614  0.05
+##  5  0.881  0.927 -0.0454   0.05
+##  6  0.878  0.919 -0.0417   0.05
+##  7  0.935  0.940 -0.00432  0.05
+##  8  0.934  0.932  0.00252  0.05
+##  9  0.934  0.941 -0.00666  0.05
+## 10  0.928  0.933 -0.00475  0.05
+## # ℹ 18,990 more rows
 tapply(qv$qv_bias, qv$rho, mean)
-## Error: object 'qv' not found
+##        0.05         0.1        0.15         0.2        0.25         0.3        0.35         0.4 
+## -0.05682187 -0.06284893 -0.06126073 -0.06811650 -0.07483771 -0.08105812 -0.09004364 -0.09702247 
+##        0.45         0.5        0.55         0.6        0.65         0.7        0.75         0.8 
+## -0.10507023 -0.11487207 -0.11847570 -0.12709023 -0.13370683 -0.14249375 -0.15056883 -0.16725110 
+##        0.85         0.9        0.95 
+## -0.21084108 -0.23360922 -0.24126673
 ```

@@ -138,7 +138,7 @@ mc_simq = \(cores = 6){
   }
 
   if (doclust) {
-    parallel::clusterExport(cores, varlist = c("simx","us","rho","lw"))
+    parallel::clusterExport(cores, varlist = c("simx","us","rho","lw","wxg"))
     out_g = parallel::parLapply(cores,parak,calcul_q)
     out_g = tibble::as_tibble(do.call(rbind, out_g))
   } else {
