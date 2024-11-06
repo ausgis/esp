@@ -37,7 +37,9 @@ m[14,11:12] = 2
 m[15,11:13] = 2
 
 library(sf)
+## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(terra)
+## terra 1.7.83
 r = terra::rast(m, crs = "EPSG:4326")
 names(r) = 'simx_strata'
 simx = sf::st_as_sf(terra::as.points(r))
@@ -96,11 +98,11 @@ ggplot2::ggplot() +
   ggplot2::theme_void()
 ```
 
-![**Figure 1**. Strata of simulated independent variable X](../man/figures/whysed/x_strata-1.png)
+![**Figure 1**. Strata of simulated independent variable X](man/figures/whysed/x_strata-1.png)
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the spatial durbin process. The autoregressive coefficients of X are set to twice the stratification levels, i.e., stratifications 1, 2, and 3 correspond to autoregressive coefficients of 2, 4, and 6, respectively. The spatial lag coefficient takes values from 0.05 to 0.95 with an interval of 0.05. For each spatial lag coefficient $\rho$, we randomly simulate 100 times.
+The error term is specified as $\mu \sim \mathcal{N}(0, 0.1)$, and the corresponding $Y$ is simulated using the Spatially Lagged X Error Process. The spatial lag coefficients of the error terms are set to twice the stratification levels, i.e., stratifications 1, 2, and 3 correspond to spatial lag coefficients of 2, 4, and 6, respectively. The autoregressive coefficients take values from 0.05 to 0.95 with an interval of 0.05. For each spatial autoregressive coefficient $\lambad$, we randomly simulate 1000 times.
 
 
 ``` r
@@ -109,7 +111,7 @@ for (i in seq_along(us)) {
   us[[i]] = rnorm(nrow(simx),0,0.1)
 }
 
-rho = seq(0.05,0.95,by = 0.05)
+lambda = seq(0.05,0.95,by = 0.05)
 
 lw = spdep::nb2listw(sdsfun::spdep_nb(simx),
                      style = "W",
@@ -128,8 +130,8 @@ mc_simq = \(cores = 6){
     on.exit(parallel::stopCluster(cores), add = TRUE)
   }
 
-  paradf = tidyr::crossing("rho" = rho,
-                           "ui" = 1:100)
+  paradf = tidyr::crossing("lambda" = lambda,
+                           "ui" = 1:1000)
   parak = split(paradf, seq_len(nrow(paradf)))
 
   gdist = stats::as.dist(sdsfun::sf_distance_matrix(simx))
@@ -140,9 +142,9 @@ mc_simq = \(cores = 6){
   }
 
   calcul_q = \(paramgd){
-    rhov = paramgd[[1]]
+    lambdav = paramgd[[1]]
     u_i = paramgd[[2]]
-    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata*2, simx$simx_strata, lw, rho = rhov)
+    y = spdgp::sim_durbin(us[[u_i]], simx$simx_strata, simx$simx_strata*2, lw, lambda = lambdav)
     sed = hclustgeo_disc(y,alpha = 0.75)
     sid = hclustgeo_disc(y,alpha = 0)
     qv1 = gdverse::factor_detector(y,sed)[[1]]
@@ -153,7 +155,7 @@ mc_simq = \(cores = 6){
   }
 
   if (doclust) {
-    parallel::clusterExport(cores, varlist = c("simx","us","rho","lw"))
+    parallel::clusterExport(cores, varlist = c("simx","us","lambda","lw"))
     out_g = parallel::parLapply(cores,parak,calcul_q)
     out_g = tibble::as_tibble(do.call(rbind, out_g))
   } else {
@@ -163,26 +165,9 @@ mc_simq = \(cores = 6){
 }
 
 qv = mc_simq(cores = 12)
+## Error in checkForRemoteErrors(val): 12 nodes produced errors; first error: unused argument (lambda = lambdav)
 qv
-## # A tibble: 1,900 × 4
-##    qv_sed qv_sid qv_bias   rho
-##     <dbl>  <dbl>   <dbl> <dbl>
-##  1  0.998  0.998       0  0.05
-##  2  0.998  0.998       0  0.05
-##  3  0.997  0.997       0  0.05
-##  4  0.998  0.998       0  0.05
-##  5  0.998  0.998       0  0.05
-##  6  0.998  0.998       0  0.05
-##  7  0.998  0.998       0  0.05
-##  8  0.998  0.998       0  0.05
-##  9  0.998  0.998       0  0.05
-## 10  0.998  0.998       0  0.05
-## # ℹ 1,890 more rows
-tapply(qv$qv_bias, qv$rho, mean)
-##         0.05          0.1         0.15          0.2         0.25          0.3         0.35 
-## -0.003730299 -0.004598168 -0.008629568 -0.009083803 -0.013027071 -0.020524905 -0.034507171 
-##          0.4         0.45          0.5         0.55          0.6         0.65          0.7 
-## -0.036417126 -0.035733490 -0.042590039 -0.050666891 -0.069836797 -0.093104122 -0.095702926 
-##         0.75          0.8         0.85          0.9         0.95 
-## -0.111785462 -0.130288998 -0.171257233 -0.228723769 -0.237107745
+## Error: object 'qv' not found
+tapply(qv$qv_bias, qv$lambda, mean)
+## Error: object 'qv' not found
 ```
