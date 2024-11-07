@@ -19,7 +19,7 @@ Authors@R: c(
              role = c("aut"),
              comment = c(ORCID = "0000-0003-0858-4728"))
       )
-Description: Assesses spatial associations between variables using an equivalent geographical detector (q-statistic) within a regression framework and integrates a spatially explicit stratified power model to account for spatial dependence and spatial stratified heterogeneity, enabling modeling of complex spatial associations.
+Description: Assesses spatial associations between variables through an equivalent geographical detector (q-statistic) within a regression framework and incorporates a spatially explicit stratified power model by integrating spatial dependence and spatial stratified heterogeneity, facilitating the modeling of complex spatial relationships.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
