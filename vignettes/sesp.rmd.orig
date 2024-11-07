@@ -154,7 +154,7 @@ plot_optdisc = \(g){
  fig1 = seq_along(g$optdisc) |>
    purrr::map(\(.x) ggplot2::ggplot(data = gmap) +
                 ggplot2::geom_sf(ggplot2::aes(color = factor(g$optdisc[,.x,drop = TRUE])),
-                                 alpha = .65, size = 0.35) +
+                                 alpha = .65, size = 0.45) +
                 ggplot2::labs(color = 'zones') +
                 ggplot2::theme_void() +
                 ggplot2::theme(
