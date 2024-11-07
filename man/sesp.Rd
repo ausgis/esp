@@ -14,7 +14,7 @@ sesp(
   model = "ols",
   durbin = FALSE,
   overlay = "and",
-  alpha = 0.25,
+  alpha = 0.5,
   bw = "AIC",
   adaptive = TRUE,
   kernel = "gaussian",
@@ -49,7 +49,7 @@ be discretized.}
 \item{overlay}{(optional) Spatial overlay method. One of \code{and}, \code{or}, \code{intersection}. Default is \code{and}.}
 
 \item{alpha}{(optional) Controlling the strength of spatial soft constraints, the larger the \code{alpha},
-the stronger the spatial soft constraint. Default is \code{0.25}.}
+the stronger the spatial soft constraint. Default is \code{0.5}.}
 
 \item{bw}{(optional) The bandwidth used in selecting models. The optimal bandwidth can be
 selected using one of two methods: \code{AIC}, and \code{CV}. Default is \code{AIC}.}

@@ -22,7 +22,7 @@
 #' @param durbin (optional) Whether to consider spatial durbin terms, default is `false`.
 #' @param overlay (optional) Spatial overlay method. One of `and`, `or`, `intersection`. Default is `and`.
 #' @param alpha (optional) Controlling the strength of spatial soft constraints, the larger the `alpha`,
-#' the stronger the spatial soft constraint. Default is `0.25`.
+#' the stronger the spatial soft constraint. Default is `0.5`.
 #' @param bw (optional) The bandwidth used in selecting models. The optimal bandwidth can be
 #' selected using one of two methods: `AIC`, and `CV`. Default is `AIC`.
 #' @param adaptive (optional) Whether the bandwidth value is adaptive or not. Default is `TRUE`.
@@ -52,7 +52,7 @@
 #' g
 #'
 sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:8,
-         model = 'ols', durbin = FALSE, overlay = 'and', alpha = 0.25, bw = "AIC",
+         model = 'ols', durbin = FALSE, overlay = 'and', alpha = 0.5, bw = "AIC",
          adaptive = TRUE, kernel = "gaussian", increase_rate = 0.05, cores = 1, ...) {
   if (!(model %in% c("ols","gwr","lag","error"))){
     stop("`model` must be one of `ols`,`gwr`,`lag` or `error`!")
@@ -151,7 +151,8 @@ sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3
       )
       moran_v = dplyr::pull(moran_g$result,2)
       moran_p = dplyr::pull(moran_g$result,6)
-      se_alpha = dplyr::if_else(moran_v>=0.25&moran_p<=0.05,moran_v,alpha,missing = alpha)
+      se_alpha = dplyr::if_else(moran_v>=alpha&moran_p<=0.05,
+                                moran_v,alpha,missing = alpha)
       D0 = stats::dist(gwrcoefs[,n,drop = TRUE])
       resh = ClustGeo::hclustgeo(D0,stats::as.dist(gdist),se_alpha,...)
       resdisc = tibble::as_tibble(stats::cutree(resh,discnum))
