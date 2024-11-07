@@ -125,16 +125,16 @@ qv
 ## # A tibble: 1,000 × 3
 ##    qv_sed    moran moran_p
 ##     <dbl>    <dbl>   <dbl>
-##  1  0.204  0.0113   0.247 
-##  2  0.177 -0.0338   0.967 
-##  3  0.204 -0.0349   0.971 
-##  4  0.198 -0.00742  0.642 
-##  5  0.175 -0.0104   0.702 
-##  6  0.199 -0.0257   0.917 
-##  7  0.131 -0.00403  0.569 
-##  8  0.177  0.00371  0.397 
-##  9  0.189  0.0313   0.0354
-## 10  0.147 -0.00367  0.561 
+##  1  0.179 -0.00153 0.513  
+##  2  0.192 -0.0181  0.832  
+##  3  0.209  0.0191  0.131  
+##  4  0.154 -0.00689 0.631  
+##  5  0.178  0.0236  0.0850 
+##  6  0.203 -0.0292  0.943  
+##  7  0.204  0.0409  0.00956
+##  8  0.196  0.00567 0.356  
+##  9  0.147 -0.0210  0.869  
+## 10  0.197 -0.00387 0.565  
 ## # ℹ 990 more rows
 ```
 
@@ -152,16 +152,28 @@ ggplot2::ggplot(data = qv, ggplot2::aes(x = qv_sed)) +
   ggplot2::theme_classic()
 ```
 
-![**Figure 1**. The results of q-values from 1000 explicit spatial discretization simulations.](man/figures/whysed/plot_mcres_1-1.png)
+![**Figure 1**. The results of q-values from 1000 explicit spatial discretization simulations.](../man/figures/whysed/plot_mcres_1-1.png)
 
 We selected simulated q-values that are more consistent with the actual situation, specifically those for which the global Moran's I of the permuted data is statistically significant (p-value < 0.05) and greater than zero.
 
 
 ``` r
-qv_sign = dplyr::filter(moran>=0&moran_p<=0.05)
-## Error: object 'moran' not found
+qv_sign = dplyr::filter(qv,moran>=0&moran_p<=0.05)
 qv_sign
-## Error: object 'qv_sign' not found
+## # A tibble: 54 × 3
+##    qv_sed  moran moran_p
+##     <dbl>  <dbl>   <dbl>
+##  1  0.204 0.0409 0.00956
+##  2  0.187 0.0349 0.0223 
+##  3  0.170 0.0286 0.0492 
+##  4  0.196 0.0434 0.00653
+##  5  0.179 0.0295 0.0444 
+##  6  0.179 0.0308 0.0378 
+##  7  0.187 0.0381 0.0144 
+##  8  0.209 0.0300 0.0418 
+##  9  0.198 0.0384 0.0138 
+## 10  0.167 0.0365 0.0180 
+## # ℹ 44 more rows
 ```
 
 
@@ -176,6 +188,8 @@ ggplot2::ggplot(data = qv_sign, ggplot2::aes(x = qv_sed)) +
   ggplot2::labs(x = "Q Value",
                 y = "Density") +
   ggplot2::theme_classic()
-## Error: object 'qv_sign' not found
 ```
 
+![**Figure 2**. Q-value distribution from randomized simulations that best align with actual conditions.](../man/figures/whysed/plot_mcres_2-1.png)
+
+The q-value obtained by classifying into five categories using the natural breaks method is 0.07985, while the q-value from five-category hierarchical clustering without spatial soft constraints is 0.07315. In the Monte Carlo simulation experiment, the range of q-values spans from 0.1133 to 0.21893. The range of q-values from randomized simulations that best align with actual conditions is from 0.12233 to 0.21538. The Monte Carlo simulation results suggest that spatially implicit discretization tends to underestimate the q-value of the variable when moderate spatial autocorrelation is present, emphasizing the need for spatially explicit discretization.
