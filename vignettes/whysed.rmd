@@ -30,9 +30,9 @@ dt = system.file('extdata/Depression.csv',package = 'gdverse') |>
   dplyr::select(y = Depression_prevelence,
                 x = PopulationDensity)
 ## Rows: 1072 Columns: 13
-## ── Column specification ───────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────
 ## Delimiter: ","
-## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neig...
+## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neigh...
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -122,14 +122,21 @@ mc_simq = \(times = 5000, cores = 6){
 
 qv = mc_simq(times = 1000, cores = 12)
 qv
+## # A tibble: 1,000 × 3
+##    qv_sed    moran moran_p
+##     <dbl>    <dbl>   <dbl>
+##  1  0.204  0.0113   0.247 
+##  2  0.177 -0.0338   0.967 
+##  3  0.204 -0.0349   0.971 
+##  4  0.198 -0.00742  0.642 
+##  5  0.175 -0.0104   0.702 
+##  6  0.199 -0.0257   0.917 
+##  7  0.131 -0.00403  0.569 
+##  8  0.177  0.00371  0.397 
+##  9  0.189  0.0313   0.0354
+## 10  0.147 -0.00367  0.561 
+## # ℹ 990 more rows
 ```
-We selected simulated q-values that are more consistent with the actual situation, specifically those for which the global Moran's I of the permuted data is statistically significant (p-value < 0.05) and greater than zero.
-
-```{r}
-qv_sign = dplyr::filter(moran>=0&moran_p<=0.05)
-qv_sign
-```
-
 
 
 ``` r
@@ -145,68 +152,30 @@ ggplot2::ggplot(data = qv, ggplot2::aes(x = qv_sed)) +
   ggplot2::theme_classic()
 ```
 
-![**Figure 1**. The results of q-values from 1000 explicit spatial discretization simulations.](../man/figures/whysed/plot_mcres_1-1.png)
+![**Figure 1**. The results of q-values from 1000 explicit spatial discretization simulations.](man/figures/whysed/plot_mcres_1-1.png)
 
-The q-value obtained by classifying into five categories using the natural breaks method is `r round(qv_naturaldisc, 5)`, while the q-value from five-category hierarchical clustering without spatial soft constraints is `r round(qv_hclustdisc, 5)`. In the Monte Carlo simulation experiment, the range of q-values spans from `r round(min(qv$qv_sed), 5)` to `r round(max(qv$qv_sed), 5)`. The range of q-values from randomized simulations that best align with actual conditions is from `r round(min(qv_sign$qv_sed), 5)` to `r round(max(qv_sign$qv_sed), 5)`. The Monte Carlo simulation results suggest that spatially implicit discretization tends to underestimate the q-value of the variable when moderate spatial autocorrelation is present, emphasizing the need for spatially explicit discretization.
+We selected simulated q-values that are more consistent with the actual situation, specifically those for which the global Moran's I of the permuted data is statistically significant (p-value < 0.05) and greater than zero.
 
-<!-- In the repeated experiment, X is shuffled 10000 times, and the global Moran's I for the shuffled X is calculated. If the Moran's I of the shuffled X is significant and greater than 0, it is used as the degree of spatial soft constraint for the spatially constrained hierarchical clustering. Otherwise, the degree of soft constraint is set to 0. Subsequently, the q-values for each simulation round is computed. -->
 
-<!-- ```{r mc_simq1} -->
-<!-- mc_simq1 = \(times = 5000, cores = 6){ -->
-<!--   doclust = FALSE -->
-<!--   if (inherits(cores, "cluster")) { -->
-<!--     doclust = TRUE -->
-<!--   } else if (cores > 1) { -->
-<!--     doclust = TRUE -->
-<!--     cores = parallel::makeCluster(cores) -->
-<!--     on.exit(parallel::stopCluster(cores), add = TRUE) -->
-<!--   } -->
+``` r
+qv_sign = dplyr::filter(moran>=0&moran_p<=0.05)
+## Error: object 'moran' not found
+qv_sign
+## Error: object 'qv_sign' not found
+```
 
-<!--   calcul_q = \(n_sim) { -->
-<!--     x_sim = sample(x) -->
-<!--     g = sdsfun::moran_test( -->
-<!--       sf::st_set_geometry(tibble::tibble(x_sim = x_sim),geom) -->
-<!--     ) -->
-<!--     moran = dplyr::pull(g$result,2) -->
-<!--     moran_p = dplyr::pull(g$result,6) -->
-<!--     if (moran_p<=0.05 & moran>=0) { -->
-<!--       x_sed = hclustgeo_disc(x_sim, discnum = 5, -->
-<!--                              alpha = 0.365) -->
-<!--       qv = gdverse::factor_detector(y,x_sed)[[1]] -->
-<!--       res = tibble::tibble(qv_sed = qv, moran = moran, -->
-<!--                            moran_p = moran_p) -->
-<!--     } else { -->
-<!--       res = tibble::tibble(qv_sed = 0, moran = moran, -->
-<!--                            moran_p = moran_p) -->
-<!--     } -->
 
-<!--     return(res) -->
-<!--   } -->
+``` r
+ggplot2::ggplot(data = qv_sign, ggplot2::aes(x = qv_sed)) +
+  ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
+                          bins = 50, fill = "skyblue",
+                          color = "black", alpha = 0.7) +
+  ggplot2::geom_density(color = "red", linewidth = 1.2) +
+  ggplot2::scale_x_continuous(expand = c(0.01, 0)) +
+  ggplot2::scale_y_continuous(expand = c(0, 0)) +
+  ggplot2::labs(x = "Q Value",
+                y = "Density") +
+  ggplot2::theme_classic()
+## Error: object 'qv_sign' not found
+```
 
-<!--   if (doclust) { -->
-<!--     parallel::clusterExport(cores,varlist = c("geom","y","x","gdist","hclustgeo_disc")) -->
-<!--     out_g = parallel::parLapply(cores,seq(1,times,by = 1),calcul_q) -->
-<!--     out_g = tibble::as_tibble(do.call(rbind, out_g)) -->
-<!--   } else { -->
-<!--     out_g = purrr::map_dfr(seq(1,times,by = 1),calcul_q) -->
-<!--   } -->
-<!--   return(out_g) -->
-<!-- } -->
-
-<!-- qv1 = mc_simq1(times = 10000, cores = 12) |> -->
-<!--   dplyr::filter(moran>=0 & moran_p<=0.05) -->
-<!-- ``` -->
-
-<!-- ```{r plot_mcres_1,fig.width=4.05,fig.height=2.85,fig.cap=knitr::asis_output("**Figure 1**. The results of q-values from 1000 explicit spatial discretization simulations.")} -->
-<!-- ggplot2::ggplot(data = qv, ggplot2::aes(x = qv_sed)) + -->
-<!--   ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), -->
-<!--                           bins = 50, fill = "skyblue", -->
-<!--                           color = "black", alpha = 0.7) + -->
-<!--   ggplot2::geom_density(color = "red", linewidth = 1.2) + -->
-<!--   ggplot2::labs(title = "Monte Carlo Simulation Results", -->
-<!--                 x = "Q Value", -->
-<!--                 y = "Density") + -->
-<!--   ggplot2::theme_minimal() -->
-<!-- ``` -->
-
-<!-- The Monte Carlo simulation experiment indicates that spatial implicit discretization underestimates the q-value of the variable when there is moderate spatial autocorrelation, highlighting the necessity of spatial explicit discretization. -->

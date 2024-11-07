@@ -121,7 +121,7 @@ ggplot2::ggplot(data = qv, ggplot2::aes(x = qv_sed)) +
 We selected simulated q-values that are more consistent with the actual situation, specifically those for which the global Moran's I of the permuted data is statistically significant (p-value < 0.05) and greater than zero.
 
 ```{r}
-qv_sign = dplyr::filter(moran>=0&moran_p<=0.05)
+qv_sign = dplyr::filter(qv,moran>=0&moran_p<=0.05)
 qv_sign
 ```
 
