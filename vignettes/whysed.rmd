@@ -7,10 +7,16 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  fig.path = "man/figures/whysed/",
+  fig.dpi = 150
+)
+```
 
 
-
-We demonstrate the necessity of the spatial explicit discretization (discretization with spatial soft constraints) method using the `Depression.csv` data from the `gdverse` package. In this analysis, we select `Depression_prevalence` as the dependent variable Y and `PopulationDensity` as the independent variable X. X is randomly shuffled, and the q-value is calculated using both discretization methods that do and do not account for spatial soft constraints, with the process repeated 1000 times. We selected hierarchical clustering with spatial soft constraints and natural breaks method to represent explicit and implicit spatial discretization, respectively. At the same time, hierarchical clustering without spatial soft constraints is used as a control in the experiment. The hierarchical clustering with spatial soft constraints method and hierarchical clustering without spatial soft constraints method were implemented using the `ClustGeo` package and the natural breaks method is implemented based on the `sdsfun` package. In subsequent analyses, all discretization methods applied will discretize the dataset into five strata for the calculation of the q-values.
+We demonstrate the necessity of the spatial explicit discretization (discretization with spatial soft constraints) method using the `Depression.csv` data from the `gdverse` package. In this analysis, we select `Depression_prevalence` as the dependent variable $Y$ and `PopulationDensity` as the independent variable $X$. $X$ is randomly shuffled, and the q-value is calculated using both discretization methods that do and do not account for spatial soft constraints, with the process repeated 1000 times. We selected hierarchical clustering with spatial soft constraints and natural breaks method to represent explicit and implicit spatial discretization, respectively. At the same time, hierarchical clustering without spatial soft constraints is used as a control in the experiment. The hierarchical clustering with spatial soft constraints method and hierarchical clustering without spatial soft constraints method were implemented using the `ClustGeo` package and the natural breaks method is implemented based on the `sdsfun` package. In subsequent analyses, all discretization methods applied will discretize the dataset into five strata for the calculation of the q-values.
 
 ## Install Necessary R Packages
 
@@ -22,40 +28,19 @@ devtools::install_github("ausgis/sesp",build_vignettes = TRUE,dep = TRUE)
 
 ## The spatial autocorrelation of the example data
 
-
-``` r
+```{r moran_data}
 dt = system.file('extdata/Depression.csv',package = 'gdverse') |>
   readr::read_csv() |>
   sf::st_as_sf(coords = c('X','Y'), crs = 4326) |>
   dplyr::select(y = Depression_prevelence,
                 x = PopulationDensity)
-## Rows: 1072 Columns: 13
-## ── Column specification ───────────────────────────────────────────────────────────────────────────
-## Delimiter: ","
-## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neig...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
 sdsfun::moran_test(dt)
-## ***                 global moran test
 ```
-
-
----------------------------------------------------------------------
- Variable     MoranI          EI         VarI       zI        pI     
----------- ------------- ------------ ----------- ------- -----------
-    y       0.339557***   -0.0009337   0.0003192   19.06   2.892e-81 
-
-    x       0.365364***   -0.0009337   0.0003192   20.5    1.052e-93 
----------------------------------------------------------------------
-
-
 
 ## Q value corresponding to spatial implicit discretization
 
-
-``` r
+```{r prepare}
 geom = sf::st_geometry(dt)
 y = dt$y
 x = dt$x
@@ -67,24 +52,20 @@ hclustgeo_disc = \(xv,discnum,alpha = 0.5){
 }
 ```
 
-
-``` r
+```{r qv_sid}
 x_naturaldisc = sdsfun::discretize_vector(x,5,method = "natural")
 x_hclustdisc = hclustgeo_disc(x,5,alpha = 0)
 qv_naturaldisc = gdverse::factor_detector(y,x_naturaldisc)[[1]]
 qv_naturaldisc
-## [1] 0.07985365
 qv_hclustdisc = gdverse::factor_detector(y,x_hclustdisc)[[1]]
 qv_hclustdisc
-## [1] 0.07315131
 ```
 
 ## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-In the repeated experiment, X is shuffled 1000 times, and the global Moran's I for the shuffled X is calculated. If the Moran's I of the shuffled X is significant and greater than 0, it is used as the degree of spatial soft constraint for the spatially constrained hierarchical clustering. Otherwise, the degree of soft constraint is set to 0. Subsequently, the q-values for each simulation round is computed.
+In the repeated experiment, $X$ is shuffled 1000 times, and the global Moran's I of the original independent variable $X$ serves as the degree of spatial soft constraint (0.365 in this case). Subsequently, the q-values for each simulation round is computed.
 
-
-``` r
+```{r mc_simq}
 mc_simq = \(times = 5000, cores = 6){
   doclust = FALSE
   if (inherits(cores, "cluster")) {
@@ -102,17 +83,11 @@ mc_simq = \(times = 5000, cores = 6){
     )
     moran = dplyr::pull(g$result,2)
     moran_p = dplyr::pull(g$result,6)
-    if (moran_p<=0.05 & moran>=0) {
-      x_sed = hclustgeo_disc(x_sim, discnum = 5,
-                             alpha = moran)
-      qv = gdverse::factor_detector(y,x_sed)[[1]]
-      res = tibble::tibble(qv_sed = qv, moran = moran,
-                           moran_p = moran_p)
-    } else {
-      res = tibble::tibble(qv_sed = 0, moran = moran,
-                           moran_p = moran_p)
-    }
-
+    x_sed = hclustgeo_disc(x_sim, discnum = 5,
+                           alpha = 0.365)
+    qv = gdverse::factor_detector(y,x_sed)[[1]]
+    res = tibble::tibble(qv_sed = qv, moran = moran,
+                         moran_p = moran_p)
     return(res)
   }
 
@@ -126,23 +101,82 @@ mc_simq = \(times = 5000, cores = 6){
   return(out_g)
 }
 
-qv = mc_simq(times = 10000, cores = 12) |>
-  dplyr::filter(moran>=0 & moran_p<=0.05)
+qv = mc_simq(times = 1000, cores = 12)
 ```
 
-
-``` r
+```{r plot_mcres_1,fig.width=4.05,fig.height=2.85,fig.cap=knitr::asis_output("**Figure 1**. The results of q-values from 1000 explicit spatial discretization simulations.")}
 ggplot2::ggplot(data = qv, ggplot2::aes(x = qv_sed)) +
   ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
                           bins = 50, fill = "skyblue",
                           color = "black", alpha = 0.7) +
   ggplot2::geom_density(color = "red", linewidth = 1.2) +
-  ggplot2::labs(title = "Monte Carlo Simulation Results",
-                x = "Q Value",
+  ggplot2::scale_x_continuous(expand = c(0.01, 0)) +
+  ggplot2::scale_y_continuous(expand = c(0, 0)) +
+  ggplot2::labs(x = "Q Value",
                 y = "Density") +
-  ggplot2::theme_minimal()
+  ggplot2::theme_classic()
 ```
 
-![**Figure 1**. The results of Q-values from 1000 explicit spatial discretization simulations.](../man/figures/whysed/plot_mcres-1.png)
-
 The Monte Carlo simulation experiment indicates that spatial implicit discretization underestimates the q-value of the variable when there is moderate spatial autocorrelation, highlighting the necessity of spatial explicit discretization.
+
+<!-- In the repeated experiment, X is shuffled 10000 times, and the global Moran's I for the shuffled X is calculated. If the Moran's I of the shuffled X is significant and greater than 0, it is used as the degree of spatial soft constraint for the spatially constrained hierarchical clustering. Otherwise, the degree of soft constraint is set to 0. Subsequently, the q-values for each simulation round is computed. -->
+
+<!-- ```{r mc_simq1} -->
+<!-- mc_simq1 = \(times = 5000, cores = 6){ -->
+<!--   doclust = FALSE -->
+<!--   if (inherits(cores, "cluster")) { -->
+<!--     doclust = TRUE -->
+<!--   } else if (cores > 1) { -->
+<!--     doclust = TRUE -->
+<!--     cores = parallel::makeCluster(cores) -->
+<!--     on.exit(parallel::stopCluster(cores), add = TRUE) -->
+<!--   } -->
+
+<!--   calcul_q = \(n_sim) { -->
+<!--     x_sim = sample(x) -->
+<!--     g = sdsfun::moran_test( -->
+<!--       sf::st_set_geometry(tibble::tibble(x_sim = x_sim),geom) -->
+<!--     ) -->
+<!--     moran = dplyr::pull(g$result,2) -->
+<!--     moran_p = dplyr::pull(g$result,6) -->
+<!--     if (moran_p<=0.05 & moran>=0) { -->
+<!--       x_sed = hclustgeo_disc(x_sim, discnum = 5, -->
+<!--                              alpha = 0.365) -->
+<!--       qv = gdverse::factor_detector(y,x_sed)[[1]] -->
+<!--       res = tibble::tibble(qv_sed = qv, moran = moran, -->
+<!--                            moran_p = moran_p) -->
+<!--     } else { -->
+<!--       res = tibble::tibble(qv_sed = 0, moran = moran, -->
+<!--                            moran_p = moran_p) -->
+<!--     } -->
+
+<!--     return(res) -->
+<!--   } -->
+
+<!--   if (doclust) { -->
+<!--     parallel::clusterExport(cores,varlist = c("geom","y","x","gdist","hclustgeo_disc")) -->
+<!--     out_g = parallel::parLapply(cores,seq(1,times,by = 1),calcul_q) -->
+<!--     out_g = tibble::as_tibble(do.call(rbind, out_g)) -->
+<!--   } else { -->
+<!--     out_g = purrr::map_dfr(seq(1,times,by = 1),calcul_q) -->
+<!--   } -->
+<!--   return(out_g) -->
+<!-- } -->
+
+<!-- qv1 = mc_simq1(times = 10000, cores = 12) |> -->
+<!--   dplyr::filter(moran>=0 & moran_p<=0.05) -->
+<!-- ``` -->
+
+<!-- ```{r plot_mcres_1,fig.width=4.05,fig.height=2.85,fig.cap=knitr::asis_output("**Figure 1**. The results of q-values from 1000 explicit spatial discretization simulations.")} -->
+<!-- ggplot2::ggplot(data = qv, ggplot2::aes(x = qv_sed)) + -->
+<!--   ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)), -->
+<!--                           bins = 50, fill = "skyblue", -->
+<!--                           color = "black", alpha = 0.7) + -->
+<!--   ggplot2::geom_density(color = "red", linewidth = 1.2) + -->
+<!--   ggplot2::labs(title = "Monte Carlo Simulation Results", -->
+<!--                 x = "Q Value", -->
+<!--                 y = "Density") + -->
+<!--   ggplot2::theme_minimal() -->
+<!-- ``` -->
+
+<!-- The Monte Carlo simulation experiment indicates that spatial implicit discretization underestimates the q-value of the variable when there is moderate spatial autocorrelation, highlighting the necessity of spatial explicit discretization. -->
