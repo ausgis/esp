@@ -39,14 +39,14 @@ go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
            model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    0.17    0.02    0.68
+##    0.38    0.03    0.55
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.01    0.00    0.09
+##    0.03    0.00    0.06
 ```
 
 ### Factor detector
@@ -154,7 +154,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    5.85    1.06   30.04
+##    5.80    1.01   28.57
 g1
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -199,7 +199,7 @@ system.time({
             yzone = yzone, model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    5.75    0.69  266.61
+##    7.24    0.71  265.13
 g2
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -244,7 +244,7 @@ system.time({
             yzone = yzone, model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    9.44    1.09  143.06
+##    5.62    0.25  140.58
 g3
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -289,7 +289,7 @@ system.time({
             model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##    8.20    1.14  267.81
+##    9.06    0.90  259.78
 g4
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -334,7 +334,7 @@ system.time({
             yzone = yzone, model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    8.74    1.19  160.87
+##    9.83    1.00  162.05
 g5
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -461,7 +461,7 @@ plot_optdisc = \(g){
  fig1 = seq_along(g$optdisc) |>
    purrr::map(\(.x) ggplot2::ggplot(data = gmap) +
                 ggplot2::geom_sf(ggplot2::aes(color = factor(g$optdisc[,.x,drop = TRUE])),
-                                 alpha = .65, size = 0.45) +
+                                 alpha = .65, size = 0.5) +
                 ggplot2::labs(color = 'zones') +
                 ggplot2::theme_void() +
                 ggplot2::theme(
