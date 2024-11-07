@@ -99,14 +99,14 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 <span>           model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.20    0.00    0.59</span></span>
+<span><span class="co">##    0.46    0.00    0.58</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://stscl.github.io/gdverse/reference/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
 <span>         type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'factor'</span>,<span class="st">'interaction'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.08    0.00    0.08</span></span></code></pre></div>
+<span><span class="co">##    0.03    0.02    0.08</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="factor-detector">Factor detector<a class="anchor" aria-label="anchor" href="#factor-detector"></a>
 </h3>
@@ -214,7 +214,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    4.70    0.80   26.48</span></span>
+<span><span class="co">##    3.33    0.56   32.39</span></span>
 <span><span class="va">g1</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -259,7 +259,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'lag'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    9.05    0.95  259.55</span></span>
+<span><span class="co">##    7.60    0.80  270.42</span></span>
 <span><span class="va">g2</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -304,7 +304,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'error'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    8.41    0.55  138.52</span></span>
+<span><span class="co">##    7.33    0.91  142.08</span></span>
 <span><span class="va">g3</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -349,7 +349,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            model <span class="op">=</span> <span class="st">'lag'</span>, durbin <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    8.39    0.90  259.33</span></span>
+<span><span class="co">##    9.25    1.31  260.35</span></span>
 <span><span class="va">g4</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -394,7 +394,7 @@ Weighted Regression<a class="anchor" aria-label="anchor" href="#spatially-explic
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'gwr'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    6.50    0.36  157.92</span></span>
+<span><span class="co">##    6.40    0.88  163.76</span></span>
 <span><span class="va">g5</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -519,7 +519,7 @@ Weighted Regression<a class="anchor" aria-label="anchor" href="#spatially-explic
 <span> <span class="va">fig1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">optdisc</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>   <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">.x</span><span class="op">)</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">gmap</span><span class="op">)</span> <span class="op">+</span></span>
 <span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">optdisc</span><span class="op">[</span>,<span class="va">.x</span>,drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>                                 alpha <span class="op">=</span> <span class="fl">.65</span><span class="op">)</span> <span class="op">+</span></span>
+<span>                                 alpha <span class="op">=</span> <span class="fl">.65</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">'zones'</span><span class="op">)</span> <span class="op">+</span></span>
 <span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
