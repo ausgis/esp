@@ -539,9 +539,9 @@ sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3
 print.sespm = \(x, ...) {
   cat("***          Spatially Explicit Stratified Power     \n")
   cat(paste0("\n Q values are estimated using *",x$model,"* \n"))
-  cat("\n -------------- Global Power of Determinat : ------------\n")
+  cat("\n -------------- Global Power of Determinant : ------------\n")
   PrintGlobalQ(utils::head(x$factor,10))
-  cat("\n ------------- Global Variable Interaction : ------------\n")
+  cat("\n -------------  Global Variable Interaction : ------------\n")
   PrintGlobalQ(utils::head(dplyr::select(x$interaction,1:2),10))
   cat("\n! Only the top ten items of global scale are displayed.")
   cat("\n! The others can be accessed through specific subsets.\n")
