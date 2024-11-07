@@ -121,7 +121,15 @@ mc_simq = \(times = 5000, cores = 6){
 }
 
 qv = mc_simq(times = 1000, cores = 12)
+qv
 ```
+We selected simulated q-values that are more consistent with the actual situation, specifically those for which the global Moran's I of the permuted data is statistically significant (p-value < 0.05) and greater than zero.
+
+```{r}
+qv_sign = dplyr::filter(moran>=0&moran_p<=0.05)
+qv_sign
+```
+
 
 
 ``` r
@@ -139,7 +147,7 @@ ggplot2::ggplot(data = qv, ggplot2::aes(x = qv_sed)) +
 
 ![**Figure 1**. The results of q-values from 1000 explicit spatial discretization simulations.](../man/figures/whysed/plot_mcres_1-1.png)
 
-The Monte Carlo simulation experiment indicates that spatial implicit discretization underestimates the q-value of the variable when there is moderate spatial autocorrelation, highlighting the necessity of spatial explicit discretization.
+The q-value obtained by classifying into five categories using the natural breaks method is `r round(qv_naturaldisc, 5)`, while the q-value from five-category hierarchical clustering without spatial soft constraints is `r round(qv_hclustdisc, 5)`. In the Monte Carlo simulation experiment, the range of q-values spans from `r round(min(qv$qv_sed), 5)` to `r round(max(qv$qv_sed), 5)`. The range of q-values from randomized simulations that best align with actual conditions is from `r round(min(qv_sign$qv_sed), 5)` to `r round(max(qv_sign$qv_sed), 5)`. The Monte Carlo simulation results suggest that spatially implicit discretization tends to underestimate the q-value of the variable when moderate spatial autocorrelation is present, emphasizing the need for spatially explicit discretization.
 
 <!-- In the repeated experiment, X is shuffled 10000 times, and the global Moran's I for the shuffled X is calculated. If the Moran's I of the shuffled X is significant and greater than 0, it is used as the degree of spatial soft constraint for the spatially constrained hierarchical clustering. Otherwise, the degree of soft constraint is set to 0. Subsequently, the q-values for each simulation round is computed. -->
 
