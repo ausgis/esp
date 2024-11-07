@@ -99,14 +99,14 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 <span>           model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.38    0.03    0.55</span></span>
+<span><span class="co">##    0.29    0.00    0.55</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://stscl.github.io/gdverse/reference/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
 <span>         type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'factor'</span>,<span class="st">'interaction'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.03    0.00    0.06</span></span></code></pre></div>
+<span><span class="co">##    0.08    0.00    0.06</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="factor-detector">Factor detector<a class="anchor" aria-label="anchor" href="#factor-detector"></a>
 </h3>
@@ -214,13 +214,13 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    5.80    1.01   28.57</span></span>
+<span><span class="co">##    3.83    0.77   31.37</span></span>
 <span><span class="va">g1</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Q values are estimated using *Ordinary Least Square* </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  -------------- Global Power of Determinat : ------------</span></span>
+<span><span class="co">##  -------------- Global Power of Determinant : ------------</span></span>
 <span><span class="co">## Variable              Qvalue AIC      BIC      LogLik    </span></span>
 <span><span class="co">## PopulationDensity     0.202  4505.365 4505.365 -2246.682 </span></span>
 <span><span class="co">## Population65          0.159  4561.304 4561.304 -2274.652 </span></span>
@@ -233,7 +233,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span><span class="co">## DrinkingPlaces        0.203  4503.855 4503.855 -2245.927 </span></span>
 <span><span class="co">## X.HouseRent           0.225  4476.344 4476.344 -2231.172 </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  ------------- Global Variable Interaction : ------------</span></span>
+<span><span class="co">##  -------------  Global Variable Interaction : ------------</span></span>
 <span><span class="co">## Variable                                    Interaction  </span></span>
 <span><span class="co">## PopulationDensity ∩ Population65          Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- </span></span>
@@ -259,13 +259,13 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'lag'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    7.24    0.71  265.13</span></span>
+<span><span class="co">##    9.77    1.45  261.25</span></span>
 <span><span class="va">g2</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Q values are estimated using *Spatial Lag Model* </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  -------------- Global Power of Determinat : ------------</span></span>
+<span><span class="co">##  -------------- Global Power of Determinant : ------------</span></span>
 <span><span class="co">## Variable              Qvalue AIC      BIC      LogLik    </span></span>
 <span><span class="co">## PopulationDensity     0.154  4333.170 4333.170 -2159.585 </span></span>
 <span><span class="co">## Population65          0.122  4370.485 4370.485 -2178.242 </span></span>
@@ -278,7 +278,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span><span class="co">## DrinkingPlaces        0.160  4330.763 4330.763 -2158.382 </span></span>
 <span><span class="co">## X.HouseRent           0.187  4316.759 4316.759 -2150.380 </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  ------------- Global Variable Interaction : ------------</span></span>
+<span><span class="co">##  -------------  Global Variable Interaction : ------------</span></span>
 <span><span class="co">## Variable                                    Interaction  </span></span>
 <span><span class="co">## PopulationDensity ∩ Population65          Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- </span></span>
@@ -304,13 +304,13 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'error'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    5.62    0.25  140.58</span></span>
+<span><span class="co">##    5.75    0.39  143.19</span></span>
 <span><span class="va">g3</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Q values are estimated using *Spatial Error Model* </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  -------------- Global Power of Determinat : ------------</span></span>
+<span><span class="co">##  -------------- Global Power of Determinant : ------------</span></span>
 <span><span class="co">## Variable              Qvalue AIC      BIC      LogLik    </span></span>
 <span><span class="co">## PopulationDensity     0.199  4288.640 4288.640 -2137.320 </span></span>
 <span><span class="co">## Population65          0.156  4335.830 4335.830 -2160.915 </span></span>
@@ -323,7 +323,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span><span class="co">## DrinkingPlaces        0.198  4295.621 4295.621 -2140.811 </span></span>
 <span><span class="co">## X.HouseRent           0.219  4279.959 4279.959 -2131.979 </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  ------------- Global Variable Interaction : ------------</span></span>
+<span><span class="co">##  -------------  Global Variable Interaction : ------------</span></span>
 <span><span class="co">## Variable                                    Interaction  </span></span>
 <span><span class="co">## PopulationDensity ∩ Population65          Weaken, uni- </span></span>
 <span><span class="co">## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- </span></span>
@@ -349,13 +349,13 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span>            model <span class="op">=</span> <span class="st">'lag'</span>, durbin <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    9.06    0.90  259.78</span></span>
+<span><span class="co">##    5.65    0.42  265.55</span></span>
 <span><span class="va">g4</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Q values are estimated using *Spatial Durbin Model* </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  -------------- Global Power of Determinat : ------------</span></span>
+<span><span class="co">##  -------------- Global Power of Determinant : ------------</span></span>
 <span><span class="co">## Variable              Qvalue AIC      BIC      LogLik    </span></span>
 <span><span class="co">## PopulationDensity     0.211  4291.372 4291.372 -2134.686 </span></span>
 <span><span class="co">## Population65          0.163  4340.250 4340.250 -2159.125 </span></span>
@@ -368,7 +368,7 @@ Regression<a class="anchor" aria-label="anchor" href="#spatially-explicit-strati
 <span><span class="co">## DrinkingPlaces        0.210  4294.833 4294.833 -2136.417 </span></span>
 <span><span class="co">## X.HouseRent           0.239  4280.458 4280.458 -2127.229 </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  ------------- Global Variable Interaction : ------------</span></span>
+<span><span class="co">##  -------------  Global Variable Interaction : ------------</span></span>
 <span><span class="co">## Variable                                    Interaction  </span></span>
 <span><span class="co">## PopulationDensity ∩ Population65          Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- </span></span>
@@ -394,13 +394,13 @@ Weighted Regression<a class="anchor" aria-label="anchor" href="#spatially-explic
 <span>            yzone <span class="op">=</span> <span class="va">yzone</span>, model <span class="op">=</span> <span class="st">'gwr'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    9.83    1.00  162.05</span></span>
+<span><span class="co">##    6.70    0.75  162.39</span></span>
 <span><span class="va">g5</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  Q values are estimated using *Geographically Weighted Regression* </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  -------------- Global Power of Determinat : ------------</span></span>
+<span><span class="co">##  -------------- Global Power of Determinant : ------------</span></span>
 <span><span class="co">## Variable              Qvalue AIC      </span></span>
 <span><span class="co">## PopulationDensity     0.366  4260.457 </span></span>
 <span><span class="co">## Population65          0.317  4337.745 </span></span>
@@ -413,7 +413,7 @@ Weighted Regression<a class="anchor" aria-label="anchor" href="#spatially-explic
 <span><span class="co">## DrinkingPlaces        0.294  4373.148 </span></span>
 <span><span class="co">## X.HouseRent           0.370  4255.989 </span></span>
 <span><span class="co">## </span></span>
-<span><span class="co">##  ------------- Global Variable Interaction : ------------</span></span>
+<span><span class="co">##  -------------  Global Variable Interaction : ------------</span></span>
 <span><span class="co">## Variable                                    Interaction  </span></span>
 <span><span class="co">## PopulationDensity ∩ Population65          Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- </span></span>
@@ -517,7 +517,7 @@ Weighted Regression<a class="anchor" aria-label="anchor" href="#spatially-explic
 <span> <span class="va">gmap</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_set_geometry</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">optdisc</span>,<span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">depression</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span> <span class="va">fig1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">optdisc</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>   <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/purrr/man/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">.x</span><span class="op">)</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">gmap</span><span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">.x</span><span class="op">)</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">gmap</span><span class="op">)</span> <span class="op">+</span></span>
 <span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">optdisc</span><span class="op">[</span>,<span class="va">.x</span>,drop <span class="op">=</span> <span class="cn">TRUE</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                                 alpha <span class="op">=</span> <span class="fl">.65</span>, size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">'zones'</span><span class="op">)</span> <span class="op">+</span></span>
@@ -525,8 +525,8 @@ Weighted Regression<a class="anchor" aria-label="anchor" href="#spatially-explic
 <span>                <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
 <span>                  legend.position <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
 <span>                <span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>   <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/patchwork/man/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">3</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>   <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/patchwork/man/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span></span>
+<span>   <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_plots.html" class="external-link">wrap_plots</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">3</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>   <span class="fu">patchwork</span><span class="fu">::</span><span class="fu"><a href="https://patchwork.data-imaginist.com/reference/plot_annotation.html" class="external-link">plot_annotation</a></span><span class="op">(</span></span>
 <span>     tag_levels <span class="op">=</span> <span class="st">'a'</span>,</span>
 <span>     tag_prefix <span class="op">=</span> <span class="st">'('</span>,</span>
 <span>     tag_suffix <span class="op">=</span> <span class="st">')'</span>,</span>
