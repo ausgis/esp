@@ -48,7 +48,6 @@
 <span>  <span class="va">formula</span>,</span>
 <span>  <span class="va">data</span>,</span>
 <span>  listw <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  yzone <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  discvar <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  discnum <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"ols"</span>,</span>
@@ -78,12 +77,7 @@ variables should not be <code>all</code> or <code>none</code>.</p></dd>
 
 
 <dt id="arg-listw">listw<a class="anchor" aria-label="anchor" href="#arg-listw"></a></dt>
-<dd><p>(optional) A list of <code>listw</code>. See <code><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html" class="external-link">spdep::mat2listw()</a></code> and <code><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html" class="external-link">spdep::nb2listw()</a></code> for details.</p></dd>
-
-
-<dt id="arg-yzone">yzone<a class="anchor" aria-label="anchor" href="#arg-yzone"></a></dt>
-<dd><p>(optional) Spatial zones of the response variable. When <em>yzone</em> is <code>NULL</code>, the local zones
-q value is not calculated. Default is <code>NULL</code>.</p></dd>
+<dd><p>(optional) A <code>listw</code> object. See <code><a href="https://r-spatial.github.io/spdep/reference/mat2listw.html" class="external-link">spdep::mat2listw()</a></code> and <code><a href="https://r-spatial.github.io/spdep/reference/nb2listw.html" class="external-link">spdep::nb2listw()</a></code> for details.</p></dd>
 
 
 <dt id="arg-discvar">discvar<a class="anchor" aria-label="anchor" href="#arg-discvar"></a></dt>
@@ -152,12 +146,6 @@ multi-core parallel computing.</p></dd>
 
 <dt><code>optdisc</code></dt>
 <dd><p>independent variable optimal spatial discretization</p></dd>
-
-<dt><code>localq</code></dt>
-<dd><p>q values of explanatory variables under different response zones</p></dd>
-
-<dt><code>zone</code></dt>
-<dd><p>zones of the response variable</p></dd>
 
 <dt><code>allfactor</code></dt>
 <dd><p>factor detection results corresponding to different numbers of discreteization</p></dd>
