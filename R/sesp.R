@@ -446,6 +446,7 @@ plot.sespm = \(x, slicenum = 2, ...) {
     ggplot2::labs(x = "", y = "") +
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid.major.y = ggplot2::element_blank(),
+                   axis.text.y = ggplot2::element_text(face = "bold.italic"),
                    legend.position = "off", ...)
 
   return(fig_factor)
