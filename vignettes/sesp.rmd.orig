@@ -75,7 +75,7 @@ depression
 
 ### SESP With Linear Regression
 
-```{r g1,fig.width=9.55,fig.height=4.75,fig.cap=knitr::asis_output("**Figure 1**. Results of SESP With Linear Regression")}
+```{r g1,fig.width=8.55,fig.height=4.05,fig.cap=knitr::asis_output("**Figure 1**. Results of SESP With Linear Regression")}
 system.time({
   g1 = sesp(Depression_prevelence ~ ., data = depression,
             model = 'ols', overlay = 'intersection', cores = 8)
@@ -89,7 +89,7 @@ plot(g1,slicenum = 10) +
 
 ### SESP With Spatial Lag Regression
 
-```{r g2,fig.width=9.55,fig.height=4.75,fig.cap=knitr::asis_output("**Figure 2**. Results of SESP With Spatial Lag Regression")}
+```{r g2,fig.width=8.55,fig.height=4.05,fig.cap=knitr::asis_output("**Figure 2**. Results of SESP With Spatial Lag Regression")}
 system.time({
   g2 = sesp(Depression_prevelence ~ .,
             data = depression,
@@ -104,7 +104,7 @@ plot(g2,slicenum = 10) +
 
 ### SESP With Spatial Error Regression
 
-```{r g3,fig.width=9.55,fig.height=4.75,fig.cap=knitr::asis_output("**Figure 3**. Results of SESP With Spatial Error Regression")}
+```{r g3,fig.width=8.55,fig.height=4.05,fig.cap=knitr::asis_output("**Figure 3**. Results of SESP With Spatial Error Regression")}
 system.time({
   g3 = sesp(Depression_prevelence ~ .,
             data = depression,
@@ -119,7 +119,7 @@ plot(g3,slicenum = 10) +
 
 ### SESP With Spatial Durbin Regression
 
-```{r g4,fig.width=9.55,fig.height=4.75,fig.cap=knitr::asis_output("**Figure 4**. Results of SESP With Spatial Durbin Regression")}
+```{r g4,fig.width=8.55,fig.height=4.05,fig.cap=knitr::asis_output("**Figure 4**. Results of SESP With Spatial Durbin Regression")}
 system.time({
   g4 = sesp(Depression_prevelence ~ ., data = depression,
             model = 'lag', durbin = TRUE, cores = 8)
@@ -133,7 +133,7 @@ plot(g4,slicenum = 10) +
 
 ### SESP With Geographically Weighted Regression
 
-```{r g5,fig.width=9.55,fig.height=4.75,fig.cap=knitr::asis_output("**Figure 5**. Results of SESP With Geographically Weighted Regression")}
+```{r g5,fig.width=8.55,fig.height=4.05,fig.cap=knitr::asis_output("**Figure 5**. Results of SESP With Geographically Weighted Regression")}
 system.time({
   g5 = sesp(Depression_prevelence ~ .,
             data = depression,
