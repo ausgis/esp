@@ -20,10 +20,6 @@ knitr::opts_chunk$set(
 ```r
 install.packages(c("sf","gdverse"), dep = T)
 # install.packages("devtools")
-# install.packages("devtools")
-devtools::install_github("SpatLyu/tidyrgeoda",
-                         build_vignettes = T,
-                         dep = T)
 devtools::install_github("ausgis/sesp",
                          build_vignettes = TRUE,
                          dep = TRUE)
@@ -66,7 +62,7 @@ go1$interaction
 go2$interaction
 ```
 
-## Spatially Explicit Stratified Power Model Under The Spatial Linear Regression Framework
+## Spatially Explicit Stratified Power Model Under The Linear Regression Framework
 
 Using the same data as [the gdverse idsa vignette](https://stscl.github.io/gdverse/articles/idsa.html):
 
@@ -77,77 +73,57 @@ depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
 depression
 ```
 
-### Apply natural breaks to the response variable to generate 3 local zones
-
-```{r Depression_prevelence,fig.width=6.5,fig.height=4,fig.cap=knitr::asis_output("**Figure 1**. Zones of Depression Prevelence")}
-yzone = tidyrgeoda::st_azp_greedy(depression,"Depression_prevelence",3)
-yzone = yzone$Clusters
-depressionmap = sf::st_sf(zones = yzone,geom = sf::st_geometry(depression))
-
-ggplot2::ggplot(data = depressionmap) +
-    ggplot2::geom_sf(ggplot2::aes(color = factor(zones)), alpha = .65) +
-    ggplot2::labs(color = 'zones') +
-    ggplot2::theme_bw()
-```
-
-### Spatially Explicit Stratified Power Model With Linear Regression
+### SESP With Linear Regression
 
 ```{r}
 system.time({
-  g1 = sesp(Depression_prevelence ~ ., data = depression, yzone = yzone,
+  g1 = sesp(Depression_prevelence ~ ., data = depression,
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 g1
 ```
 
-### Spatially Explicit Stratified Power Model With Spatial Lag Regression
+### SESP With Spatial Lag Regression
 
 ```{r}
 system.time({
-  g2 = sesp(Depression_prevelence ~ ., data = depression,
-            yzone = yzone, model = 'lag', cores = 8)
+  g2 = sesp(Depression_prevelence ~ .,
+            data = depression,
+            model = 'lag', cores = 8)
 })
 g2
 ```
 
-### Spatially Explicit Stratified Power Model With Spatial Error Regression
+### SESP With Spatial Error Regression
 
 ```{r}
 system.time({
-  g3 = sesp(Depression_prevelence ~ ., data = depression,
-            yzone = yzone, model = 'error', cores = 8)
+  g3 = sesp(Depression_prevelence ~ .,
+            data = depression,
+            model = 'error', cores = 8)
 })
 g3
 ```
 
-### Spatially Explicit Stratified Power Model With Spatial Durbin Regression
+### SESP With Spatial Durbin Regression
 
 ```{r}
 system.time({
-  g4 = sesp(Depression_prevelence ~ ., data = depression, yzone = yzone,
+  g4 = sesp(Depression_prevelence ~ ., data = depression,
             model = 'lag', durbin = TRUE, cores = 8)
 })
 g4
 ```
 
-### Spatially Explicit Stratified Power Model With Geographically Weighted Regression
+### SESP With Geographically Weighted Regression
 
 ```{r}
 system.time({
-  g5 = sesp(Depression_prevelence ~ ., data = depression,
-            yzone = yzone, model = 'gwr', cores = 8)
+  g5 = sesp(Depression_prevelence ~ .,
+            data = depression,
+            model = 'gwr', cores = 8)
 })
 g5
-```
-
-### Results of local zones-based power of determinat
-
-```{r}
-g1$localq
-g2$localq
-g3$localq
-g4$localq
-g5$localq
 ```
 
 ### Results of optimal spatial discretization
@@ -177,22 +153,22 @@ plot_optdisc = \(g){
 }
 ```
 
-```{r optdisc1,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 2**. Optimal spatial discretization result with linear regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
+```{r optdisc1,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 1**. Optimal spatial discretization result with linear regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
 plot_optdisc(g1)
 ```
 
-```{r optdisc2,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 3**. Optimal spatial discretization result with spatial lag regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
+```{r optdisc2,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 2**. Optimal spatial discretization result with spatial lag regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
 plot_optdisc(g2)
 ```
 
-```{r optdisc3,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 4**. Optimal spatial discretization result with spatial error regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
+```{r optdisc3,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 3**. Optimal spatial discretization result with spatial error regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
 plot_optdisc(g3)
 ```
 
-```{r optdisc4,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 5**. Optimal spatial discretization result with spatial durbin regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
+```{r optdisc4,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 4**. Optimal spatial discretization result with spatial durbin regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
 plot_optdisc(g4)
 ```
 
-```{r optdisc5,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 6**. Optimal spatial discretization result with geographically weighted regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
+```{r optdisc5,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 5**. Optimal spatial discretization result with geographically weighted regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
 plot_optdisc(g5)
 ```
