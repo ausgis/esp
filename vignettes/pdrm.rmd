@@ -1,5 +1,5 @@
 ---
-title: "Q Values Estimation In Statistical Variance and Linear Regression Framework"
+title: "Equivalent Q Values Within Statistical Variance and Linear Regression Framework"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{pdrm}
@@ -9,8 +9,7 @@ vignette: >
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+  collapse = TRUE
 )
 ```
 
