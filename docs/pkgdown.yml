@@ -2,9 +2,10 @@ pandoc: '3.2'
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  pdrm: pdrm.html
   sesp: sesp.html
   whysed: whysed.html
-last_built: 2024-11-07T14:14Z
+last_built: 2024-11-08T04:28Z
 urls:
   reference: https://ausgis.github.io/sesp/reference
   article: https://ausgis.github.io/sesp/articles
