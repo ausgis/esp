@@ -14,10 +14,6 @@ vignette: >
 ```r
 install.packages(c("sf","gdverse"), dep = T)
 # install.packages("devtools")
-# install.packages("devtools")
-devtools::install_github("SpatLyu/tidyrgeoda",
-                         build_vignettes = T,
-                         dep = T)
 devtools::install_github("ausgis/sesp",
                          build_vignettes = TRUE,
                          dep = TRUE)
@@ -43,14 +39,14 @@ go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
            model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    0.42    0.02    0.53
+##    0.41    0.02    0.55
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.05    0.00    0.06
+##    0.07    0.00    0.07
 ```
 
 ### Factor detector
@@ -78,12 +74,12 @@ go2$factor
 
 ``` r
 go1$interaction
-## # A tibble: 3 × 5
-##   Variable              Interaction    Qv1   Qv2  Qv12
-##   <chr>                 <chr>        <dbl> <dbl> <dbl>
-## 1 watershed ∩ elevation Enhance, bi- 0.638 0.607 0.714
-## 2 watershed ∩ soiltype  Enhance, bi- 0.638 0.386 0.736
-## 3 elevation ∩ soiltype  Enhance, bi- 0.607 0.386 0.664
+## # A tibble: 3 × 7
+##   Variable              Interaction    Qv1   Qv2  Qv12 Variable1 Variable2
+##   <chr>                 <chr>        <dbl> <dbl> <dbl> <chr>     <chr>    
+## 1 watershed ∩ elevation Enhance, bi- 0.638 0.607 0.714 watershed elevation
+## 2 watershed ∩ soiltype  Enhance, bi- 0.638 0.386 0.736 watershed soiltype 
+## 3 elevation ∩ soiltype  Enhance, bi- 0.607 0.386 0.664 elevation soiltype
 go2$interaction
 ## # A tibble: 3 × 6
 ##   variable1 variable2 Interaction  `Variable1 Q-statistics` `Variable2 Q-statistics`
@@ -94,7 +90,7 @@ go2$interaction
 ## # ℹ 1 more variable: `Variable1 and Variable2 interact Q-statistics` <dbl>
 ```
 
-## Spatially Explicit Stratified Power Model Under The Spatial Linear Regression Framework
+## Spatially Explicit Stratified Power Model Under The Linear Regression Framework
 
 Using the same data as [the gdverse idsa vignette](https://stscl.github.io/gdverse/articles/idsa.html):
 
@@ -134,108 +130,263 @@ depression
 ## #   DrinkingPlaces <dbl>, X.HouseRent <dbl>, geometry <POINT [°]>
 ```
 
-### Apply natural breaks to the response variable to generate 3 local zones
-
-
-``` r
-yzone = tidyrgeoda::st_azp_greedy(depression,"Depression_prevelence",3)
-## Welcome to tidyrgeoda 0.1.1!
-yzone = yzone$Clusters
-depressionmap = sf::st_sf(zones = yzone,geom = sf::st_geometry(depression))
-
-ggplot2::ggplot(data = depressionmap) +
-    ggplot2::geom_sf(ggplot2::aes(color = factor(zones)), alpha = .65) +
-    ggplot2::labs(color = 'zones') +
-    ggplot2::theme_bw()
-```
-
-![**Figure 1**. Zones of Depression Prevelence](../man/figures/sesp/Depression_prevelence-1.png)
-
-### Spatially Explicit Stratified Power Model With Linear Regression
+### SESP With Linear Regression
 
 
 ``` r
 system.time({
-  g1 = sesp(Depression_prevelence ~ ., data = depression, yzone = yzone,
+  g1 = sesp(Depression_prevelence ~ ., data = depression,
             model = 'ols', overlay = 'intersection', cores = 8)
 })
-## Error in checkForRemoteErrors(val): one node produced an error: length of 'dimnames' [2] not equal to array extent
-## Timing stopped at: 4.09 0.55 28.14
+##    user  system elapsed 
+##    3.74    0.67   22.52
 g1
-## Error: object 'g1' not found
+## ***          Spatially Explicit Stratified Power     
+## 
+##  Q values are estimated using *Ordinary Least Square* 
+## 
+##  -------------- Global Power of Determinant : ------------
+## Variable              Qvalue AIC      BIC      LogLik    
+## PopulationDensity     0.202  4505.365 4505.365 -2246.682 
+## Population65          0.159  4561.304 4561.304 -2274.652 
+## NoHealthInsurance     0.255  4435.513 4435.513 -2209.756 
+## Neighbor_Disadvantage 0.296  4370.901 4370.901 -2179.450 
+## Beer                  0.200  4507.758 4507.758 -2247.879 
+## MentalHealthPati      0.260  4428.205 4428.205 -2206.103 
+## NatureParks           0.181  4533.589 4533.589 -2260.794 
+## Casinos               0.205  4503.507 4503.507 -2244.754 
+## DrinkingPlaces        0.203  4503.855 4503.855 -2245.927 
+## X.HouseRent           0.225  4476.344 4476.344 -2231.172 
+## 
+##  -------------  Global Variable Interaction : ------------
+## Variable                                    Interaction  
+## PopulationDensity ∩ Population65          Enhance, bi- 
+## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
+## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ MentalHealthPati      Enhance, bi- 
+## PopulationDensity ∩ NatureParks           Enhance, bi- 
+## PopulationDensity ∩ Casinos               Enhance, bi- 
+## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
+## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
+## Population65 ∩ NoHealthInsurance          Enhance, bi- 
+## 
+## ! Only the top ten items of global scale are displayed.
+## ! The others can be accessed through specific subsets.
+plot(g1,slicenum = 10) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
 ```
 
-### Spatially Explicit Stratified Power Model With Spatial Lag Regression
+![**Figure 1**. Results of SESP With Linear Regression](../man/figures/sesp/g1-1.png)
+
+### SESP With Spatial Lag Regression
 
 
 ``` r
 system.time({
-  g2 = sesp(Depression_prevelence ~ ., data = depression,
-            yzone = yzone, model = 'lag', cores = 8)
+  g2 = sesp(Depression_prevelence ~ .,
+            data = depression,
+            model = 'lag', cores = 8)
 })
-## Error in checkForRemoteErrors(val): one node produced an error: length of 'dimnames' [2] not equal to array extent
-## Timing stopped at: 6.9 0.73 278.3
+##    user  system elapsed 
+##    5.63    0.61  266.69
 g2
-## Error: object 'g2' not found
+## ***          Spatially Explicit Stratified Power     
+## 
+##  Q values are estimated using *Spatial Lag Model* 
+## 
+##  -------------- Global Power of Determinant : ------------
+## Variable              Qvalue AIC      BIC      LogLik    
+## PopulationDensity     0.154  4333.170 4333.170 -2159.585 
+## Population65          0.122  4370.485 4370.485 -2178.242 
+## NoHealthInsurance     0.216  4267.870 4267.870 -2124.935 
+## Neighbor_Disadvantage 0.289  4248.866 4248.866 -2117.433 
+## Beer                  0.187  4319.936 4319.936 -2149.968 
+## MentalHealthPati      0.240  4288.518 4288.518 -2135.259 
+## NatureParks           0.138  4364.690 4364.690 -2175.345 
+## Casinos               0.153  4346.299 4346.299 -2166.149 
+## DrinkingPlaces        0.160  4330.763 4330.763 -2158.382 
+## X.HouseRent           0.187  4316.759 4316.759 -2150.380 
+## 
+##  -------------  Global Variable Interaction : ------------
+## Variable                                    Interaction  
+## PopulationDensity ∩ Population65          Enhance, bi- 
+## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
+## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ MentalHealthPati      Weaken, uni- 
+## PopulationDensity ∩ NatureParks           Weaken, uni- 
+## PopulationDensity ∩ Casinos               Enhance, bi- 
+## PopulationDensity ∩ DrinkingPlaces        Weaken, uni- 
+## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
+## Population65 ∩ NoHealthInsurance          Weaken, uni- 
+## 
+## ! Only the top ten items of global scale are displayed.
+## ! The others can be accessed through specific subsets.
+plot(g2,slicenum = 10) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
 ```
 
-### Spatially Explicit Stratified Power Model With Spatial Error Regression
+![**Figure 2**. Results of SESP With Spatial Lag Regression](../man/figures/sesp/g2-1.png)
+
+### SESP With Spatial Error Regression
 
 
 ``` r
 system.time({
-  g3 = sesp(Depression_prevelence ~ ., data = depression,
-            yzone = yzone, model = 'error', cores = 8)
+  g3 = sesp(Depression_prevelence ~ .,
+            data = depression,
+            model = 'error', cores = 8)
 })
-## Error in checkForRemoteErrors(val): one node produced an error: length of 'dimnames' [2] not equal to array extent
-## Timing stopped at: 5.59 0.69 145.7
+##    user  system elapsed 
+##    5.16    0.62  142.54
 g3
-## Error: object 'g3' not found
+## ***          Spatially Explicit Stratified Power     
+## 
+##  Q values are estimated using *Spatial Error Model* 
+## 
+##  -------------- Global Power of Determinant : ------------
+## Variable              Qvalue AIC      BIC      LogLik    
+## PopulationDensity     0.199  4288.640 4288.640 -2137.320 
+## Population65          0.156  4335.830 4335.830 -2160.915 
+## NoHealthInsurance     0.253  4230.432 4230.432 -2106.216 
+## Neighbor_Disadvantage 0.289  4238.682 4238.682 -2112.341 
+## Beer                  0.193  4292.395 4292.395 -2139.197 
+## MentalHealthPati      0.247  4262.110 4262.110 -2122.055 
+## NatureParks           0.171  4325.679 4325.679 -2155.839 
+## Casinos               0.184  4305.020 4305.020 -2145.510 
+## DrinkingPlaces        0.198  4295.621 4295.621 -2140.811 
+## X.HouseRent           0.219  4279.959 4279.959 -2131.979 
+## 
+##  -------------  Global Variable Interaction : ------------
+## Variable                                    Interaction  
+## PopulationDensity ∩ Population65          Weaken, uni- 
+## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
+## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ MentalHealthPati      Enhance, bi- 
+## PopulationDensity ∩ NatureParks           Weaken, uni- 
+## PopulationDensity ∩ Casinos               Enhance, bi- 
+## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
+## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
+## Population65 ∩ NoHealthInsurance          Weaken, uni- 
+## 
+## ! Only the top ten items of global scale are displayed.
+## ! The others can be accessed through specific subsets.
+plot(g3,slicenum = 10) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
 ```
 
-### Spatially Explicit Stratified Power Model With Spatial Durbin Regression
+![**Figure 3**. Results of SESP With Spatial Error Regression](../man/figures/sesp/g3-1.png)
+
+### SESP With Spatial Durbin Regression
 
 
 ``` r
 system.time({
-  g4 = sesp(Depression_prevelence ~ ., data = depression, yzone = yzone,
+  g4 = sesp(Depression_prevelence ~ ., data = depression,
             model = 'lag', durbin = TRUE, cores = 8)
 })
-## Error in checkForRemoteErrors(val): one node produced an error: length of 'dimnames' [2] not equal to array extent
-## Timing stopped at: 5.81 0.36 278.7
+##    user  system elapsed 
+##    8.95    0.90  258.64
 g4
-## Error: object 'g4' not found
+## ***          Spatially Explicit Stratified Power     
+## 
+##  Q values are estimated using *Spatial Durbin Model* 
+## 
+##  -------------- Global Power of Determinant : ------------
+## Variable              Qvalue AIC      BIC      LogLik    
+## PopulationDensity     0.211  4291.372 4291.372 -2134.686 
+## Population65          0.163  4340.250 4340.250 -2159.125 
+## NoHealthInsurance     0.261  4238.839 4238.839 -2104.420 
+## Neighbor_Disadvantage 0.316  4226.864 4226.864 -2102.432 
+## Beer                  0.209  4291.057 4291.057 -2134.529 
+## MentalHealthPati      0.296  4247.222 4247.222 -2108.611 
+## NatureParks           0.252  4285.895 4285.895 -2125.948 
+## Casinos               0.237  4291.052 4291.052 -2132.526 
+## DrinkingPlaces        0.210  4294.833 4294.833 -2136.417 
+## X.HouseRent           0.239  4280.458 4280.458 -2127.229 
+## 
+##  -------------  Global Variable Interaction : ------------
+## Variable                                    Interaction  
+## PopulationDensity ∩ Population65          Enhance, bi- 
+## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
+## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ MentalHealthPati      Enhance, bi- 
+## PopulationDensity ∩ NatureParks           Enhance, bi- 
+## PopulationDensity ∩ Casinos               Enhance, bi- 
+## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
+## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
+## Population65 ∩ NoHealthInsurance          Enhance, bi- 
+## 
+## ! Only the top ten items of global scale are displayed.
+## ! The others can be accessed through specific subsets.
+plot(g4,slicenum = 10) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
 ```
 
-### Spatially Explicit Stratified Power Model With Geographically Weighted Regression
+![**Figure 4**. Results of SESP With Spatial Durbin Regression](../man/figures/sesp/g4-1.png)
+
+### SESP With Geographically Weighted Regression
 
 
 ``` r
 system.time({
-  g5 = sesp(Depression_prevelence ~ ., data = depression,
-            yzone = yzone, model = 'gwr', cores = 8)
+  g5 = sesp(Depression_prevelence ~ .,
+            data = depression,
+            model = 'gwr', cores = 8)
 })
-## Error in checkForRemoteErrors(val): 2 nodes produced errors; first error: length of 'dimnames' [2] not equal to array extent
-## Timing stopped at: 5.64 0.65 178.6
+##    user  system elapsed 
+##    8.15    0.78  151.08
 g5
-## Error: object 'g5' not found
+## ***          Spatially Explicit Stratified Power     
+## 
+##  Q values are estimated using *Geographically Weighted Regression* 
+## 
+##  -------------- Global Power of Determinant : ------------
+## Variable              Qvalue AIC      
+## PopulationDensity     0.366  4260.457 
+## Population65          0.317  4337.745 
+## NoHealthInsurance     0.254  4429.183 
+## Neighbor_Disadvantage 0.354  4277.147 
+## Beer                  0.350  4288.285 
+## MentalHealthPati      0.367  4258.876 
+## NatureParks           0.266  4412.671 
+## Casinos               0.307  4354.933 
+## DrinkingPlaces        0.294  4373.148 
+## X.HouseRent           0.370  4255.989 
+## 
+##  -------------  Global Variable Interaction : ------------
+## Variable                                    Interaction  
+## PopulationDensity ∩ Population65          Enhance, bi- 
+## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
+## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ MentalHealthPati      Enhance, bi- 
+## PopulationDensity ∩ NatureParks           Weaken, uni- 
+## PopulationDensity ∩ Casinos               Weaken, uni- 
+## PopulationDensity ∩ DrinkingPlaces        Weaken, uni- 
+## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
+## Population65 ∩ NoHealthInsurance          Weaken, uni- 
+## 
+## ! Only the top ten items of global scale are displayed.
+## ! The others can be accessed through specific subsets.
+plot(g5,slicenum = 10) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
 ```
 
-### Results of local zones-based power of determinat
-
-
-``` r
-g1$localq
-## Error: object 'g1' not found
-g2$localq
-## Error: object 'g2' not found
-g3$localq
-## Error: object 'g3' not found
-g4$localq
-## Error: object 'g4' not found
-g5$localq
-## Error: object 'g5' not found
-```
+![**Figure 5**. Results of SESP With Geographically Weighted Regression](../man/figures/sesp/g5-1.png)
 
 ### Results of optimal spatial discretization
 
@@ -268,29 +419,34 @@ plot_optdisc = \(g){
 
 ``` r
 plot_optdisc(g1)
-## Error: object 'g1' not found
 ```
+
+![**Figure 6**. Optimal spatial discretization result with linear regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc1-1.png)
 
 
 ``` r
 plot_optdisc(g2)
-## Error: object 'g2' not found
 ```
+
+![**Figure 7**. Optimal spatial discretization result with spatial lag regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc2-1.png)
 
 
 ``` r
 plot_optdisc(g3)
-## Error: object 'g3' not found
 ```
+
+![**Figure 8**. Optimal spatial discretization result with spatial error regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc3-1.png)
 
 
 ``` r
 plot_optdisc(g4)
-## Error: object 'g4' not found
 ```
+
+![**Figure 9**. Optimal spatial discretization result with spatial durbin regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc4-1.png)
 
 
 ``` r
 plot_optdisc(g5)
-## Error: object 'g5' not found
 ```
+
+![**Figure 10**. Optimal spatial discretization result with geographically weighted regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc5-1.png)
