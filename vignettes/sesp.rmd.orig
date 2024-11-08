@@ -26,7 +26,7 @@ devtools::install_github("ausgis/sesp",
 ```
 
 
-```{r}
+```{r loadrpkg}
 library(sf)
 library(sesp)
 library(gdverse)
@@ -34,7 +34,7 @@ library(gdverse)
 
 ## Equivalence of Q Values in the Native Geographical Detector and Linear Regression Framework
 
-```{r}
+```{r eqsvlm}
 NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
 
 system.time({
@@ -50,14 +50,14 @@ go2 = gd(incidence ~ ., data = NTDs,
 
 ### Factor detector
 
-```{r}
+```{r fd}
 go1$factor
 go2$factor
 ```
 
 ### Interaction detector
 
-```{r}
+```{r id}
 go1$interaction
 go2$interaction
 ```
@@ -66,7 +66,7 @@ go2$interaction
 
 Using the same data as [the gdverse idsa vignette](https://stscl.github.io/gdverse/articles/idsa.html):
 
-```{r}
+```{r load_data}
 depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
   readr::read_csv() |>
   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
@@ -75,13 +75,13 @@ depression
 
 ### SESP With Linear Regression
 
-```{r}
+```{r g1,fig.width=9.55,fig.height=4.75,fig.cap=knitr::asis_output("**Figure 1**. Results of SESP With Linear Regression")}
 system.time({
   g1 = sesp(Depression_prevelence ~ ., data = depression,
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 g1
-plot(g1,slicenum = 3) +
+plot(g1,slicenum = 10) +
   ggplot2::theme(axis.text.x = ggplot2::element_text(
                                   angle = 30,vjust = 0.85,hjust = 0.75)
                 )
@@ -89,50 +89,66 @@ plot(g1,slicenum = 3) +
 
 ### SESP With Spatial Lag Regression
 
-```{r}
+```{r g2,fig.width=9.55,fig.height=4.75,fig.cap=knitr::asis_output("**Figure 2**. Results of SESP With Spatial Lag Regression")}
 system.time({
   g2 = sesp(Depression_prevelence ~ .,
             data = depression,
             model = 'lag', cores = 8)
 })
 g2
+plot(g2,slicenum = 10) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
 ```
 
 ### SESP With Spatial Error Regression
 
-```{r}
+```{r g3,fig.width=9.55,fig.height=4.75,fig.cap=knitr::asis_output("**Figure 3**. Results of SESP With Spatial Error Regression")}
 system.time({
   g3 = sesp(Depression_prevelence ~ .,
             data = depression,
             model = 'error', cores = 8)
 })
 g3
+plot(g3,slicenum = 10) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
 ```
 
 ### SESP With Spatial Durbin Regression
 
-```{r}
+```{r g4,fig.width=9.55,fig.height=4.75,fig.cap=knitr::asis_output("**Figure 4**. Results of SESP With Spatial Durbin Regression")}
 system.time({
   g4 = sesp(Depression_prevelence ~ ., data = depression,
             model = 'lag', durbin = TRUE, cores = 8)
 })
 g4
+plot(g4,slicenum = 10) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
 ```
 
 ### SESP With Geographically Weighted Regression
 
-```{r}
+```{r g5,fig.width=9.55,fig.height=4.75,fig.cap=knitr::asis_output("**Figure 5**. Results of SESP With Geographically Weighted Regression")}
 system.time({
   g5 = sesp(Depression_prevelence ~ .,
             data = depression,
             model = 'gwr', cores = 8)
 })
 g5
+plot(g5,slicenum = 10) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
 ```
 
 ### Results of optimal spatial discretization
 
-```{r}
+```{r plot_optdisc}
 plot_optdisc = \(g){
  gmap = sf::st_set_geometry(g$optdisc,sf::st_geometry(depression))
 
