@@ -429,9 +429,9 @@ plot.sespm = \(x, slicenum = 2, ...) {
     dplyr::mutate(Variable = forcats::fct_reorder(Variable, Qvalue, .desc = TRUE)) |>
     dplyr::mutate(Variable_col = c("first",rep("others",times = nrow(x$factor)-1))) |>
     dplyr::mutate(Qvtext = paste0(sprintf("%4.2f", Qvalue * 100), "%"))
-  fig_factor = ggplot2::ggplot(g_factor,
-                               ggplot2::aes(x = Qvalue, y = Variable,
-                                            fill = Variable_col)) +
+  fig1 = ggplot2::ggplot(g_factor,
+                         ggplot2::aes(x = Qvalue, y = Variable,
+                                      fill = Variable_col)) +
     ggplot2::geom_col() +
     ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.1))) +
     ggplot2::scale_y_discrete(limits = rev) +
@@ -447,7 +447,42 @@ plot.sespm = \(x, slicenum = 2, ...) {
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid.major.y = ggplot2::element_blank(),
                    axis.text.y = ggplot2::element_text(face = "bold.italic"),
-                   legend.position = "off", ...)
+                   legend.position = "off")
 
-  return(fig_factor)
+  gv1 = dplyr::count(x$interaction,Variable1)
+  gv2 = dplyr::count(x$interaction,Variable2)
+  gv = gv1 |>
+    dplyr::left_join(gv2,by = 'n') |>
+    dplyr::arrange(dplyr::desc(n))
+  g_interaction = dplyr::mutate(x$interaction,
+                      Variable1 = factor(Variable1,levels = gv$Variable1),
+                      Variable2 = factor(Variable2,levels = rev(gv$Variable2))
+                  )
+  fig2 = ggplot2::ggplot(g_interaction,
+                         ggplot2::aes(x = Variable1, y = Variable2,
+                                      size = Qv12, color = Interaction)) +
+    ggplot2::geom_point(alpha = 1) +
+    ggplot2::scale_size(range = c(1,5)) +
+    ggplot2::guides(size = ggplot2::guide_legend(
+      override.aes = list(shape = 21,
+                          fill = "transparent",
+                          color = "black"))) +
+    ggplot2::scale_color_manual(values = c("Enhance, nonlinear" = "#EA4848",
+                                           "Independent" = "#E08338",
+                                           "Enhance, bi-" = "#F2C55E",
+                                           "Weaken, uni-" = "#6EE9EF",
+                                           "Weaken, nonlinear" = "#558DE8")) +
+    ggplot2::labs(x = "", y = "", size = "", color = "") +
+    ggplot2::coord_fixed() +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.text.y = ggplot2::element_text(face = "bold.italic"),
+      axis.text.x = ggplot2::element_text(face = "bold.italic"),
+      legend.position = "inside",
+      legend.justification = c('right','bottom'),
+      legend.background = ggplot2::element_rect(fill = 'transparent')
+    )
+
+  fig_p = patchwork::wrap_plots(fig1,fig2, ncol = 2)
+  return(fig_p)
 }
