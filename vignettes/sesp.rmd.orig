@@ -81,7 +81,10 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 g1
-plot(g1,slicenum = 3)
+plot(g1,slicenum = 3) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
 ```
 
 ### SESP With Spatial Lag Regression
