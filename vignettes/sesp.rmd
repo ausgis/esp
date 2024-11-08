@@ -39,14 +39,14 @@ go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
            model = 'ols', overlay = 'intersection')
 })
 ##    user  system elapsed 
-##    0.41    0.02    0.55
+##    0.26    0.02    0.66
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
 ##    user  system elapsed 
-##    0.07    0.00    0.07
+##    0.04    0.00    0.09
 ```
 
 ### Factor detector
@@ -100,9 +100,9 @@ depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
   readr::read_csv() |>
   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
 ## Rows: 1072 Columns: 13
-## ── Column specification ───────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────
 ## Delimiter: ","
-## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neig...
+## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neigh...
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -139,7 +139,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    3.74    0.67   22.52
+##    4.19    0.73   31.17
 g1
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -191,7 +191,7 @@ system.time({
             model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    5.63    0.61  266.69
+##    6.02    0.69  252.30
 g2
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -243,7 +243,7 @@ system.time({
             model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    5.16    0.62  142.54
+##    8.03    0.80  134.53
 g3
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -294,7 +294,7 @@ system.time({
             model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##    8.95    0.90  258.64
+##    7.45    0.65  251.24
 g4
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -346,7 +346,7 @@ system.time({
             model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    8.15    0.78  151.08
+##    8.59    1.01  149.15
 g5
 ## ***          Spatially Explicit Stratified Power     
 ## 
