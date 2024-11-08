@@ -464,11 +464,7 @@ plot.sespm = \(x, slicenum = 2, ...) {
                          ggplot2::aes(x = Variable1, y = Variable2,
                                       size = Qv12, color = Interaction)) +
     ggplot2::geom_point(alpha = 1) +
-    ggplot2::scale_size(range = c(1,10)) +
-    ggplot2::guides(size = ggplot2::guide_legend(
-      override.aes = list(shape = 21,
-                          fill = "transparent",
-                          color = "black"))) +
+    ggplot2::scale_size(range = c(1,10),guide = 'none') +
     ggplot2::scale_color_manual(values = c("Enhance, nonlinear" = "#EA4848",
                                            "Independent" = "#E08338",
                                            "Enhance, bi-" = "#F2C55E",
@@ -482,9 +478,7 @@ plot.sespm = \(x, slicenum = 2, ...) {
       axis.text.x = ggplot2::element_text(family = 'serif',face = "bold.italic"),
       legend.position = "inside",
       legend.justification = c('right','bottom'),
-      legend.background = ggplot2::element_rect(fill = 'transparent', a),
-      legend.spacing = ggplot2::unit(0, "cm"),
-      legend.margin = ggplot2::margin(0, 0, 0, 0)
+      legend.background = ggplot2::element_rect(fill = 'transparent')
     )
 
   fig_p = patchwork::wrap_plots(fig1,fig2, ncol = 2)
