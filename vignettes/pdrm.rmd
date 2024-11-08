@@ -1,0 +1,74 @@
+---
+title: "Q Values Estimation In Statistical Variance and Linear Regression Framework"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{pdrm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+### 1. **Q Values**
+
+$$
+q = 1 - \frac{\sum\limits_{h = 1}^{L}N_h\sigma_h^2}{N\sigma^2} 
+  = 1 - \frac{\sum\limits_{h = 1}^{L}\sum\limits_{i = 1}^{N_h}\left({y_{hi} - \overline{y}_h}^2\right)}{\sum\limits_{i = 1}^{N} \left({y_i - \overline{y}}^2\right)}
+$$
+
+### 2. **Linear Regression Model with Dummy Variables**
+
+Consider a linear regression model where the response variable $y$ depends on $k$ dummy variables $D_1, D_2, \dots, D_k$. Each dummy variable $D_j$ indicates membership in a particular category or group, taking the value 1 if an observation belongs to category $j$ and 0 otherwise. The model is expressed as:
+
+$$
+y_i = \beta_0 + \beta_1 D_{i1} + \beta_2 D_{i2} + \cdots + \beta_k D_{ik} + \epsilon_i
+$$
+
+where: $y_i$ is the response variable for the $i$-th observation, $\beta_0$ is the intercept term, $\beta_j$ is the coefficient associated with dummy variable $D_j$, $D_{ij}$ is the value of dummy variable $D_j$ for the $i$-th observation, which is 1 if the $i$-th observation belongs to category $j$ and 0 otherwise, $\epsilon_i$ is the error term.
+
+### 3. **Behavior of Dummy Variables**
+
+Each observation belongs to exactly one of the categories represented by the dummy variables. If the $i$-th observation belongs to category $j$, then $D_{ij} = 1$ and all other dummy variables are `0` for that observation. Thus, the regression equation for observation $i$ belonging to category $j$ simplifies to:
+
+$$
+y_i = \beta_0 + \beta_j + \epsilon_i
+$$
+
+This equation holds for all observations $i$ that belong to category $j$.
+
+### 4. **Predicted Value for a Category**
+
+The predicted value $\widehat{y}_j$ for an observation in category $j$ is the expected value of $y_i$, given that $D_{ij} = 1$ and the other dummy variables are `0`. Since the error term $\epsilon_i$ has an expected value of 0, the predicted value for category $j$ is:
+
+$$
+\widehat{y}_j = \mathbb{E}(y_i | D_{ij} = 1) = \beta_0 + \beta_j
+$$
+
+### 5. **Ordinary Least Squares (OLS) Estimation**
+
+In linear regression, the coefficients $\beta_0, \beta_1, \dots, \beta_k$ are estimated using the Ordinary Least Squares (OLS) method, which minimizes the sum of squared residuals:
+
+$$
+\text{Minimize } \sum_{i=1}^n (y_i - \widehat{y}_i)^2
+$$
+
+The OLS solution leads to the estimate of $\beta_j$ for each dummy variable such that the predicted value $\widehat{y}_j = \beta_0 + \beta_j$ represents the mean value of $y_i$ for all observations in category $j$. Specifically, OLS ensures that:
+
+$$
+\widehat{y}_j = \frac{1}{N_j} \sum_{i: D_{ij} = 1} y_i = \bar{y}_j
+$$
+
+where $N_j$ is the number of observations in category $j$, and $\bar{y}_j$ is the mean response for category $j$.
+
+so :
+
+$$
+q = 1 - \frac{\sum\limits_{h = 1}^{L}N_h\sigma_h^2}{N\sigma^2} 
+  = 1 - \frac{\sum\limits_{h = 1}^{L}\sum\limits_{i = 1}^{N_h}\left({y_{hi} - \overline{y}_h}^2\right)}{\sum\limits_{i = 1}^{N} \left({y_i - \overline{y}}^2\right)} = 
+\frac{\sum\limits_{i = 1}^{N}\left({y_i - \widehat{y}_i}^2\right)}{\sum\limits_{i = 1}^{N}\left({y_i - \overline{y}}^2\right)} = R^2
+$$
