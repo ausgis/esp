@@ -13,10 +13,12 @@ navbar:
     articles:
       text: Vignettes
       menu:
-      - text: Spatially Explicit Stratified Power Model
-        href: articles/sesp.html
       - text: Why Is Spatially Explicit Discretization Necessary?
         href: articles/whysed.html
+      - text: Equivalent Q Values Within Statistical Variance and Linear Regression Framework
+        href: articles/pdrm.html
+      - text: Spatially Explicit Stratified Power Model
+        href: articles/sesp.html
 
 home:
   title: |
