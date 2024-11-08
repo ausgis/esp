@@ -81,6 +81,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 g1
+plot(g1,slicenum = 3)
 ```
 
 ### SESP With Spatial Lag Regression
@@ -153,22 +154,22 @@ plot_optdisc = \(g){
 }
 ```
 
-```{r optdisc1,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 1**. Optimal spatial discretization result with linear regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
+```{r optdisc1,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 6**. Optimal spatial discretization result with linear regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
 plot_optdisc(g1)
 ```
 
-```{r optdisc2,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 2**. Optimal spatial discretization result with spatial lag regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
+```{r optdisc2,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 7**. Optimal spatial discretization result with spatial lag regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
 plot_optdisc(g2)
 ```
 
-```{r optdisc3,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 3**. Optimal spatial discretization result with spatial error regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
+```{r optdisc3,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 8**. Optimal spatial discretization result with spatial error regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
 plot_optdisc(g3)
 ```
 
-```{r optdisc4,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 4**. Optimal spatial discretization result with spatial durbin regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
+```{r optdisc4,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 9**. Optimal spatial discretization result with spatial durbin regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
 plot_optdisc(g4)
 ```
 
-```{r optdisc5,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 5**. Optimal spatial discretization result with geographically weighted regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
+```{r optdisc5,fig.width=6.5,fig.height=7,fig.cap=knitr::asis_output("**Figure 10**. Optimal spatial discretization result with geographically weighted regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.")}
 plot_optdisc(g5)
 ```

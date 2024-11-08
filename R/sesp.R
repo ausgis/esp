@@ -426,6 +426,7 @@ print.sespm = \(x, ...) {
 #' @noRd
 plot.sespm = \(x, slicenum = 2, ...) {
   g_factor = x$factor |>
+    dplyr::arrange(dplyr::desc(Qvalue)) |>
     dplyr::mutate(Variable = forcats::fct_reorder(Variable, Qvalue, .desc = TRUE)) |>
     dplyr::mutate(Variable_col = c("first",rep("others",times = nrow(x$factor)-1))) |>
     dplyr::mutate(Qvtext = paste0(sprintf("%4.2f", Qvalue * 100), "%"))
@@ -446,7 +447,8 @@ plot.sespm = \(x, slicenum = 2, ...) {
     ggplot2::labs(x = "", y = "") +
     ggplot2::theme_bw() +
     ggplot2::theme(panel.grid.major.y = ggplot2::element_blank(),
-                   axis.text.y = ggplot2::element_text(face = "bold.italic"),
+                   axis.text.y = ggplot2::element_text(family = 'serif',
+                                                       face = "bold.italic"),
                    legend.position = "off")
 
   gv1 = dplyr::count(x$interaction,Variable1)
@@ -476,8 +478,8 @@ plot.sespm = \(x, slicenum = 2, ...) {
     ggplot2::coord_fixed() +
     ggplot2::theme_bw() +
     ggplot2::theme(
-      axis.text.y = ggplot2::element_text(face = "bold.italic"),
-      axis.text.x = ggplot2::element_text(face = "bold.italic"),
+      axis.text.y = ggplot2::element_text(family = 'serif',face = "bold.italic"),
+      axis.text.x = ggplot2::element_text(family = 'serif',face = "bold.italic"),
       legend.position = "inside",
       legend.justification = c('right','bottom'),
       legend.background = ggplot2::element_rect(fill = 'transparent')
