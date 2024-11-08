@@ -8,7 +8,6 @@ sesp(
   formula,
   data,
   listw = NULL,
-  yzone = NULL,
   discvar = "all",
   discnum = 3:8,
   model = "ols",
@@ -29,10 +28,7 @@ sesp(
 \item{data}{An \code{sf} object of observation data. Please note that the column names of the independent
 variables should not be \code{all} or \code{none}.}
 
-\item{listw}{(optional) A list of \code{listw}. See \code{spdep::mat2listw()} and \code{spdep::nb2listw()} for details.}
-
-\item{yzone}{(optional) Spatial zones of the response variable. When \emph{yzone} is \code{NULL}, the local zones
-q value is not calculated. Default is \code{NULL}.}
+\item{listw}{(optional) A \code{listw} object. See \code{spdep::mat2listw()} and \code{spdep::nb2listw()} for details.}
 
 \item{discvar}{(optional) Name of continuous variable columns that need to be discretized. Noted that
 when \code{formula} has \code{discvar}, \code{data} must have these columns. Default is \code{all}, which means all independent
@@ -72,8 +68,6 @@ A list.
 \item{\code{factor}}{global factor detection result}
 \item{\code{interaction}}{global interactive detection results}
 \item{\code{optdisc}}{independent variable optimal spatial discretization}
-\item{\code{localq}}{q values of explanatory variables under different response zones}
-\item{\code{zone}}{zones of the response variable}
 \item{\code{allfactor}}{factor detection results corresponding to different numbers of discreteization}
 \item{\code{model}}{regression model used to estimate equivalent q values}
 }
