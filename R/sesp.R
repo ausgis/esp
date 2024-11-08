@@ -418,3 +418,33 @@ print.sespm = \(x, ...) {
   cat("\n! Only the top ten items of global scale are displayed.")
   cat("\n! The others can be accessed through specific subsets.\n")
 }
+
+#' @title plot sesp model
+#' @export
+#' @noRd
+plot.sespm = \(x, slicenum = 2, ...) {
+  g_factor = x$factor |>
+    dplyr::mutate(Variable = forcats::fct_reorder(Variable, Qvalue, .desc = TRUE)) |>
+    dplyr::mutate(Variable_col = c("first",rep("others",times = nrow(x$factor)-1))) |>
+    dplyr::mutate(Qvtext = paste0(sprintf("%4.2f", Qvalue * 100), "%"))
+  fig_factor = ggplot2::ggplot(g_factor,
+                               ggplot2::aes(x = Qvalue, y = Variable,
+                                            fill = Variable_col)) +
+    ggplot2::geom_col() +
+    ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.1))) +
+    ggplot2::scale_y_discrete(limits = rev) +
+    ggplot2::scale_fill_manual(breaks = c("first", "others"),
+                               values = c("#DE3533","#808080")) +
+    ggplot2::geom_text(data = dplyr::slice(g, seq(1,slicenum)),
+                       ggplot2::aes(label = Qvtext),
+                       hjust = 1.25, color = "black", fontface = "bold") +
+    ggplot2::geom_text(data = dplyr::slice(g, -seq(1,slicenum)),
+                       ggplot2::aes(label = Qvtext),
+                       hjust = -0.1, color = "black", fontface = "bold") +
+    ggplot2::labs(x = "", y = "") +
+    ggplot2::theme_bw() +
+    ggplot2::theme(panel.grid.major.y = ggplot2::element_blank(),
+                   legend.position = "off", ...)
+
+  return(fig_factor)
+}

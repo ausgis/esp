@@ -31,6 +31,8 @@ Depends:
 Imports: 
     ClustGeo,
     dplyr,
+    forcats,
+    ggplot2,
     GWmodel3,
     magrittr,
     parallel,
