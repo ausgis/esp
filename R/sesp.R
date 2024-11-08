@@ -9,9 +9,7 @@
 #' @param formula A formula for enhanced stratified power model.
 #' @param data An `sf` object of observation data. Please note that the column names of the independent
 #' variables should not be `all` or `none`.
-#' @param listw (optional) A list of `listw`. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
-#' @param yzone (optional) Spatial zones of the response variable. When *yzone* is `NULL`, the local zones
-#' q value is not calculated. Default is `NULL`.
+#' @param listw (optional) A `listw` object. See `spdep::mat2listw()` and `spdep::nb2listw()` for details.
 #' @param discvar (optional) Name of continuous variable columns that need to be discretized. Noted that
 #' when `formula` has `discvar`, `data` must have these columns. Default is `all`, which means all independent
 #' variables are used as `discvar`. When `discvar` is set to `none`, all independent variables do not need to
@@ -38,8 +36,6 @@
 #' \item{\code{factor}}{global factor detection result}
 #' \item{\code{interaction}}{global interactive detection results}
 #' \item{\code{optdisc}}{independent variable optimal spatial discretization}
-#' \item{\code{localq}}{q values of explanatory variables under different response zones}
-#' \item{\code{zone}}{zones of the response variable}
 #' \item{\code{allfactor}}{factor detection results corresponding to different numbers of discreteization}
 #' \item{\code{model}}{regression model used to estimate equivalent q values}
 #' }
@@ -51,7 +47,7 @@
 #'          model = 'ols', overlay = 'intersection', cores = 1)
 #' g
 #'
-sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3:8,
+sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
          model = 'ols', durbin = FALSE, overlay = 'and', alpha = 0.5, bw = "AIC",
          adaptive = TRUE, kernel = "gaussian", increase_rate = 0.05, cores = 1, ...) {
   if (!(model %in% c("ols","gwr","lag","error"))){
@@ -100,14 +96,7 @@ sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3
   if (is.null(listw)){
     globallw = spdep::nb2listw(sdsfun::spdep_nb(data), style = "W", zero.policy = TRUE)
   } else {
-    if(inherits(listw,"list")){
-      if (length(listw) != (length(unique(yzone)) + 1)) {
-        stop('The listw needs to be set for both the global and individual yzone, then preserved in a list.')
-      }
-      globallw = listw[[1]]
-    } else {
-      stop("The listw needs to be preserved in a list.")
-    }
+    globallw = listw
   }
 
   if (any(discvar == "all")){
@@ -404,129 +393,12 @@ sesp = \(formula, data, listw = NULL, yzone = NULL, discvar = "all", discnum = 3
                            Qv2 = qv_disc[variable2],
                            Qv12 = qv_disc[Interactname])
 
-  if (is.null(yzone)) {
-    localqv = NULL
-  } else {
-    if (is.null(listw)) {
-      locallw = purrr::map(unique(yzone),
-                           \(.yz) spdep::nb2listw(sdsfun::spdep_nb(data[which(yzone == .yz),]),
-                                                  style = "W", zero.policy = TRUE))
-    } else {
-      locallw = listw[-1]
-    }
-
-    get_slmlocal = \(n,model,durbin,bw,adaptive,kernel){
-      zs = unique(yzone)[n]
-      opt_discdf = opt_discdf[which(yzone == zs),]
-      listw = locallw[[n]]
-      geom = sf::st_geometry(data[which(yzone == zs),])
-      dummydf = sdsfun::dummy_tbl(opt_discdf)
-      slmlevelvar = names(dummydf)
-      slmx = sapply(names(opt_discdf), function(x) {
-        matched = grep(paste0("^", x, "_"), slmlevelvar, value = TRUE)
-        res = paste(matched, collapse = "+")
-        return(unname(res))
-      })
-      dummydf = dplyr::bind_cols(tibble::tibble(y = yvec[which(yzone == zs)]),
-                                 dummydf)
-
-      suppressMessages({slm_res = purrr::map_dfc(slmx, \(.varname) {
-        slmformula = paste0("y ~ ",.varname)
-        suppressWarnings({if (model == "lag") {
-          g = spatialreg::lagsarlm(slmformula, dummydf, listw,
-                                   Durbin = durbin,zero.policy = TRUE)
-        } else if (model == "error") {
-          g = spatialreg::errorsarlm(slmformula, dummydf, listw,
-                                     Durbin = durbin,zero.policy = TRUE)
-        } else if (model == "gwr") {
-          dummydf = sf::st_set_geometry(dummydf,geom)
-          g = GWmodel3::gwr_basic(
-            slmformula, dummydf, bw = bw, adaptive = adaptive, kernel = kernel
-          )
-        } else {
-          g = stats::lm(slmformula, dummydf)
-        }})
-
-        if (model != "gwr") {
-          aicv = stats::AIC(g)
-          bicv = stats::AIC(g)
-          loglikv = as.numeric(stats::logLik(g))
-          if (model == 'error'){
-            fity = as.numeric(stats::predict(g, pred.type = 'trend', listw = listw, re.form = NA))
-          } else {
-            fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
-          }
-          return(list("pred" = fity, "AIC" = aicv,
-                      "BIC" = bicv, "LogLik" = loglikv))
-        } else {
-          aicv = g$diagnostic$AIC
-          fity = stats::predict(g,dummydf)$yhat
-          return(list("pred" = fity, "AIC" = aicv))
-        }
-      })})
-      return(slm_res)
-    }
-    if (doclust) {
-      slmres = parallel::parLapply(cores, seq_along(unique(yzone)), get_slmlocal, model = model,
-                                   durbin = durbin, bw = bw, adaptive = adaptive, kernel = kernel)
-    } else {
-      slmres = purrr::map(seq_along(unique(yzone)), get_slmlocal, model = model,
-                          durbin = durbin, bw = bw, adaptive = adaptive, kernel = kernel)
-    }
-
-    y_pred = purrr::map(slmres, \(.df){
-      .res = dplyr::select(.df,dplyr::starts_with("pred"))
-      names(.res) = xvarname
-      return(.res)
-    })
-
-    aicv = purrr::map(slmres, \(.df){
-      .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("AIC")),1)
-      names(.res) = xvarname
-      return(.res)
-    })
-    if (model != "gwr") {
-      bicv = purrr::map(slmres, \(.df){
-        .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("BIC")),1)
-        names(.res) = xvarname
-        return(.res)
-      })
-      loglikv = purrr::map(slmres, \(.df){
-        .res = dplyr::slice(dplyr::select(.df,dplyr::starts_with("LogLik")),1)
-        names(.res) = xvarname
-        return(.res)
-      })
-      localqv = purrr::map_dfr(seq_along(y_pred),\(n){
-        qvalue = SLMQ(yvec[which(yzone == unique(yzone)[n])],
-                      as.matrix(y_pred[[n]]))
-        resqv = tibble::tibble(Variable = names(aicv[[n]]),
-                               Qvalue = qvalue,
-                               AIC = as.numeric(aicv[[n]]),
-                               BIC = as.numeric(bicv[[n]]),
-                               LogLik = as.numeric(loglikv[[n]]),
-                               Zone = unique(yzone)[n])
-        return(resqv)
-      })} else {
-        localqv = purrr::map_dfr(seq_along(y_pred),\(n){
-          qvalue = SLMQ(yvec[which(yzone == unique(yzone)[n])],
-                        as.matrix(y_pred[[n]]))
-          resqv = tibble::tibble(Variable = names(aicv[[n]]),
-                                 Qvalue = qvalue,
-                                 AIC = as.numeric(aicv[[n]]),
-                                 Zone = unique(yzone)[n])
-          return(resqv)
-        })
-      }
-  }
-
   opt_fdv$Variable = as.character(opt_fdv$Variable)
   fdv$Variable = as.character(fdv$Variable)
   names(opt_discdf) = xvarname
   res = list("factor" = opt_fdv,
              "interaction" = opt_idv,
              "optdisc" = opt_discdf,
-             "localq" = localqv,
-             "zone" = yzone,
              "allfactor" = fdv,
              "model" = SLMUsed(model,durbin))
   class(res) = "sespm"
