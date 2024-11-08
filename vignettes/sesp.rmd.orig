@@ -20,6 +20,10 @@ knitr::opts_chunk$set(
 ```r
 install.packages(c("sf","gdverse"), dep = T)
 # install.packages("devtools")
+# install.packages("devtools")
+devtools::install_github("SpatLyu/tidyrgeoda",
+                         build_vignettes = T,
+                         dep = T)
 devtools::install_github("ausgis/sesp",
                          build_vignettes = TRUE,
                          dep = TRUE)
@@ -76,7 +80,8 @@ depression
 ### Apply natural breaks to the response variable to generate 3 local zones
 
 ```{r Depression_prevelence,fig.width=6.5,fig.height=4,fig.cap=knitr::asis_output("**Figure 1**. Zones of Depression Prevelence")}
-yzone = sdsfun::discretize_vector(depression$Depression_prevelence,3,method = 'natural')
+yzone = tidyrgeoda::st_azp_greedy(depression,"Depression_prevelence",3)
+yzone = yzone$Clusters
 depressionmap = sf::st_sf(zones = yzone,geom = sf::st_geometry(depression))
 
 ggplot2::ggplot(data = depressionmap) +
