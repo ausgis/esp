@@ -51,7 +51,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ausgis/sesp/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/stscl/sesp/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -67,7 +67,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Spatially Explicit Stratified Power Model</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/ausgis/sesp/blob/HEAD/vignettes/sesp.rmd" class="external-link"><code>vignettes/sesp.rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/stscl/sesp/blob/HEAD/vignettes/sesp.rmd" class="external-link"><code>vignettes/sesp.rmd</code></a></small>
       <div class="d-none name"><code>sesp.rmd</code></div>
     </div>
 
@@ -79,13 +79,11 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sf"</span>,<span class="st">"gdverse"</span><span class="op">)</span>, dep <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ausgis/sesp"</span>,</span>
-<span>                         build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                         dep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"stscl/sesp"</span>,build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>,dep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span><span class="co">## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ausgis.github.io/sesp/">sesp</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/sesp/">sesp</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/gdverse/" class="external-link">gdverse</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
