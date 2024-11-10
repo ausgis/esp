@@ -47,7 +47,7 @@ Imports:
     tidyr,
     utils
 Suggests: 
-    gdverse,
+    gdverse (>= 1.2),
     knitr,
     Rcpp,
     RcppArmadillo,
