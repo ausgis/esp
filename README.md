@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# sesp <a href="https://ausgis.github.io/sesp/"><img src="man/figures/logo.png" align="right" height="139" alt="sesp website" /></a>
+# sesp <a href="https://stscl.github.io/sesp/"><img src="man/figures/logo.png" align="right" height="139" alt="sesp website" /></a>
 
 <!-- badges: start -->
 
@@ -18,22 +18,22 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-cyan.svg)](htt
 <!-- ``` r -->
 <!-- install.packages("sesp") -->
 <!-- ``` -->
-<!-- - Install development binary version from [R-universe](https://ausgis.r-universe.dev/sesp) with: -->
+<!-- - Install development binary version from [R-universe](https://stscl.r-universe.dev/sesp) with: -->
 <!-- ``` r -->
 <!-- install.packages('sesp', -->
-<!--                  repos = c("https://ausgis.r-universe.dev", -->
+<!--                  repos = c("https://stscl.r-universe.dev", -->
 <!--                            "https://cloud.r-project.org"), -->
 <!--                  dep = TRUE) -->
 <!-- ``` -->
 
 - Install development source version from
-  [GitHub](https://github.com/ausgis/sesp) with:
+  [GitHub](https://github.com/stscl/sesp) with:
 
 ``` r
 if (!requireNamespace("devtools")) {
     install.packages("devtools")
 }
-devtools::install_github("ausgis/sesp",
+devtools::install_github("stscl/sesp",
                          build_vignettes = TRUE,
                          dep = TRUE)
 ```
