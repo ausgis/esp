@@ -23,7 +23,7 @@ We demonstrate the necessity of the spatial explicit discretization (discretizat
 ```r
 install.packages("gdverse",dep = TRUE)
 # install.packages("devtools")
-devtools::install_github("ausgis/sesp",build_vignettes = TRUE,dep = TRUE)
+devtools::install_github("stscl/sesp",build_vignettes = TRUE,dep = TRUE)
 ```
 
 ## The spatial autocorrelation of the example data
