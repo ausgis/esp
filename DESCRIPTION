@@ -24,8 +24,8 @@ License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-URL: https://ausgis.github.io/sesp/, https://github.com/ausgis/sesp
-BugReports: https://github.com/ausgis/sesp/issues
+URL: https://stscl.github.io/sesp/, https://github.com/stscl/sesp
+BugReports: https://github.com/stscl/sesp/issues
 Depends: 
     R (>= 4.1.0)
 Imports: 
