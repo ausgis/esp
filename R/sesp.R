@@ -428,8 +428,8 @@ plot.sespm = \(x, slicenum = 2, ...) {
     ggplot2::scale_fill_manual(breaks = c("first", "others"),
                                values = c("#DE3533","#808080")) +
     ggplot2::geom_text(data = dplyr::slice(g_factor, seq(1,slicenum)),
-                       ggplot2::aes(label = Qvtext),
-                       hjust = 1.25, color = "black", fontface = "bold") +
+                       ggplot2::aes(label = Qvtext), hjust = 1.25, color = "black",
+                       family = 'serif', fontface = "bold") +
     ggplot2::geom_text(data = dplyr::slice(g_factor, -seq(1,slicenum)),
                        ggplot2::aes(label = Qvtext),
                        hjust = -0.1, color = "black", fontface = "bold") +
