@@ -28,13 +28,9 @@ fuzzyoverlay2 = \(formula, data, method = "and"){
   if (!(method %in% c("and","or","intersection"))){
     stop("`method` must be one of `and`,`or` or `intersection`!")
   }
-  formula = stats::as.formula(formula)
-  formula.vars = all.vars(formula)
-  if (formula.vars[2] != "."){
-    data = dplyr::select(data,dplyr::all_of(formula.vars))
-  }
-  yname = formula.vars[1]
-  xname = colnames(data)[-which(colnames(data) == yname)]
+  formulaname = sdsfun::formula_varname(formula, data)
+  yname = formulaname[[1]]
+  xname = formulaname[[2]]
   xinteract = utils::combn(xname,2,simplify = FALSE)
   variable1 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][1])
   variable2 = purrr::map_chr(seq_along(xinteract), \(.x) xinteract[[.x]][2])
