@@ -98,25 +98,25 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 <span>           model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.26    0.02    0.66</span></span>
+<span><span class="co">##    0.35    0.03    0.53</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://stscl.github.io/gdverse/reference/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
 <span>         type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'factor'</span>,<span class="st">'interaction'</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.04    0.00    0.09</span></span></code></pre></div>
+<span><span class="co">##    0.06    0.00    0.08</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="factor-detector">Factor detector<a class="anchor" aria-label="anchor" href="#factor-detector"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">go1</span><span class="op">$</span><span class="va">factor</span></span>
 <span><span class="co">## # A tibble: 3 × 5</span></span>
-<span><span class="co">##   Variable  Qvalue    AIC    BIC LogLik</span></span>
-<span><span class="co">##   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span><span class="co">## 1 watershed  0.638 -10.0  -10.0   15.0 </span></span>
-<span><span class="co">## 2 elevation  0.607   1.18   1.18   7.41</span></span>
-<span><span class="co">## 3 soiltype   0.386  79.7   79.7  -33.8</span></span>
+<span><span class="co">##   Variable  Qvalue   AIC   BIC LogLik</span></span>
+<span><span class="co">##   &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span><span class="co">## 1 watershed  0.597  77.1  77.1  -28.5</span></span>
+<span><span class="co">## 2 elevation  0.644  50.3  50.3  -17.1</span></span>
+<span><span class="co">## 3 soiltype   0.512 104.  104.   -46.2</span></span>
 <span><span class="va">go2</span><span class="op">$</span><span class="va">factor</span></span>
 <span><span class="co">## # A tibble: 3 × 3</span></span>
 <span><span class="co">##   variable  `Q-statistic` `P-value`</span></span>
@@ -133,9 +133,9 @@ Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivale
 <span><span class="co">## # A tibble: 3 × 7</span></span>
 <span><span class="co">##   Variable              Interaction    Qv1   Qv2  Qv12 Variable1 Variable2</span></span>
 <span><span class="co">##   &lt;chr&gt;                 &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    </span></span>
-<span><span class="co">## 1 watershed ∩ elevation Enhance, bi- 0.638 0.607 0.714 watershed elevation</span></span>
-<span><span class="co">## 2 watershed ∩ soiltype  Enhance, bi- 0.638 0.386 0.736 watershed soiltype </span></span>
-<span><span class="co">## 3 elevation ∩ soiltype  Enhance, bi- 0.607 0.386 0.664 elevation soiltype</span></span>
+<span><span class="co">## 1 watershed ∩ elevation Enhance, bi- 0.597 0.644 0.677 watershed elevation</span></span>
+<span><span class="co">## 2 watershed ∩ soiltype  Enhance, bi- 0.597 0.512 0.671 watershed soiltype </span></span>
+<span><span class="co">## 3 elevation ∩ soiltype  Enhance, bi- 0.644 0.512 0.671 elevation soiltype</span></span>
 <span><span class="va">go2</span><span class="op">$</span><span class="va">interaction</span></span>
 <span><span class="co">## # A tibble: 3 × 6</span></span>
 <span><span class="co">##   variable1 variable2 Interaction  `Variable1 Q-statistics` `Variable2 Q-statistics`</span></span>
@@ -157,9 +157,9 @@ idsa vignette</a>:</p>
 <span>  <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X'</span>,<span class="st">'Y'</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span>
 <span><span class="co">## Rows: 1072 Columns: 13</span></span>
-<span><span class="co">## ── Column specification ────────────────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">## ── Column specification ───────────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">## Delimiter: ","</span></span>
-<span><span class="co">## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neigh...</span></span>
+<span><span class="co">## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neig...</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ℹ Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
@@ -194,7 +194,7 @@ idsa vignette</a>:</p>
 <span>            model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    4.19    0.73   31.17</span></span>
+<span><span class="co">##    5.57    0.75   32.89</span></span>
 <span><span class="va">g1</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -202,16 +202,16 @@ idsa vignette</a>:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">##  -------------- Global Power of Determinant : ------------</span></span>
 <span><span class="co">## Variable              Qvalue AIC      BIC      LogLik    </span></span>
-<span><span class="co">## PopulationDensity     0.202  4505.365 4505.365 -2246.682 </span></span>
-<span><span class="co">## Population65          0.159  4561.304 4561.304 -2274.652 </span></span>
-<span><span class="co">## NoHealthInsurance     0.255  4435.513 4435.513 -2209.756 </span></span>
-<span><span class="co">## Neighbor_Disadvantage 0.296  4370.901 4370.901 -2179.450 </span></span>
-<span><span class="co">## Beer                  0.200  4507.758 4507.758 -2247.879 </span></span>
-<span><span class="co">## MentalHealthPati      0.260  4428.205 4428.205 -2206.103 </span></span>
-<span><span class="co">## NatureParks           0.181  4533.589 4533.589 -2260.794 </span></span>
-<span><span class="co">## Casinos               0.205  4503.507 4503.507 -2244.754 </span></span>
-<span><span class="co">## DrinkingPlaces        0.203  4503.855 4503.855 -2245.927 </span></span>
-<span><span class="co">## X.HouseRent           0.225  4476.344 4476.344 -2231.172 </span></span>
+<span><span class="co">## PopulationDensity     0.205  4502.661 4502.661 -2245.331 </span></span>
+<span><span class="co">## Population65          0.187  4528.900 4528.900 -2257.450 </span></span>
+<span><span class="co">## NoHealthInsurance     0.213  4493.959 4493.959 -2239.980 </span></span>
+<span><span class="co">## Neighbor_Disadvantage 0.216  4489.263 4489.263 -2237.631 </span></span>
+<span><span class="co">## Beer                  0.244  4454.614 4454.614 -2218.307 </span></span>
+<span><span class="co">## MentalHealthPati      0.238  4458.638 4458.638 -2222.319 </span></span>
+<span><span class="co">## NatureParks           0.156  4566.472 4566.472 -2277.236 </span></span>
+<span><span class="co">## Casinos               0.224  4483.450 4483.450 -2232.725 </span></span>
+<span><span class="co">## DrinkingPlaces        0.151  4573.448 4573.448 -2280.724 </span></span>
+<span><span class="co">## X.HouseRent           0.204  4505.741 4505.741 -2245.871 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  -------------  Global Variable Interaction : ------------</span></span>
 <span><span class="co">## Variable                                    Interaction  </span></span>
@@ -248,7 +248,7 @@ Linear Regression</div>
 <span>            model <span class="op">=</span> <span class="st">'lag'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    6.02    0.69  252.30</span></span>
+<span><span class="co">##    8.31    1.06  264.67</span></span>
 <span><span class="va">g2</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -256,29 +256,29 @@ Linear Regression</div>
 <span><span class="co">## </span></span>
 <span><span class="co">##  -------------- Global Power of Determinant : ------------</span></span>
 <span><span class="co">## Variable              Qvalue AIC      BIC      LogLik    </span></span>
-<span><span class="co">## PopulationDensity     0.154  4333.170 4333.170 -2159.585 </span></span>
-<span><span class="co">## Population65          0.122  4370.485 4370.485 -2178.242 </span></span>
-<span><span class="co">## NoHealthInsurance     0.216  4267.870 4267.870 -2124.935 </span></span>
-<span><span class="co">## Neighbor_Disadvantage 0.289  4248.866 4248.866 -2117.433 </span></span>
-<span><span class="co">## Beer                  0.187  4319.936 4319.936 -2149.968 </span></span>
-<span><span class="co">## MentalHealthPati      0.240  4288.518 4288.518 -2135.259 </span></span>
-<span><span class="co">## NatureParks           0.138  4364.690 4364.690 -2175.345 </span></span>
-<span><span class="co">## Casinos               0.153  4346.299 4346.299 -2166.149 </span></span>
-<span><span class="co">## DrinkingPlaces        0.160  4330.763 4330.763 -2158.382 </span></span>
-<span><span class="co">## X.HouseRent           0.187  4316.759 4316.759 -2150.380 </span></span>
+<span><span class="co">## PopulationDensity     0.162  4336.703 4336.703 -2161.352 </span></span>
+<span><span class="co">## Population65          0.145  4363.627 4363.627 -2173.813 </span></span>
+<span><span class="co">## NoHealthInsurance     0.173  4341.150 4341.150 -2162.575 </span></span>
+<span><span class="co">## Neighbor_Disadvantage 0.177  4331.916 4331.916 -2157.958 </span></span>
+<span><span class="co">## Beer                  0.217  4293.261 4293.261 -2136.630 </span></span>
+<span><span class="co">## MentalHealthPati      0.224  4305.675 4305.675 -2143.838 </span></span>
+<span><span class="co">## NatureParks           0.109  4380.138 4380.138 -2183.069 </span></span>
+<span><span class="co">## Casinos               0.200  4325.222 4325.222 -2152.611 </span></span>
+<span><span class="co">## DrinkingPlaces        0.101  4379.217 4379.217 -2182.609 </span></span>
+<span><span class="co">## X.HouseRent           0.145  4340.049 4340.049 -2163.024 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  -------------  Global Variable Interaction : ------------</span></span>
 <span><span class="co">## Variable                                    Interaction  </span></span>
 <span><span class="co">## PopulationDensity ∩ Population65          Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ Beer                  Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ MentalHealthPati      Weaken, uni- </span></span>
-<span><span class="co">## PopulationDensity ∩ NatureParks           Weaken, uni- </span></span>
+<span><span class="co">## PopulationDensity ∩ Neighbor_Disadvantage Weaken, uni- </span></span>
+<span><span class="co">## PopulationDensity ∩ Beer                  Weaken, uni- </span></span>
+<span><span class="co">## PopulationDensity ∩ MentalHealthPati      Enhance, bi- </span></span>
+<span><span class="co">## PopulationDensity ∩ NatureParks           Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ Casinos               Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ DrinkingPlaces        Weaken, uni- </span></span>
 <span><span class="co">## PopulationDensity ∩ X.HouseRent           Enhance, bi- </span></span>
-<span><span class="co">## Population65 ∩ NoHealthInsurance          Weaken, uni- </span></span>
+<span><span class="co">## Population65 ∩ NoHealthInsurance          Enhance, bi- </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ! Only the top ten items of global scale are displayed.</span></span>
 <span><span class="co">## ! The others can be accessed through specific subsets.</span></span>
@@ -302,7 +302,7 @@ Spatial Lag Regression</div>
 <span>            model <span class="op">=</span> <span class="st">'error'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    8.03    0.80  134.53</span></span>
+<span><span class="co">##   10.58    1.66  142.44</span></span>
 <span><span class="va">g3</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -310,29 +310,29 @@ Spatial Lag Regression</div>
 <span><span class="co">## </span></span>
 <span><span class="co">##  -------------- Global Power of Determinant : ------------</span></span>
 <span><span class="co">## Variable              Qvalue AIC      BIC      LogLik    </span></span>
-<span><span class="co">## PopulationDensity     0.199  4288.640 4288.640 -2137.320 </span></span>
-<span><span class="co">## Population65          0.156  4335.830 4335.830 -2160.915 </span></span>
-<span><span class="co">## NoHealthInsurance     0.253  4230.432 4230.432 -2106.216 </span></span>
-<span><span class="co">## Neighbor_Disadvantage 0.289  4238.682 4238.682 -2112.341 </span></span>
-<span><span class="co">## Beer                  0.193  4292.395 4292.395 -2139.197 </span></span>
-<span><span class="co">## MentalHealthPati      0.247  4262.110 4262.110 -2122.055 </span></span>
-<span><span class="co">## NatureParks           0.171  4325.679 4325.679 -2155.839 </span></span>
-<span><span class="co">## Casinos               0.184  4305.020 4305.020 -2145.510 </span></span>
-<span><span class="co">## DrinkingPlaces        0.198  4295.621 4295.621 -2140.811 </span></span>
-<span><span class="co">## X.HouseRent           0.219  4279.959 4279.959 -2131.979 </span></span>
+<span><span class="co">## PopulationDensity     0.203  4295.874 4295.874 -2140.937 </span></span>
+<span><span class="co">## Population65          0.182  4325.794 4325.794 -2154.897 </span></span>
+<span><span class="co">## NoHealthInsurance     0.206  4306.366 4306.366 -2145.183 </span></span>
+<span><span class="co">## Neighbor_Disadvantage 0.211  4292.852 4292.852 -2138.426 </span></span>
+<span><span class="co">## Beer                  0.236  4261.339 4261.339 -2120.669 </span></span>
+<span><span class="co">## MentalHealthPati      0.226  4290.270 4290.270 -2137.135 </span></span>
+<span><span class="co">## NatureParks           0.152  4343.985 4343.985 -2164.992 </span></span>
+<span><span class="co">## Casinos               0.202  4291.347 4291.347 -2135.673 </span></span>
+<span><span class="co">## DrinkingPlaces        0.146  4339.579 4339.579 -2162.790 </span></span>
+<span><span class="co">## X.HouseRent           0.197  4287.536 4287.536 -2135.768 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  -------------  Global Variable Interaction : ------------</span></span>
 <span><span class="co">## Variable                                    Interaction  </span></span>
-<span><span class="co">## PopulationDensity ∩ Population65          Weaken, uni- </span></span>
+<span><span class="co">## PopulationDensity ∩ Population65          Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ Beer                  Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ MentalHealthPati      Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ NatureParks           Weaken, uni- </span></span>
+<span><span class="co">## PopulationDensity ∩ NatureParks           Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ Casinos               Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- </span></span>
+<span><span class="co">## PopulationDensity ∩ DrinkingPlaces        Weaken, uni- </span></span>
 <span><span class="co">## PopulationDensity ∩ X.HouseRent           Enhance, bi- </span></span>
-<span><span class="co">## Population65 ∩ NoHealthInsurance          Weaken, uni- </span></span>
+<span><span class="co">## Population65 ∩ NoHealthInsurance          Enhance, bi- </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ! Only the top ten items of global scale are displayed.</span></span>
 <span><span class="co">## ! The others can be accessed through specific subsets.</span></span>
@@ -355,7 +355,7 @@ Spatial Error Regression</div>
 <span>            model <span class="op">=</span> <span class="st">'lag'</span>, durbin <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    7.45    0.65  251.24</span></span>
+<span><span class="co">##   11.04    1.50  267.14</span></span>
 <span><span class="va">g4</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -363,16 +363,16 @@ Spatial Error Regression</div>
 <span><span class="co">## </span></span>
 <span><span class="co">##  -------------- Global Power of Determinant : ------------</span></span>
 <span><span class="co">## Variable              Qvalue AIC      BIC      LogLik    </span></span>
-<span><span class="co">## PopulationDensity     0.211  4291.372 4291.372 -2134.686 </span></span>
-<span><span class="co">## Population65          0.163  4340.250 4340.250 -2159.125 </span></span>
-<span><span class="co">## NoHealthInsurance     0.261  4238.839 4238.839 -2104.420 </span></span>
-<span><span class="co">## Neighbor_Disadvantage 0.316  4226.864 4226.864 -2102.432 </span></span>
-<span><span class="co">## Beer                  0.209  4291.057 4291.057 -2134.529 </span></span>
-<span><span class="co">## MentalHealthPati      0.296  4247.222 4247.222 -2108.611 </span></span>
-<span><span class="co">## NatureParks           0.252  4285.895 4285.895 -2125.948 </span></span>
-<span><span class="co">## Casinos               0.237  4291.052 4291.052 -2132.526 </span></span>
-<span><span class="co">## DrinkingPlaces        0.210  4294.833 4294.833 -2136.417 </span></span>
-<span><span class="co">## X.HouseRent           0.239  4280.458 4280.458 -2127.229 </span></span>
+<span><span class="co">## PopulationDensity     0.210  4300.669 4300.669 -2139.335 </span></span>
+<span><span class="co">## Population65          0.197  4329.029 4329.029 -2151.515 </span></span>
+<span><span class="co">## NoHealthInsurance     0.227  4305.640 4305.640 -2139.820 </span></span>
+<span><span class="co">## Neighbor_Disadvantage 0.229  4295.740 4295.740 -2132.870 </span></span>
+<span><span class="co">## Beer                  0.262  4260.269 4260.269 -2113.135 </span></span>
+<span><span class="co">## MentalHealthPati      0.284  4261.358 4261.358 -2115.679 </span></span>
+<span><span class="co">## NatureParks           0.167  4345.486 4345.486 -2161.743 </span></span>
+<span><span class="co">## Casinos               0.278  4269.780 4269.780 -2117.890 </span></span>
+<span><span class="co">## DrinkingPlaces        0.158  4341.539 4341.539 -2159.769 </span></span>
+<span><span class="co">## X.HouseRent           0.222  4285.855 4285.855 -2129.927 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  -------------  Global Variable Interaction : ------------</span></span>
 <span><span class="co">## Variable                                    Interaction  </span></span>
@@ -383,7 +383,7 @@ Spatial Error Regression</div>
 <span><span class="co">## PopulationDensity ∩ MentalHealthPati      Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ NatureParks           Enhance, bi- </span></span>
 <span><span class="co">## PopulationDensity ∩ Casinos               Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- </span></span>
+<span><span class="co">## PopulationDensity ∩ DrinkingPlaces        Weaken, uni- </span></span>
 <span><span class="co">## PopulationDensity ∩ X.HouseRent           Enhance, bi- </span></span>
 <span><span class="co">## Population65 ∩ NoHealthInsurance          Enhance, bi- </span></span>
 <span><span class="co">## </span></span>
@@ -409,7 +409,7 @@ Spatial Durbin Regression</div>
 <span>            model <span class="op">=</span> <span class="st">'gwr'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    8.59    1.01  149.15</span></span>
+<span><span class="co">##   11.53    1.53  131.87</span></span>
 <span><span class="va">g5</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -417,29 +417,29 @@ Spatial Durbin Regression</div>
 <span><span class="co">## </span></span>
 <span><span class="co">##  -------------- Global Power of Determinant : ------------</span></span>
 <span><span class="co">## Variable              Qvalue AIC      </span></span>
-<span><span class="co">## PopulationDensity     0.366  4260.457 </span></span>
-<span><span class="co">## Population65          0.317  4337.745 </span></span>
-<span><span class="co">## NoHealthInsurance     0.254  4429.183 </span></span>
-<span><span class="co">## Neighbor_Disadvantage 0.354  4277.147 </span></span>
-<span><span class="co">## Beer                  0.350  4288.285 </span></span>
-<span><span class="co">## MentalHealthPati      0.367  4258.876 </span></span>
-<span><span class="co">## NatureParks           0.266  4412.671 </span></span>
-<span><span class="co">## Casinos               0.307  4354.933 </span></span>
-<span><span class="co">## DrinkingPlaces        0.294  4373.148 </span></span>
-<span><span class="co">## X.HouseRent           0.370  4255.989 </span></span>
+<span><span class="co">## PopulationDensity     0.390  4222.993 </span></span>
+<span><span class="co">## Population65          0.362  4267.337 </span></span>
+<span><span class="co">## NoHealthInsurance     0.334  4313.012 </span></span>
+<span><span class="co">## Neighbor_Disadvantage 0.303  4359.302 </span></span>
+<span><span class="co">## Beer                  0.335  4312.556 </span></span>
+<span><span class="co">## MentalHealthPati      0.322  4331.471 </span></span>
+<span><span class="co">## NatureParks           0.335  4311.999 </span></span>
+<span><span class="co">## Casinos               0.289  4382.091 </span></span>
+<span><span class="co">## DrinkingPlaces        0.303  4360.807 </span></span>
+<span><span class="co">## X.HouseRent           0.445  4129.926 </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">##  -------------  Global Variable Interaction : ------------</span></span>
-<span><span class="co">## Variable                                    Interaction  </span></span>
-<span><span class="co">## PopulationDensity ∩ Population65          Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ Beer                  Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ MentalHealthPati      Enhance, bi- </span></span>
-<span><span class="co">## PopulationDensity ∩ NatureParks           Weaken, uni- </span></span>
-<span><span class="co">## PopulationDensity ∩ Casinos               Weaken, uni- </span></span>
-<span><span class="co">## PopulationDensity ∩ DrinkingPlaces        Weaken, uni- </span></span>
-<span><span class="co">## PopulationDensity ∩ X.HouseRent           Enhance, bi- </span></span>
-<span><span class="co">## Population65 ∩ NoHealthInsurance          Weaken, uni- </span></span>
+<span><span class="co">## Variable                                    Interaction       </span></span>
+<span><span class="co">## PopulationDensity ∩ Population65          Weaken, nonlinear </span></span>
+<span><span class="co">## PopulationDensity ∩ NoHealthInsurance     Weaken, uni-      </span></span>
+<span><span class="co">## PopulationDensity ∩ Neighbor_Disadvantage Weaken, uni-      </span></span>
+<span><span class="co">## PopulationDensity ∩ Beer                  Weaken, uni-      </span></span>
+<span><span class="co">## PopulationDensity ∩ MentalHealthPati      Weaken, uni-      </span></span>
+<span><span class="co">## PopulationDensity ∩ NatureParks           Enhance, bi-      </span></span>
+<span><span class="co">## PopulationDensity ∩ Casinos               Weaken, uni-      </span></span>
+<span><span class="co">## PopulationDensity ∩ DrinkingPlaces        Weaken, uni-      </span></span>
+<span><span class="co">## PopulationDensity ∩ X.HouseRent           Weaken, nonlinear </span></span>
+<span><span class="co">## Population65 ∩ NoHealthInsurance          Weaken, nonlinear </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ! Only the top ten items of global scale are displayed.</span></span>
 <span><span class="co">## ! The others can be accessed through specific subsets.</span></span>
