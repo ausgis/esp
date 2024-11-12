@@ -67,7 +67,6 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
   if (formula.vars[2] != "."){
     data = dplyr::select(data,dplyr::all_of(formula.vars))
   }
-  data = sdsfun::tbl_all2int(data)
   yname = formula.vars[1]
   yvec = data[, yname, drop = TRUE]
   geom = sf::st_geometry(data)
@@ -107,14 +106,7 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
         sf::st_drop_geometry() |>
         tibble::as_tibble() |>
         dplyr::select(dplyr::all_of(xundiscname)) |>
-        dplyr::mutate(dplyr::across(dplyr::everything(),\(x){
-          if (inherits(x,"factor")){
-            x = as.integer(x)
-          } else if (inherits(x,'character')) {
-            x = as.integer(as.factor(x))
-          }
-          return(x)
-        }))
+        sdsfun::tbl_all2int()
       names(undiscdf) = paste0('x',seq(length(xdiscname) + 1, by = 1,
                                        length.out = length(xundiscname) + 1))
     } else {
