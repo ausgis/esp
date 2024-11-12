@@ -171,7 +171,8 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
     xvarname = xundiscname
     discdf = data |>
       sf::st_drop_geometry() |>
-      dplyr::select(dplyr::all_of(xvarname))
+      dplyr::select(dplyr::all_of(xvarname)) |>
+      sdsfun::tbl_all2int()
     names(discdf) = paste0('x',seq_along(discdf))
     discdf = list(discdf)
   }
