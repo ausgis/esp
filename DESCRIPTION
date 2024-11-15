@@ -38,7 +38,7 @@ Imports:
     parallel,
     patchwork,
     purrr,
-    sdsfun (>= 0.4.2),
+    sdsfun (>= 0.4.3),
     sf,
     spatialreg,
     spdep,
@@ -47,7 +47,7 @@ Imports:
     tidyr,
     utils
 Suggests: 
-    gdverse (>= 1.2),
+    gdverse (>= 1.3),
     knitr,
     Rcpp,
     RcppArmadillo,
