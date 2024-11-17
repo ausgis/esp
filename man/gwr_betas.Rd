@@ -2,7 +2,7 @@
 % Please edit documentation in R/gwr_betas.R
 \name{gwr_betas}
 \alias{gwr_betas}
-\title{Estimate \code{gwr} model coefficients}
+\title{Estimate GWR model coefficients}
 \usage{
 gwr_betas(
   formula,
@@ -14,9 +14,9 @@ gwr_betas(
 )
 }
 \arguments{
-\item{formula}{A formula of \code{gwr} model.}
+\item{formula}{A formula.}
 
-\item{data}{An sf object of observation data}
+\item{data}{An \code{sf} object of observation data}
 
 \item{bw}{(optional) The bandwidth used in selecting models. The optimal bandwidth can be
 selected using one of two methods: \code{AIC}, and \code{CV}. Default will use \code{AIC}.}
@@ -31,7 +31,7 @@ selected using one of two methods: \code{AIC}, and \code{CV}. Default will use \
 A \code{tibble}
 }
 \description{
-Estimate \code{gwr} model coefficients
+Estimate GWR model coefficients
 }
 \examples{
 \donttest{
