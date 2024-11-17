@@ -33,7 +33,7 @@ knitr::opts_chunk$set(
 <!-- install.packages("sesp") -->
 <!-- ``` -->
 
-- Install development binary version from [R-universe](https://stscl.r-universe.dev/sesp) with:
+- Install binary version from [R-universe](https://stscl.r-universe.dev/sesp) with:
 
 ``` r
 install.packages('sesp',
@@ -42,7 +42,7 @@ install.packages('sesp',
                  dep = TRUE)
 ```
 
-- Install development source version from [GitHub](https://github.com/stscl/sesp) with:
+- Install from source code on [GitHub](https://github.com/stscl/sesp) with:
 
 ```r
 if (!requireNamespace("devtools")) {

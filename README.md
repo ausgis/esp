@@ -20,7 +20,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-cyan.svg)](htt
 <!-- install.packages("sesp") -->
 <!-- ``` -->
 
-- Install development binary version from
+- Install binary version from
   [R-universe](https://stscl.r-universe.dev/sesp) with:
 
 ``` r
@@ -30,8 +30,8 @@ install.packages('sesp',
                  dep = TRUE)
 ```
 
-- Install development source version from
-  [GitHub](https://github.com/stscl/sesp) with:
+- Install from source code on [GitHub](https://github.com/stscl/sesp)
+  with:
 
 ``` r
 if (!requireNamespace("devtools")) {
