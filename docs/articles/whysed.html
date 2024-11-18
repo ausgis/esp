@@ -94,17 +94,17 @@ package, the natural breaks method is implemented based on the
 by <code>gdverse</code> package. In subsequent analyses, all
 discretization methods applied will discretize the dataset into five
 strata for the calculation of the q-values.</p>
-<div class="section level2">
-<h2 id="install-necessary-r-packages">Install Necessary R Packages<a class="anchor" aria-label="anchor" href="#install-necessary-r-packages"></a>
-</h2>
+<div class="section level3">
+<h3 id="install-necessary-r-packages">Install Necessary R Packages<a class="anchor" aria-label="anchor" href="#install-necessary-r-packages"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"gdverse"</span>,dep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"stscl/sesp"</span>,build_vignettes <span class="op">=</span> <span class="cn">TRUE</span>,dep <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="the-spatial-autocorrelation-of-the-example-data">The spatial autocorrelation of the example data<a class="anchor" aria-label="anchor" href="#the-spatial-autocorrelation-of-the-example-data"></a>
-</h2>
+<div class="section level3">
+<h3 id="the-spatial-autocorrelation-of-the-example-data">The spatial autocorrelation of the example data<a class="anchor" aria-label="anchor" href="#the-spatial-autocorrelation-of-the-example-data"></a>
+</h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dt</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/Depression.csv'</span>,package <span class="op">=</span> <span class="st">'gdverse'</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -158,9 +158,9 @@ strata for the calculation of the q-values.</p>
 </tbody>
 </table>
 </div>
-<div class="section level2">
-<h2 id="q-value-corresponding-to-spatial-implicit-discretization">Q value corresponding to spatial implicit discretization<a class="anchor" aria-label="anchor" href="#q-value-corresponding-to-spatial-implicit-discretization"></a>
-</h2>
+<div class="section level3">
+<h3 id="q-values-corresponding-to-spatial-implicit-discretization">Q values corresponding to spatial implicit discretization<a class="anchor" aria-label="anchor" href="#q-values-corresponding-to-spatial-implicit-discretization"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">geom</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">=</span> <span class="va">dt</span><span class="op">$</span><span class="va">y</span></span>
@@ -170,27 +170,36 @@ strata for the calculation of the q-values.</p>
 <span>  <span class="va">D0</span> <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="va">xv</span><span class="op">)</span></span>
 <span>  <span class="va">resh</span> <span class="op">=</span> <span class="fu">ClustGeo</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ClustGeo/man/hclustgeo.html" class="external-link">hclustgeo</a></span><span class="op">(</span><span class="va">D0</span>,<span class="va">gdist</span>,alpha <span class="op">=</span> <span class="va">alpha</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/cutree.html" class="external-link">cutree</a></span><span class="op">(</span><span class="va">resh</span>,<span class="va">discnum</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x_naturaldisc</span> <span class="op">=</span> <span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/discretize_vector.html" class="external-link">discretize_vector</a></span><span class="op">(</span><span class="va">x</span>,<span class="fl">5</span>,method <span class="op">=</span> <span class="st">"natural"</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">x_naturaldisc</span> <span class="op">=</span> <span class="fu">sdsfun</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/sdsfun/reference/discretize_vector.html" class="external-link">discretize_vector</a></span><span class="op">(</span><span class="va">x</span>,<span class="fl">5</span>,method <span class="op">=</span> <span class="st">"natural"</span><span class="op">)</span></span>
 <span><span class="va">x_hclustdisc</span> <span class="op">=</span> <span class="fu">hclustgeo_disc</span><span class="op">(</span><span class="va">x</span>,<span class="fl">5</span>,alpha <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">x_robustdisc</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/robust_disc.html" class="external-link">robust_disc</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>,</span>
+<span>                                 data <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span>,x <span class="op">=</span> <span class="va">x</span><span class="op">)</span>,</span>
+<span>                                 discnum <span class="op">=</span> <span class="fl">5</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">qv_naturaldisc</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/factor_detector.html" class="external-link">factor_detector</a></span><span class="op">(</span><span class="va">y</span>,<span class="va">x_naturaldisc</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="va">qv_naturaldisc</span></span>
 <span><span class="co">## [1] 0.07985365</span></span>
 <span><span class="va">qv_hclustdisc</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/factor_detector.html" class="external-link">factor_detector</a></span><span class="op">(</span><span class="va">y</span>,<span class="va">x_hclustdisc</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="va">qv_hclustdisc</span></span>
-<span><span class="co">## [1] 0.07315131</span></span></code></pre></div>
+<span><span class="co">## [1] 0.07315131</span></span>
+<span><span class="va">qv_robustdisc</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/factor_detector.html" class="external-link">factor_detector</a></span><span class="op">(</span><span class="va">y</span>,<span class="va">x_robustdisc</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">qv_robustdisc</span></span>
+<span><span class="co">## [1] 0.1199684</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="a-monte-carlo-simulation-experiment-demonstrating-the-necessity-of-spatial-explicit-discretization">A Monte Carlo simulation experiment demonstrating the necessity of
+<div class="section level3">
+<h3 id="a-monte-carlo-simulation-experiment-demonstrating-the-necessity-of-spatial-explicit-discretization">A Monte Carlo simulation experiment demonstrating the necessity of
 spatial explicit discretization<a class="anchor" aria-label="anchor" href="#a-monte-carlo-simulation-experiment-demonstrating-the-necessity-of-spatial-explicit-discretization"></a>
-</h2>
+</h3>
 <p>In the repeated experiment, <span class="math inline">\(X\)</span> is
 shuffled 1000 times, and the global Moran’s I of the original
 independent variable <span class="math inline">\(X\)</span> serves as
 the degree of spatial soft constraint (0.365 in this case).
 Subsequently, the q-values for each simulation round is computed.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mc_simq</span> <span class="op">=</span> \<span class="op">(</span><span class="va">times</span> <span class="op">=</span> <span class="fl">1000</span>, <span class="va">cores</span> <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">doclust</span> <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">inherits</a></span><span class="op">(</span><span class="va">cores</span>, <span class="st">"cluster"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -209,16 +218,9 @@ Subsequently, the q-values for each simulation round is computed.</p>
 <span>    <span class="va">moran</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">result</span>,<span class="fl">2</span><span class="op">)</span></span>
 <span>    <span class="va">moran_p</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">result</span>,<span class="fl">6</span><span class="op">)</span></span>
 <span>    <span class="va">x_sed</span> <span class="op">=</span> <span class="fu">hclustgeo_disc</span><span class="op">(</span><span class="va">x_sim</span>, discnum <span class="op">=</span> <span class="fl">5</span>, alpha <span class="op">=</span> <span class="fl">0.365</span><span class="op">)</span></span>
-<span>    <span class="va">x_sid</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/robust_disc.html" class="external-link">robust_disc</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>,</span>
-<span>                                 data <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span>,x <span class="op">=</span> <span class="va">x_sim</span><span class="op">)</span>,</span>
-<span>                                 discnum <span class="op">=</span> <span class="fl">5</span>, cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html" class="external-link">pull</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>    <span class="va">qv1</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/factor_detector.html" class="external-link">factor_detector</a></span><span class="op">(</span><span class="va">y</span>,<span class="va">x_sed</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span>    <span class="va">qv2</span> <span class="op">=</span> <span class="fu">gdverse</span><span class="fu">::</span><span class="fu"><a href="https://stscl.github.io/gdverse/reference/factor_detector.html" class="external-link">factor_detector</a></span><span class="op">(</span><span class="va">y</span>,<span class="va">x_sid</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span>    <span class="va">res</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>qv_sed <span class="op">=</span> <span class="va">qv1</span>, qv_sid <span class="op">=</span> <span class="va">qv2</span>,</span>
-<span>                         moran <span class="op">=</span> <span class="va">moran</span>, moran_p <span class="op">=</span> <span class="va">moran_p</span><span class="op">)</span></span>
+<span>    <span class="va">res</span> <span class="op">=</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>qv_sed <span class="op">=</span> <span class="va">qv1</span>, moran <span class="op">=</span> <span class="va">moran</span>,</span>
+<span>                         moran_p <span class="op">=</span> <span class="va">moran_p</span><span class="op">)</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span></span>
@@ -231,24 +233,24 @@ Subsequently, the q-values for each simulation round is computed.</p>
 <span>  <span class="op">}</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">out_g</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qv</span> <span class="op">=</span> <span class="fu">mc_simq</span><span class="op">(</span>times <span class="op">=</span> <span class="fl">1000</span>, cores <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="va">qv</span></span>
-<span><span class="co">## # A tibble: 1,000 × 4</span></span>
-<span><span class="co">##    qv_sed qv_sid    moran moran_p</span></span>
-<span><span class="co">##     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">##  1  0.198 0.0321 -0.0213   0.873 </span></span>
-<span><span class="co">##  2  0.190 0.0258 -0.0248   0.909 </span></span>
-<span><span class="co">##  3  0.204 0.0226  0.0273   0.0570</span></span>
-<span><span class="co">##  4  0.140 0.0282 -0.0264   0.923 </span></span>
-<span><span class="co">##  5  0.176 0.0261 -0.0169   0.814 </span></span>
-<span><span class="co">##  6  0.172 0.0249 -0.00730  0.639 </span></span>
-<span><span class="co">##  7  0.206 0.0267  0.00347  0.403 </span></span>
-<span><span class="co">##  8  0.198 0.0249  0.0239   0.0820</span></span>
-<span><span class="co">##  9  0.191 0.0306  0.00552  0.359 </span></span>
-<span><span class="co">## 10  0.208 0.0316  0.0272   0.0578</span></span>
+<span><span class="co">## # A tibble: 1,000 × 3</span></span>
+<span><span class="co">##    qv_sed    moran moran_p</span></span>
+<span><span class="co">##     &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">##  1  0.197 -0.0170   0.816 </span></span>
+<span><span class="co">##  2  0.182  0.00101  0.457 </span></span>
+<span><span class="co">##  3  0.154  0.00823  0.304 </span></span>
+<span><span class="co">##  4  0.167  0.00857  0.297 </span></span>
+<span><span class="co">##  5  0.183 -0.00626  0.617 </span></span>
+<span><span class="co">##  6  0.134  0.0268   0.0606</span></span>
+<span><span class="co">##  7  0.170 -0.0278   0.934 </span></span>
+<span><span class="co">##  8  0.199 -0.0371   0.979 </span></span>
+<span><span class="co">##  9  0.196  0.0344   0.0240</span></span>
+<span><span class="co">## 10  0.181  0.0358   0.0200</span></span>
 <span><span class="co">## # ℹ 990 more rows</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">qv</span>, <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">qv_sed</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">density</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                          bins <span class="op">=</span> <span class="fl">50</span>, fill <span class="op">=</span> <span class="st">"skyblue"</span>,</span>
@@ -268,24 +270,24 @@ q-values from 1000 explicit spatial discretization simulations.</div>
 actual situation, specifically those for which the global Moran’s I of
 the permuted data is statistically significant (p-value &lt; 0.05) and
 greater than zero.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qv_sign</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">qv</span>,<span class="va">moran</span><span class="op">&gt;=</span><span class="fl">0</span><span class="op">&amp;</span><span class="va">moran_p</span><span class="op">&lt;=</span><span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">qv_sign</span></span>
-<span><span class="co">## # A tibble: 54 × 4</span></span>
-<span><span class="co">##    qv_sed qv_sid  moran  moran_p</span></span>
-<span><span class="co">##     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;</span></span>
-<span><span class="co">##  1  0.204 0.0335 0.0292 0.0461  </span></span>
-<span><span class="co">##  2  0.192 0.0273 0.0341 0.0249  </span></span>
-<span><span class="co">##  3  0.201 0.0251 0.0402 0.0106  </span></span>
-<span><span class="co">##  4  0.197 0.0225 0.0557 0.000762</span></span>
-<span><span class="co">##  5  0.201 0.0324 0.0308 0.0377  </span></span>
-<span><span class="co">##  6  0.196 0.0325 0.0552 0.000843</span></span>
-<span><span class="co">##  7  0.173 0.0198 0.0313 0.0357  </span></span>
-<span><span class="co">##  8  0.176 0.0302 0.0365 0.0181  </span></span>
-<span><span class="co">##  9  0.172 0.0322 0.0336 0.0266  </span></span>
-<span><span class="co">## 10  0.180 0.0287 0.0419 0.00822 </span></span>
-<span><span class="co">## # ℹ 44 more rows</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<span><span class="co">## # A tibble: 45 × 3</span></span>
+<span><span class="co">##    qv_sed  moran   moran_p</span></span>
+<span><span class="co">##     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span><span class="co">##  1  0.196 0.0344 0.0240   </span></span>
+<span><span class="co">##  2  0.181 0.0358 0.0200   </span></span>
+<span><span class="co">##  3  0.193 0.0698 0.0000377</span></span>
+<span><span class="co">##  4  0.171 0.0288 0.0479   </span></span>
+<span><span class="co">##  5  0.194 0.0466 0.00388  </span></span>
+<span><span class="co">##  6  0.197 0.0391 0.0126   </span></span>
+<span><span class="co">##  7  0.170 0.0403 0.0106   </span></span>
+<span><span class="co">##  8  0.158 0.0389 0.0128   </span></span>
+<span><span class="co">##  9  0.183 0.0321 0.0324   </span></span>
+<span><span class="co">## 10  0.172 0.0565 0.000650 </span></span>
+<span><span class="co">## # ℹ 35 more rows</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">qv_sign</span>, <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">qv_sed</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">density</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                          bins <span class="op">=</span> <span class="fl">50</span>, fill <span class="op">=</span> <span class="st">"skyblue"</span>,</span>
@@ -302,16 +304,25 @@ greater than zero.</p>
 from randomized simulations that best align with actual
 conditions.</div>
 </div>
-<p>The q-value obtained by classifying into five categories using the
+<p>The q-value derived from classifying into five categories using the
 natural breaks method is 0.07985, while the q-value from five-category
-hierarchical clustering without spatial soft constraints is 0.07315. In
-the Monte Carlo simulation experiment, the range of q-values spans from
-0.12085 to 0.2191. The range of q-values from randomized simulations
-that best align with actual conditions is from 0.14854 to 0.21126. The
-Monte Carlo simulation results suggest that spatially implicit
-discretization tends to underestimate the q-value of the variable when
-moderate spatial autocorrelation is present, emphasizing the need for
-spatially explicit discretization.</p>
+hierarchical clustering without spatial constraints is 0.07315. In
+comparison, the q-value obtained through robust discretization into five
+categories is 0.11997. In the Monte Carlo simulation experiment, the
+q-values range from 0.12676 to 0.22041. Among randomized simulations
+that best align with actual conditions, the q-value range spans from
+0.15332 to 0.21528. These results indicate that spatially implicit
+discretization tends to underestimate the q-value of the variable under
+moderate spatial autocorrelation, highlighting the importance of
+spatially explicit discretization. The results also reveal that robust
+discretization, which accounts for the relationship between independent
+and dependent variables, can effectively reduce the q-value estimation
+bias introduced by spatially implicit discretization methods. However,
+it still underestimates the q-value by approximately 0.05354 to 0.4557.
+This highlights the need for a spatially explicit discretization
+approach that fully considers the relationship between independent and
+dependent variables to more accurately capture the impact of spatial
+dependence on discretization.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
