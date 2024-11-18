@@ -133,16 +133,16 @@ qv
 ## # A tibble: 3,000 × 3
 ##    qv_sed     moran moran_p
 ##     <dbl>     <dbl>   <dbl>
-##  1  0.201 -0.000892  0.499 
-##  2  0.175  0.0219    0.100 
-##  3  0.148  0.00743   0.320 
-##  4  0.186 -0.0321    0.959 
-##  5  0.160  0.0123    0.229 
-##  6  0.194 -0.0429    0.991 
-##  7  0.193 -0.0157    0.796 
-##  8  0.181  0.0174    0.152 
-##  9  0.173  0.00307   0.411 
-## 10  0.188  0.0256    0.0690
+##  1  0.206 -0.00252   0.535 
+##  2  0.200 -0.0178    0.827 
+##  3  0.207 -0.00977   0.690 
+##  4  0.190 -0.0222    0.883 
+##  5  0.191  0.00281   0.417 
+##  6  0.160  0.0291    0.0465
+##  7  0.197  0.0146    0.192 
+##  8  0.199  0.000935  0.458 
+##  9  0.163 -0.0214    0.874 
+## 10  0.180  0.00271   0.419 
 ## # ℹ 2,990 more rows
 ```
 
@@ -160,7 +160,7 @@ ggplot2::ggplot(data = qv, ggplot2::aes(x = qv_sed)) +
   ggplot2::theme_classic()
 ```
 
-![**Figure 1**. The results of q-values from 1000 explicit spatial discretization simulations.](../man/figures/whysed/plot_mcres_1-1.png)
+![**Figure 1**. The results of q-values from 1000 explicit spatial discretization simulations.](man/figures/whysed/plot_mcres_1-1.png)
 
 We selected simulated q-values that are more consistent with the actual situation, specifically those for which the global Moran's I of the permuted data is statistically significant (p-value < 0.05) and greater than zero.
 
@@ -168,20 +168,20 @@ We selected simulated q-values that are more consistent with the actual situatio
 ``` r
 qv_sign = dplyr::filter(qv,moran>=0&moran_p<=0.05)
 qv_sign
-## # A tibble: 151 × 3
+## # A tibble: 154 × 3
 ##    qv_sed  moran moran_p
 ##     <dbl>  <dbl>   <dbl>
-##  1  0.203 0.0391 0.0125 
-##  2  0.178 0.0397 0.0115 
-##  3  0.204 0.0313 0.0354 
-##  4  0.201 0.0433 0.00669
-##  5  0.196 0.0464 0.00403
-##  6  0.185 0.0347 0.0231 
-##  7  0.177 0.0366 0.0178 
-##  8  0.182 0.0409 0.00963
-##  9  0.189 0.0292 0.0457 
-## 10  0.167 0.0351 0.0219 
-## # ℹ 141 more rows
+##  1  0.160 0.0291 0.0465 
+##  2  0.190 0.0453 0.00483
+##  3  0.178 0.0298 0.0427 
+##  4  0.170 0.0337 0.0262 
+##  5  0.192 0.0444 0.00559
+##  6  0.213 0.0398 0.0114 
+##  7  0.195 0.0424 0.00769
+##  8  0.188 0.0444 0.00556
+##  9  0.193 0.0414 0.00895
+## 10  0.164 0.0296 0.0437 
+## # ℹ 144 more rows
 ```
 
 
@@ -198,6 +198,6 @@ ggplot2::ggplot(data = qv_sign, ggplot2::aes(x = qv_sed)) +
   ggplot2::theme_classic()
 ```
 
-![**Figure 2**. Q-value distribution from randomized simulations that best align with actual conditions.](../man/figures/whysed/plot_mcres_2-1.png)
+![**Figure 2**. Q-value distribution from randomized simulations that best align with actual conditions.](man/figures/whysed/plot_mcres_2-1.png)
 
-The q-value derived from classifying into five categories using the natural breaks method is 0.07985, while the q-value from five-category hierarchical clustering without spatial constraints is 0.07315. In comparison, the q-value obtained through robust discretization into five categories is 0.11997. In the Monte Carlo simulation experiment, the q-values range from 0.11513 to 0.22323. Among randomized simulations that best align with actual conditions, the q-value range spans from 0.1345 to 0.21118. These results indicate that spatially implicit discretization tends to underestimate the q-value of the variable under moderate spatial autocorrelation, highlighting the importance of spatially explicit discretization. The results also reveal that robust discretization, which accounts for the relationship between independent and dependent variables, can effectively reduce the q-value estimation bias introduced by spatially implicit discretization methods. However, it still underestimates the q-value by approximately 35.2949%. This highlights the need for a spatially explicit discretization approach that fully considers the relationship between independent and dependent variables to more accurately capture the impact of spatial dependence on discretization.
+The q-value derived from classifying into five categories using the natural breaks method is 0.07985, while the q-value from five-category hierarchical clustering without spatial constraints is 0.07315. In comparison, the q-value obtained through robust discretization into five categories is 0.11997. In the Monte Carlo simulation experiment, the q-values range from 0.12074 to 0.22217. Among randomized simulations that best align with actual conditions, the q-value range spans from 0.13296 to 0.21551. These results indicate that spatially implicit discretization tends to underestimate the q-value of the variable under moderate spatial autocorrelation, highlighting the importance of spatially explicit discretization. The results also reveal that robust discretization, which accounts for the relationship between independent and dependent variables, can effectively reduce the q-value estimation bias introduced by spatially implicit discretization methods. However, it still underestimates the q-value by approximately 35.3718%. This highlights the need for a spatially explicit discretization approach that fully considers the relationship between independent and dependent variables to more accurately capture the impact of spatial dependence on discretization.
