@@ -16,9 +16,9 @@ knitr::opts_chunk$set(
 ```
 
 
-We demonstrate the necessity of the spatial explicit discretization (discretization with spatial soft constraints) method using the `Depression.csv` data from the `gdverse` package. In this analysis, we select `Depression_prevalence` as the dependent variable $Y$ and `PopulationDensity` as the independent variable $X$. $X$ is randomly shuffled, and the q-value is calculated using both discretization methods that do and do not account for spatial soft constraints, with the process repeated 10000 times. We selected hierarchical clustering with spatial soft constraints and hierarchical clustering without spatial soft constraints method to represent explicit and implicit spatial discretization, respectively. At the same time, natural breaks method and robust discretization are used as the control in this experiment. The hierarchical clustering with spatial soft constraints method and hierarchical clustering without spatial soft constraints method were implemented using the `ClustGeo` package, the natural breaks method is implemented based on the `sdsfun` package and the robust discretization is implemented by `gdverse` package. In subsequent analyses, all discretization methods applied will discretize the dataset into five strata for the calculation of the q-values.
+We demonstrate the necessity of the spatial explicit discretization (discretization with spatial soft constraints) method using the `Depression.csv` data from the `gdverse` package. In this analysis, we select `Depression_prevalence` as the dependent variable $Y$ and `PopulationDensity` as the independent variable $X$. $X$ is randomly shuffled, and the q-value is calculated using both discretization methods that do and do not account for spatial soft constraints, with the process repeated 3000 times. We selected hierarchical clustering with spatial soft constraints and hierarchical clustering without spatial soft constraints method to represent explicit and implicit spatial discretization, respectively. At the same time, natural breaks method and robust discretization are used as the control in this experiment. The hierarchical clustering with spatial soft constraints method and hierarchical clustering without spatial soft constraints method were implemented using the `ClustGeo` package, the natural breaks method is implemented based on the `sdsfun` package and the robust discretization is implemented by `gdverse` package. In subsequent analyses, all discretization methods applied will discretize the dataset into five strata for the calculation of the q-values.
 
-### Install Necessary R Packages
+### Install necessary R packages
 
 ```r
 install.packages("gdverse",dep = TRUE)
@@ -69,7 +69,7 @@ qv_robustdisc
 
 ### A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
-In the repeated experiment, $X$ is shuffled 10000 times, and the global Moran's I of the original independent variable $X$ serves as the degree of spatial soft constraint (0.365 in this case). Subsequently, the q-values for each simulation round is computed.
+In the repeated experiment, $X$ is shuffled 3000 times, and the global Moran's I of the original independent variable $X$ serves as the degree of spatial soft constraint (0.365 in this case). Subsequently, the q-values for each simulation round is computed.
 
 ```{r mc_simq}
 mc_simq = \(times = 1000, cores = 6){
@@ -108,7 +108,7 @@ mc_simq = \(times = 1000, cores = 6){
 ```
 
 ```{r simq}
-qv = mc_simq(times = 10000, cores = 12)
+qv = mc_simq(times = 3000, cores = 12)
 qv
 ```
 
