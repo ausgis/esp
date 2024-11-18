@@ -7,7 +7,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE
+)
+```
 
 ### 1. Q Values
 
@@ -70,10 +74,8 @@ $$
 
 ### 7. Real-world example
 
-
-``` r
+```{r eqsvlm}
 library(sf)
-## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
 library(sesp)
 library(gdverse)
 
@@ -83,54 +85,23 @@ system.time({
 go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
            model = 'ols', overlay = 'intersection')
 })
-##    user  system elapsed 
-##    0.22    0.03    0.65
 
 system.time({
 go2 = gd(incidence ~ ., data = NTDs,
          type = c('factor','interaction'))
 })
-##    user  system elapsed 
-##    0.04    0.00    0.08
 ```
 
 #### Factor detector
 
-
-``` r
+```{r fd}
 go1$factor
-## # A tibble: 3 × 5
-##   Variable  Qvalue    AIC    BIC LogLik
-##   <chr>      <dbl>  <dbl>  <dbl>  <dbl>
-## 1 watershed  0.638 -10.0  -10.0   15.0 
-## 2 elevation  0.607   1.18   1.18   7.41
-## 3 soiltype   0.386  79.7   79.7  -33.8
 go2$factor
-## # A tibble: 3 × 3
-##   variable  `Q-statistic` `P-value`
-##   <chr>             <dbl>     <dbl>
-## 1 watershed         0.638  0.000129
-## 2 elevation         0.607  0.0434  
-## 3 soiltype          0.386  0.372
 ```
 
 #### Interaction detector
 
-
-``` r
+```{r id}
 go1$interaction
-## # A tibble: 3 × 7
-##   Variable              Interaction    Qv1   Qv2  Qv12 Variable1 Variable2
-##   <chr>                 <chr>        <dbl> <dbl> <dbl> <chr>     <chr>    
-## 1 watershed ∩ elevation Enhance, bi- 0.638 0.607 0.714 watershed elevation
-## 2 watershed ∩ soiltype  Enhance, bi- 0.638 0.386 0.736 watershed soiltype 
-## 3 elevation ∩ soiltype  Enhance, bi- 0.607 0.386 0.664 elevation soiltype
 go2$interaction
-## # A tibble: 3 × 6
-##   variable1 variable2 Interaction  `Variable1 Q-statistics` `Variable2 Q-statistics`
-##   <chr>     <chr>     <chr>                           <dbl>                    <dbl>
-## 1 watershed elevation Enhance, bi-                    0.638                    0.607
-## 2 watershed soiltype  Enhance, bi-                    0.638                    0.386
-## 3 elevation soiltype  Enhance, bi-                    0.607                    0.386
-## # ℹ 1 more variable: `Variable1 and Variable2 interact Q-statistics` <dbl>
 ```
