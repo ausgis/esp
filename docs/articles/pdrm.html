@@ -168,6 +168,70 @@ q = 1 - \frac{\sum\limits_{h = 1}^{L}N_h\sigma_h^2}{N\sigma^2}
 \overline{y}}^2\right)} = R^2
 \]</span></p>
 </div>
+<div class="section level3">
+<h3 id="real-world-example">7. Real-world example<a class="anchor" aria-label="anchor" href="#real-world-example"></a>
+</h3>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
+<span><span class="co">## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/sesp/">sesp</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/gdverse/" class="external-link">gdverse</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">NTDs</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">gdverse</span><span class="fu">::</span><span class="va"><a href="https://stscl.github.io/gdverse/reference/NTDs.html" class="external-link">NTDs</a></span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X'</span>,<span class="st">'Y'</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
+<span><span class="va">go1</span> <span class="op">=</span> <span class="fu"><a href="../reference/sesp.html">sesp</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>, discvar <span class="op">=</span> <span class="st">'none'</span>,</span>
+<span>           model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">##    user  system elapsed </span></span>
+<span><span class="co">##    0.22    0.03    0.65</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
+<span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://stscl.github.io/gdverse/reference/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
+<span>         type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'factor'</span>,<span class="st">'interaction'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span><span class="co">##    user  system elapsed </span></span>
+<span><span class="co">##    0.04    0.00    0.08</span></span></code></pre></div>
+<div class="section level4">
+<h4 id="factor-detector">Factor detector<a class="anchor" aria-label="anchor" href="#factor-detector"></a>
+</h4>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">go1</span><span class="op">$</span><span class="va">factor</span></span>
+<span><span class="co">## # A tibble: 3 × 5</span></span>
+<span><span class="co">##   Variable  Qvalue    AIC    BIC LogLik</span></span>
+<span><span class="co">##   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span><span class="co">## 1 watershed  0.638 -10.0  -10.0   15.0 </span></span>
+<span><span class="co">## 2 elevation  0.607   1.18   1.18   7.41</span></span>
+<span><span class="co">## 3 soiltype   0.386  79.7   79.7  -33.8</span></span>
+<span><span class="va">go2</span><span class="op">$</span><span class="va">factor</span></span>
+<span><span class="co">## # A tibble: 3 × 3</span></span>
+<span><span class="co">##   variable  `Q-statistic` `P-value`</span></span>
+<span><span class="co">##   &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span><span class="co">## 1 watershed         0.638  0.000129</span></span>
+<span><span class="co">## 2 elevation         0.607  0.0434  </span></span>
+<span><span class="co">## 3 soiltype          0.386  0.372</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="interaction-detector">Interaction detector<a class="anchor" aria-label="anchor" href="#interaction-detector"></a>
+</h4>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">go1</span><span class="op">$</span><span class="va">interaction</span></span>
+<span><span class="co">## # A tibble: 3 × 7</span></span>
+<span><span class="co">##   Variable              Interaction    Qv1   Qv2  Qv12 Variable1 Variable2</span></span>
+<span><span class="co">##   &lt;chr&gt;                 &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    </span></span>
+<span><span class="co">## 1 watershed ∩ elevation Enhance, bi- 0.638 0.607 0.714 watershed elevation</span></span>
+<span><span class="co">## 2 watershed ∩ soiltype  Enhance, bi- 0.638 0.386 0.736 watershed soiltype </span></span>
+<span><span class="co">## 3 elevation ∩ soiltype  Enhance, bi- 0.607 0.386 0.664 elevation soiltype</span></span>
+<span><span class="va">go2</span><span class="op">$</span><span class="va">interaction</span></span>
+<span><span class="co">## # A tibble: 3 × 6</span></span>
+<span><span class="co">##   variable1 variable2 Interaction  `Variable1 Q-statistics` `Variable2 Q-statistics`</span></span>
+<span><span class="co">##   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;                           &lt;dbl&gt;                    &lt;dbl&gt;</span></span>
+<span><span class="co">## 1 watershed elevation Enhance, bi-                    0.638                    0.607</span></span>
+<span><span class="co">## 2 watershed soiltype  Enhance, bi-                    0.638                    0.386</span></span>
+<span><span class="co">## 3 elevation soiltype  Enhance, bi-                    0.607                    0.386</span></span>
+<span><span class="co">## # ℹ 1 more variable: `Variable1 and Variable2 interact Q-statistics` &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
