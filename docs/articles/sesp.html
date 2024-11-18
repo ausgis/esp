@@ -73,9 +73,9 @@
 
     
     
-<div class="section level2">
-<h2 id="install-and-load-r-packages">Install and load R packages<a class="anchor" aria-label="anchor" href="#install-and-load-r-packages"></a>
-</h2>
+<div class="section level3">
+<h3 id="install-and-load-r-packages">Install and load R packages<a class="anchor" aria-label="anchor" href="#install-and-load-r-packages"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sf"</span>,<span class="st">"gdverse"</span><span class="op">)</span>, dep <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="co"># install.packages("devtools")</span></span>
@@ -85,81 +85,16 @@
 <span><span class="co">## Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/sesp/">sesp</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://stscl.github.io/gdverse/" class="external-link">gdverse</a></span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="equivalence-of-q-values-in-the-native-geographical-detector-and-linear-regression-framework">Equivalence of Q Values in the Native Geographical Detector and
-Linear Regression Framework<a class="anchor" aria-label="anchor" href="#equivalence-of-q-values-in-the-native-geographical-detector-and-linear-regression-framework"></a>
-</h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">NTDs</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="fu">gdverse</span><span class="fu">::</span><span class="va"><a href="https://stscl.github.io/gdverse/reference/NTDs.html" class="external-link">NTDs</a></span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X'</span>,<span class="st">'Y'</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
-<span><span class="va">go1</span> <span class="op">=</span> <span class="fu"><a href="../reference/sesp.html">sesp</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>, discvar <span class="op">=</span> <span class="st">'none'</span>,</span>
-<span>           model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span>
-<span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.19    0.02    0.58</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
-<span><span class="va">go2</span> <span class="op">=</span> <span class="fu"><a href="https://stscl.github.io/gdverse/reference/gd.html" class="external-link">gd</a></span><span class="op">(</span><span class="va">incidence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">NTDs</span>,</span>
-<span>         type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'factor'</span>,<span class="st">'interaction'</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span><span class="op">)</span></span>
-<span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    0.06    0.00    0.08</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="factor-detector">Factor detector<a class="anchor" aria-label="anchor" href="#factor-detector"></a>
-</h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">go1</span><span class="op">$</span><span class="va">factor</span></span>
-<span><span class="co">## # A tibble: 3 × 5</span></span>
-<span><span class="co">##   Variable  Qvalue    AIC    BIC LogLik</span></span>
-<span><span class="co">##   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span><span class="co">## 1 watershed  0.638 -10.0  -10.0   15.0 </span></span>
-<span><span class="co">## 2 elevation  0.607   1.18   1.18   7.41</span></span>
-<span><span class="co">## 3 soiltype   0.386  79.7   79.7  -33.8</span></span>
-<span><span class="va">go2</span><span class="op">$</span><span class="va">factor</span></span>
-<span><span class="co">## # A tibble: 3 × 3</span></span>
-<span><span class="co">##   variable  `Q-statistic` `P-value`</span></span>
-<span><span class="co">##   &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;</span></span>
-<span><span class="co">## 1 watershed         0.638  0.000129</span></span>
-<span><span class="co">## 2 elevation         0.607  0.0434  </span></span>
-<span><span class="co">## 3 soiltype          0.386  0.372</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="interaction-detector">Interaction detector<a class="anchor" aria-label="anchor" href="#interaction-detector"></a>
-</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">go1</span><span class="op">$</span><span class="va">interaction</span></span>
-<span><span class="co">## # A tibble: 3 × 7</span></span>
-<span><span class="co">##   Variable              Interaction    Qv1   Qv2  Qv12 Variable1 Variable2</span></span>
-<span><span class="co">##   &lt;chr&gt;                 &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    </span></span>
-<span><span class="co">## 1 watershed ∩ elevation Enhance, bi- 0.638 0.607 0.714 watershed elevation</span></span>
-<span><span class="co">## 2 watershed ∩ soiltype  Enhance, bi- 0.638 0.386 0.736 watershed soiltype </span></span>
-<span><span class="co">## 3 elevation ∩ soiltype  Enhance, bi- 0.607 0.386 0.664 elevation soiltype</span></span>
-<span><span class="va">go2</span><span class="op">$</span><span class="va">interaction</span></span>
-<span><span class="co">## # A tibble: 3 × 6</span></span>
-<span><span class="co">##   variable1 variable2 Interaction  `Variable1 Q-statistics` `Variable2 Q-statistics`</span></span>
-<span><span class="co">##   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;                           &lt;dbl&gt;                    &lt;dbl&gt;</span></span>
-<span><span class="co">## 1 watershed elevation Enhance, bi-                    0.638                    0.607</span></span>
-<span><span class="co">## 2 watershed soiltype  Enhance, bi-                    0.638                    0.386</span></span>
-<span><span class="co">## 3 elevation soiltype  Enhance, bi-                    0.607                    0.386</span></span>
-<span><span class="co">## # ℹ 1 more variable: `Variable1 and Variable2 interact Q-statistics` &lt;dbl&gt;</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="spatially-explicit-stratified-power-model-under-the-linear-regression-framework">Spatially Explicit Stratified Power Model Under The Linear
-Regression Framework<a class="anchor" aria-label="anchor" href="#spatially-explicit-stratified-power-model-under-the-linear-regression-framework"></a>
-</h2>
 <p>Using the same data as <a href="https://stscl.github.io/gdverse/articles/idsa.html" class="external-link">the gdverse
 idsa vignette</a>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">depression</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'extdata/Depression.csv'</span>,package <span class="op">=</span> <span class="st">'gdverse'</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">readr</span><span class="fu">::</span><span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span>coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X'</span>,<span class="st">'Y'</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span>
 <span><span class="co">## Rows: 1072 Columns: 13</span></span>
-<span><span class="co">## ── Column specification ───────────────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">## ── Column specification ────────────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">## Delimiter: ","</span></span>
-<span><span class="co">## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neig...</span></span>
+<span><span class="co">## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neigh...</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## ℹ Use `spec()` to retrieve the full column specification for this data.</span></span>
 <span><span class="co">## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
@@ -185,16 +120,17 @@ idsa vignette</a>:</p>
 <span><span class="co">## # ℹ 1,062 more rows</span></span>
 <span><span class="co">## # ℹ 7 more variables: Beer &lt;dbl&gt;, MentalHealthPati &lt;dbl&gt;, NatureParks &lt;dbl&gt;, Casinos &lt;dbl&gt;,</span></span>
 <span><span class="co">## #   DrinkingPlaces &lt;dbl&gt;, X.HouseRent &lt;dbl&gt;, geometry &lt;POINT [°]&gt;</span></span></code></pre></div>
+</div>
 <div class="section level3">
 <h3 id="sesp-with-linear-regression">SESP With Linear Regression<a class="anchor" aria-label="anchor" href="#sesp-with-linear-regression"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">g1</span> <span class="op">=</span> <span class="fu"><a href="../reference/sesp.html">sesp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">depression</span>,</span>
 <span>            model <span class="op">=</span> <span class="st">'ols'</span>, overlay <span class="op">=</span> <span class="st">'intersection'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    1.83    0.33   27.68</span></span>
+<span><span class="co">##    3.03    0.42   28.14</span></span>
 <span><span class="va">g1</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -241,14 +177,14 @@ Linear Regression</div>
 <div class="section level3">
 <h3 id="sesp-with-spatial-lag-regression">SESP With Spatial Lag Regression<a class="anchor" aria-label="anchor" href="#sesp-with-spatial-lag-regression"></a>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">g2</span> <span class="op">=</span> <span class="fu"><a href="../reference/sesp.html">sesp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>            data <span class="op">=</span> <span class="va">depression</span>,</span>
 <span>            model <span class="op">=</span> <span class="st">'lag'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    7.58    0.90  250.00</span></span>
+<span><span class="co">##    5.76    0.64  254.36</span></span>
 <span><span class="va">g2</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -295,14 +231,14 @@ Spatial Lag Regression</div>
 <div class="section level3">
 <h3 id="sesp-with-spatial-error-regression">SESP With Spatial Error Regression<a class="anchor" aria-label="anchor" href="#sesp-with-spatial-error-regression"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">g3</span> <span class="op">=</span> <span class="fu"><a href="../reference/sesp.html">sesp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>            data <span class="op">=</span> <span class="va">depression</span>,</span>
 <span>            model <span class="op">=</span> <span class="st">'error'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    6.81    0.71  136.28</span></span>
+<span><span class="co">##    4.06    0.25  137.75</span></span>
 <span><span class="va">g3</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -349,13 +285,13 @@ Spatial Error Regression</div>
 <div class="section level3">
 <h3 id="sesp-with-spatial-durbin-regression">SESP With Spatial Durbin Regression<a class="anchor" aria-label="anchor" href="#sesp-with-spatial-durbin-regression"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">g4</span> <span class="op">=</span> <span class="fu"><a href="../reference/sesp.html">sesp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">depression</span>,</span>
 <span>            model <span class="op">=</span> <span class="st">'lag'</span>, durbin <span class="op">=</span> <span class="cn">TRUE</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    7.30    0.83  253.43</span></span>
+<span><span class="co">##    7.96    1.17  254.39</span></span>
 <span><span class="va">g4</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -402,14 +338,14 @@ Spatial Durbin Regression</div>
 <div class="section level3">
 <h3 id="sesp-with-geographically-weighted-regression">SESP With Geographically Weighted Regression<a class="anchor" aria-label="anchor" href="#sesp-with-geographically-weighted-regression"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/system.time.html" class="external-link">system.time</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>  <span class="va">g5</span> <span class="op">=</span> <span class="fu"><a href="../reference/sesp.html">sesp</a></span><span class="op">(</span><span class="va">Depression_prevelence</span> <span class="op">~</span> <span class="va">.</span>,</span>
 <span>            data <span class="op">=</span> <span class="va">depression</span>,</span>
 <span>            model <span class="op">=</span> <span class="st">'gwr'</span>, cores <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="co">##    user  system elapsed </span></span>
-<span><span class="co">##    6.57    0.75  155.61</span></span>
+<span><span class="co">##    7.95    0.80  150.22</span></span>
 <span><span class="va">g5</span></span>
 <span><span class="co">## ***          Spatially Explicit Stratified Power     </span></span>
 <span><span class="co">## </span></span>
@@ -456,7 +392,7 @@ Geographically Weighted Regression</div>
 <div class="section level3">
 <h3 id="results-of-optimal-spatial-discretization">Results of optimal spatial discretization<a class="anchor" aria-label="anchor" href="#results-of-optimal-spatial-discretization"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">plot_optdisc</span> <span class="op">=</span> \<span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">{</span></span>
 <span> <span class="va">gmap</span> <span class="op">=</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_set_geometry</a></span><span class="op">(</span><span class="va">g</span><span class="op">$</span><span class="va">optdisc</span>,<span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_geometry</a></span><span class="op">(</span><span class="va">depression</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -479,7 +415,7 @@ Geographically Weighted Regression</div>
 <span>                            plot.tag.position <span class="op">=</span> <span class="st">"topleft"</span><span class="op">)</span><span class="op">)</span></span>
 <span> <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">fig1</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">plot_optdisc</span><span class="op">(</span><span class="va">g1</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
 <img src="../reference/figures/sesp/optdisc1-1.png" alt="Figure 6. Optimal spatial discretization result with linear regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively."><div class="figcaption">
@@ -490,7 +426,7 @@ PopulationDensity, Population65, NoHealthInsurance,
 Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos,
 DrinkingPlaces, and X.HouseRent, respectively.</div>
 </div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">plot_optdisc</span><span class="op">(</span><span class="va">g2</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
 <img src="../reference/figures/sesp/optdisc2-1.png" alt="Figure 7. Optimal spatial discretization result with spatial lag regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively."><div class="figcaption">
@@ -501,7 +437,7 @@ PopulationDensity, Population65, NoHealthInsurance,
 Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos,
 DrinkingPlaces, and X.HouseRent, respectively.</div>
 </div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">plot_optdisc</span><span class="op">(</span><span class="va">g3</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
 <img src="../reference/figures/sesp/optdisc3-1.png" alt="Figure 8. Optimal spatial discretization result with spatial error regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively."><div class="figcaption">
@@ -512,7 +448,7 @@ PopulationDensity, Population65, NoHealthInsurance,
 Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos,
 DrinkingPlaces, and X.HouseRent, respectively.</div>
 </div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">plot_optdisc</span><span class="op">(</span><span class="va">g4</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
 <img src="../reference/figures/sesp/optdisc4-1.png" alt="Figure 9. Optimal spatial discretization result with spatial durbin regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively."><div class="figcaption">
@@ -523,7 +459,7 @@ variables PopulationDensity, Population65, NoHealthInsurance,
 Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos,
 DrinkingPlaces, and X.HouseRent, respectively.</div>
 </div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">plot_optdisc</span><span class="op">(</span><span class="va">g5</span><span class="op">)</span></span></code></pre></div>
 <div class="float">
 <img src="../reference/figures/sesp/optdisc5-1.png" alt="Figure 10. Optimal spatial discretization result with geographically weighted regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively."><div class="figcaption">
@@ -533,7 +469,6 @@ Subfigures (a)–(j) depict the optimal spatial discretizations for the
 variables PopulationDensity, Population65, NoHealthInsurance,
 Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos,
 DrinkingPlaces, and X.HouseRent, respectively.</div>
-</div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
