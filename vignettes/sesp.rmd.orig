@@ -30,36 +30,6 @@ library(sesp)
 library(gdverse)
 ```
 
-## Equivalence of Q Values in the Native Geographical Detector and Linear Regression Framework
-
-```{r eqsvlm}
-NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
-
-system.time({
-go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
-           model = 'ols', overlay = 'intersection')
-})
-
-system.time({
-go2 = gd(incidence ~ ., data = NTDs,
-         type = c('factor','interaction'))
-})
-```
-
-### Factor detector
-
-```{r fd}
-go1$factor
-go2$factor
-```
-
-### Interaction detector
-
-```{r id}
-go1$interaction
-go2$interaction
-```
-
 ## Spatially Explicit Stratified Power Model Under The Linear Regression Framework
 
 Using the same data as [the gdverse idsa vignette](https://stscl.github.io/gdverse/articles/idsa.html):

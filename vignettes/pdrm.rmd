@@ -71,3 +71,37 @@ q = 1 - \frac{\sum\limits_{h = 1}^{L}N_h\sigma_h^2}{N\sigma^2}
   = 1 - \frac{\sum\limits_{h = 1}^{L}\sum\limits_{i = 1}^{N_h}\left({y_{hi} - \overline{y}_h}^2\right)}{\sum\limits_{i = 1}^{N} \left({y_i - \overline{y}}^2\right)} = 
 \frac{\sum\limits_{i = 1}^{N}\left({y_i - \widehat{y}_i}^2\right)}{\sum\limits_{i = 1}^{N}\left({y_i - \overline{y}}^2\right)} = R^2
 $$
+
+### 7. Real-world example
+
+```{r eqsvlm}
+library(sf)
+library(sesp)
+library(gdverse)
+
+NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
+
+system.time({
+go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
+           model = 'ols', overlay = 'intersection')
+})
+
+system.time({
+go2 = gd(incidence ~ ., data = NTDs,
+         type = c('factor','interaction'))
+})
+```
+
+#### Factor detector
+
+```{r fd}
+go1$factor
+go2$factor
+```
+
+#### Interaction detector
+
+```{r id}
+go1$interaction
+go2$interaction
+```
