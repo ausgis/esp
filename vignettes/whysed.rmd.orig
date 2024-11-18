@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 We demonstrate the necessity of the spatial explicit discretization (discretization with spatial soft constraints) method using the `Depression.csv` data from the `gdverse` package. In this analysis, we select `Depression_prevalence` as the dependent variable $Y$ and `PopulationDensity` as the independent variable $X$. $X$ is randomly shuffled, and the q-value is calculated using both discretization methods that do and do not account for spatial soft constraints, with the process repeated 1000 times. We selected hierarchical clustering with spatial soft constraints and hierarchical clustering without spatial soft constraints method to represent explicit and implicit spatial discretization, respectively. At the same time, natural breaks method and robust discretization are used as the control in this experiment. The hierarchical clustering with spatial soft constraints method and hierarchical clustering without spatial soft constraints method were implemented using the `ClustGeo` package, the natural breaks method is implemented based on the `sdsfun` package and the robust discretization is implemented by `gdverse` package. In subsequent analyses, all discretization methods applied will discretize the dataset into five strata for the calculation of the q-values.
 
-## Install Necessary R Packages
+### Install Necessary R Packages
 
 ```r
 install.packages("gdverse",dep = TRUE)
@@ -26,7 +26,7 @@ install.packages("gdverse",dep = TRUE)
 devtools::install_github("stscl/sesp",build_vignettes = TRUE,dep = TRUE)
 ```
 
-## The spatial autocorrelation of the example data
+### The spatial autocorrelation of the example data
 
 ```{r moran_data}
 dt = system.file('extdata/Depression.csv',package = 'gdverse') |>
@@ -38,9 +38,9 @@ dt = system.file('extdata/Depression.csv',package = 'gdverse') |>
 sdsfun::moran_test(dt)
 ```
 
-## Q value corresponding to spatial implicit discretization
+### Q values corresponding to spatial implicit discretization
 
-```{r prepare}
+```{r qv_sid}
 geom = sf::st_geometry(dt)
 y = dt$y
 x = dt$x
@@ -50,18 +50,24 @@ hclustgeo_disc = \(xv,discnum,alpha = 0.5){
   resh = ClustGeo::hclustgeo(D0,gdist,alpha = alpha)
   return(stats::cutree(resh,discnum))
 }
-```
 
-```{r qv_sid}
 x_naturaldisc = sdsfun::discretize_vector(x,5,method = "natural")
 x_hclustdisc = hclustgeo_disc(x,5,alpha = 0)
+x_robustdisc = gdverse::robust_disc(y ~ .,
+                                 data = tibble::tibble(y = y,x = x),
+                                 discnum = 5, cores = 1) |>
+  dplyr::pull(1) |>
+  as.factor() |>
+  as.integer()
 qv_naturaldisc = gdverse::factor_detector(y,x_naturaldisc)[[1]]
 qv_naturaldisc
 qv_hclustdisc = gdverse::factor_detector(y,x_hclustdisc)[[1]]
 qv_hclustdisc
+qv_robustdisc = gdverse::factor_detector(y,x_robustdisc)[[1]]
+qv_robustdisc
 ```
 
-## A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
+### A Monte Carlo simulation experiment demonstrating the necessity of spatial explicit discretization
 
 In the repeated experiment, $X$ is shuffled 1000 times, and the global Moran's I of the original independent variable $X$ serves as the degree of spatial soft constraint (0.365 in this case). Subsequently, the q-values for each simulation round is computed.
 
@@ -84,16 +90,9 @@ mc_simq = \(times = 1000, cores = 6){
     moran = dplyr::pull(g$result,2)
     moran_p = dplyr::pull(g$result,6)
     x_sed = hclustgeo_disc(x_sim, discnum = 5, alpha = 0.365)
-    x_sid = gdverse::robust_disc(y ~ .,
-                                 data = tibble::tibble(y = y,x = x_sim),
-                                 discnum = 5, cores = 1) |>
-      dplyr::pull(1) |>
-      as.factor() |>
-      as.integer()
     qv1 = gdverse::factor_detector(y,x_sed)[[1]]
-    qv2 = gdverse::factor_detector(y,x_sid)[[1]]
-    res = tibble::tibble(qv_sed = qv1, qv_sid = qv2,
-                         moran = moran, moran_p = moran_p)
+    res = tibble::tibble(qv_sed = qv1, moran = moran,
+                         moran_p = moran_p)
     return(res)
   }
 
@@ -146,4 +145,4 @@ ggplot2::ggplot(data = qv_sign, ggplot2::aes(x = qv_sed)) +
   ggplot2::theme_classic()
 ```
 
-The q-value obtained by classifying into five categories using the natural breaks method is `r round(qv_naturaldisc, 5)`, while the q-value from five-category hierarchical clustering without spatial soft constraints is `r round(qv_hclustdisc, 5)`. In the Monte Carlo simulation experiment, the range of q-values spans from `r round(min(qv$qv_sed), 5)` to `r round(max(qv$qv_sed), 5)`. The range of q-values from randomized simulations that best align with actual conditions is from `r round(min(qv_sign$qv_sed), 5)` to `r round(max(qv_sign$qv_sed), 5)`. The Monte Carlo simulation results suggest that spatially implicit discretization tends to underestimate the q-value of the variable when moderate spatial autocorrelation is present, emphasizing the need for spatially explicit discretization.
+The q-value derived from classifying into five categories using the natural breaks method is `r round(qv_naturaldisc,5)`, while the q-value from five-category hierarchical clustering without spatial constraints is `r round(qv_hclustdisc,5)`. In comparison, the q-value obtained through robust discretization into five categories is `r round(qv_robustdisc,5)`. In the Monte Carlo simulation experiment, the q-values range from `r round(min(qv$qv_sed),5)` to `r round(max(qv$qv_sed),5)`. Among randomized simulations that best align with actual conditions, the q-value range spans from `r round(min(qv_sign$qv_sed),5)` to `r round(max(qv_sign$qv_sed), 5)`. These results indicate that spatially implicit discretization tends to underestimate the q-value of the variable under moderate spatial autocorrelation, highlighting the importance of spatially explicit discretization. The results also reveal that robust discretization, which accounts for the relationship between independent and dependent variables, can effectively reduce the q-value estimation bias introduced by spatially implicit discretization methods. However, it still underestimates the q-value by approximately `r round((min(qv$qv_sed)-qv_robustdisc)/min(qv$qv_sed),5)` to `r round((max(qv$qv_sed)-qv_robustdisc)/max(qv$qv_sed),5)`. This highlights the need for a spatially explicit discretization approach that fully considers the relationship between independent and dependent variables to more accurately capture the impact of spatial dependence on discretization.
