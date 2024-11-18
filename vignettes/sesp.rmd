@@ -9,7 +9,7 @@ vignette: >
 
 
 
-## Install and load R packages
+### Install and load R packages
 
 ```r
 install.packages(c("sf","gdverse"), dep = T)
@@ -26,70 +26,6 @@ library(sesp)
 library(gdverse)
 ```
 
-## Equivalence of Q Values in the Native Geographical Detector and Linear Regression Framework
-
-
-``` r
-NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
-
-system.time({
-go1 = sesp(incidence ~ ., data = NTDs, discvar = 'none',
-           model = 'ols', overlay = 'intersection')
-})
-##    user  system elapsed 
-##    0.19    0.02    0.58
-
-system.time({
-go2 = gd(incidence ~ ., data = NTDs,
-         type = c('factor','interaction'))
-})
-##    user  system elapsed 
-##    0.06    0.00    0.08
-```
-
-### Factor detector
-
-
-``` r
-go1$factor
-## # A tibble: 3 × 5
-##   Variable  Qvalue    AIC    BIC LogLik
-##   <chr>      <dbl>  <dbl>  <dbl>  <dbl>
-## 1 watershed  0.638 -10.0  -10.0   15.0 
-## 2 elevation  0.607   1.18   1.18   7.41
-## 3 soiltype   0.386  79.7   79.7  -33.8
-go2$factor
-## # A tibble: 3 × 3
-##   variable  `Q-statistic` `P-value`
-##   <chr>             <dbl>     <dbl>
-## 1 watershed         0.638  0.000129
-## 2 elevation         0.607  0.0434  
-## 3 soiltype          0.386  0.372
-```
-
-### Interaction detector
-
-
-``` r
-go1$interaction
-## # A tibble: 3 × 7
-##   Variable              Interaction    Qv1   Qv2  Qv12 Variable1 Variable2
-##   <chr>                 <chr>        <dbl> <dbl> <dbl> <chr>     <chr>    
-## 1 watershed ∩ elevation Enhance, bi- 0.638 0.607 0.714 watershed elevation
-## 2 watershed ∩ soiltype  Enhance, bi- 0.638 0.386 0.736 watershed soiltype 
-## 3 elevation ∩ soiltype  Enhance, bi- 0.607 0.386 0.664 elevation soiltype
-go2$interaction
-## # A tibble: 3 × 6
-##   variable1 variable2 Interaction  `Variable1 Q-statistics` `Variable2 Q-statistics`
-##   <chr>     <chr>     <chr>                           <dbl>                    <dbl>
-## 1 watershed elevation Enhance, bi-                    0.638                    0.607
-## 2 watershed soiltype  Enhance, bi-                    0.638                    0.386
-## 3 elevation soiltype  Enhance, bi-                    0.607                    0.386
-## # ℹ 1 more variable: `Variable1 and Variable2 interact Q-statistics` <dbl>
-```
-
-## Spatially Explicit Stratified Power Model Under The Linear Regression Framework
-
 Using the same data as [the gdverse idsa vignette](https://stscl.github.io/gdverse/articles/idsa.html):
 
 
@@ -98,9 +34,9 @@ depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
   readr::read_csv() |>
   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
 ## Rows: 1072 Columns: 13
-## ── Column specification ───────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────
 ## Delimiter: ","
-## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neig...
+## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neigh...
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -137,7 +73,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    1.83    0.33   27.68
+##    3.03    0.42   28.14
 g1
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -189,7 +125,7 @@ system.time({
             model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    7.58    0.90  250.00
+##    5.76    0.64  254.36
 g2
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -241,7 +177,7 @@ system.time({
             model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    6.81    0.71  136.28
+##    4.06    0.25  137.75
 g3
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -292,7 +228,7 @@ system.time({
             model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##    7.30    0.83  253.43
+##    7.96    1.17  254.39
 g4
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -344,7 +280,7 @@ system.time({
             model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    6.57    0.75  155.61
+##    7.95    0.80  150.22
 g5
 ## ***          Spatially Explicit Stratified Power     
 ## 

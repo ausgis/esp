@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Install and load R packages
+### Install and load R packages
 
 ```r
 install.packages(c("sf","gdverse"), dep = T)
@@ -29,8 +29,6 @@ library(sf)
 library(sesp)
 library(gdverse)
 ```
-
-## Spatially Explicit Stratified Power Model Under The Linear Regression Framework
 
 Using the same data as [the gdverse idsa vignette](https://stscl.github.io/gdverse/articles/idsa.html):
 
