@@ -9,8 +9,7 @@ vignette: >
 
 
 
-
-We demonstrate the necessity of the spatial explicit discretization (discretization with spatial soft constraints) method using the `Depression.csv` data from the `gdverse` package. In this analysis, we select `Depression_prevalence` as the dependent variable $Y$ and `PopulationDensity` as the independent variable $X$. $X$ is randomly shuffled, and the q-value is calculated using both discretization methods that do and do not account for spatial soft constraints, with the process repeated 3000 times. We selected hierarchical clustering with spatial soft constraints and hierarchical clustering without spatial soft constraints method to represent explicit and implicit spatial discretization, respectively. At the same time, natural breaks method and robust discretization are used as the control in this experiment. The hierarchical clustering with spatial soft constraints method and hierarchical clustering without spatial soft constraints method were implemented using the `ClustGeo` package, the natural breaks method is implemented based on the `sdsfun` package and the robust discretization is implemented by `gdverse` package. In subsequent analyses, all discretization methods applied will discretize the dataset into five strata for the calculation of the q-values.
+We demonstrate the necessity of the spatial explicit discretization (discretization with spatial soft constraints) method using the `Depression.csv` data from the `gdverse` package. In this analysis, we select `Depression_prevalence` as the dependent variable $Y$ and `PopulationDensity` as the independent variable $X$. $X$ is randomly shuffled, and the q-value is calculated using both discretization methods that do and do not account for spatial soft constraints, with the process repeated 3000 times. We selected hierarchical clustering with spatial soft constraints and hierarchical clustering without spatial soft constraints method to represent explicit and implicit spatial discretization, respectively. At the same time, natural breaks method and robust discretization are used as the control in this experiment. The hierarchical clustering with spatial soft constraints method, hierarchical clustering without spatial soft constraints method and the natural breaks method were implemented using the `sdsfun` package, and the robust discretization is implemented by `gdverse` package. In subsequent analyses, all discretization methods applied will discretize the dataset into five strata for the calculation of the q-values.
 
 ### Install necessary R packages
 
@@ -30,9 +29,9 @@ dt = system.file('extdata/Depression.csv',package = 'gdverse') |>
   dplyr::select(y = Depression_prevelence,
                 x = PopulationDensity)
 ## Rows: 1072 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────────────────────────────────────────
 ## Delimiter: ","
-## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neigh...
+## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neig...
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -59,18 +58,12 @@ sdsfun::moran_test(dt)
 geom = sf::st_geometry(dt)
 y = dt$y
 x = dt$x
-gdist = stats::as.dist(sdsfun::sf_distance_matrix(dt))
-hclustgeo_disc = \(xv,discnum,alpha = 0.5){
-  D0 = stats::dist(xv)
-  resh = ClustGeo::hclustgeo(D0,gdist,alpha = alpha)
-  return(stats::cutree(resh,discnum))
-}
 
 x_naturaldisc = sdsfun::discretize_vector(x,5,method = "natural")
-x_hclustdisc = hclustgeo_disc(x,5,alpha = 0)
+x_hclustdisc = sdsfun::hclustgeo_disc(dplyr::select(dt,x),5,alpha = 0)
 x_robustdisc = gdverse::robust_disc(y ~ .,
-                                 data = tibble::tibble(y = y,x = x),
-                                 discnum = 5, cores = 1) |>
+                                    data = tibble::tibble(y = y,x = x),
+                                    discnum = 5, cores = 1) |>
   dplyr::pull(1) |>
   as.factor() |>
   as.integer()
@@ -103,12 +96,11 @@ mc_simq = \(times = 1000, cores = 6){
 
   calcul_q = \(n_sim) {
     x_sim = sample(x)
-    g = sdsfun::moran_test(
-      sf::st_set_geometry(tibble::tibble(x_sim = x_sim),geom)
-    )
+    x_sim = sf::st_set_geometry(tibble::tibble(x_sim = x_sim),geom)
+    g = sdsfun::moran_test(x_sim)
     moran = dplyr::pull(g$result,2)
     moran_p = dplyr::pull(g$result,6)
-    x_sed = hclustgeo_disc(x_sim, discnum = 5, alpha = 0.365)
+    x_sed = sdsfun::hclustgeo_disc(x_sim, n = 5, alpha = 0.365)
     qv1 = gdverse::factor_detector(y,x_sed)[[1]]
     res = tibble::tibble(qv_sed = qv1, moran = moran,
                          moran_p = moran_p)
@@ -116,7 +108,7 @@ mc_simq = \(times = 1000, cores = 6){
   }
 
   if (doclust) {
-    parallel::clusterExport(cores,varlist = c("geom","y","x","gdist","hclustgeo_disc"))
+    parallel::clusterExport(cores,varlist = c("geom","x","y"))
     out_g = parallel::parLapply(cores,seq(1,times,by = 1),calcul_q)
     out_g = tibble::as_tibble(do.call(rbind, out_g))
   } else {
@@ -131,18 +123,18 @@ mc_simq = \(times = 1000, cores = 6){
 qv = mc_simq(times = 3000, cores = 12)
 qv
 ## # A tibble: 3,000 × 3
-##    qv_sed     moran moran_p
-##     <dbl>     <dbl>   <dbl>
-##  1  0.206 -0.00252   0.535 
-##  2  0.200 -0.0178    0.827 
-##  3  0.207 -0.00977   0.690 
-##  4  0.190 -0.0222    0.883 
-##  5  0.191  0.00281   0.417 
-##  6  0.160  0.0291    0.0465
-##  7  0.197  0.0146    0.192 
-##  8  0.199  0.000935  0.458 
-##  9  0.163 -0.0214    0.874 
-## 10  0.180  0.00271   0.419 
+##    qv_sed      moran moran_p
+##     <dbl>      <dbl>   <dbl>
+##  1  0.182  0.0000884   0.477
+##  2  0.182  0.00891     0.291
+##  3  0.195 -0.0236      0.898
+##  4  0.194 -0.0201      0.858
+##  5  0.195 -0.00266     0.538
+##  6  0.188 -0.00397     0.567
+##  7  0.181 -0.0275      0.931
+##  8  0.156  0.00970     0.276
+##  9  0.167  0.0132      0.215
+## 10  0.165 -0.0266      0.925
 ## # ℹ 2,990 more rows
 ```
 
@@ -168,20 +160,20 @@ We selected simulated q-values that are more consistent with the actual situatio
 ``` r
 qv_sign = dplyr::filter(qv,moran>=0&moran_p<=0.05)
 qv_sign
-## # A tibble: 154 × 3
+## # A tibble: 163 × 3
 ##    qv_sed  moran moran_p
 ##     <dbl>  <dbl>   <dbl>
-##  1  0.160 0.0291 0.0465 
-##  2  0.190 0.0453 0.00483
-##  3  0.178 0.0298 0.0427 
-##  4  0.170 0.0337 0.0262 
-##  5  0.192 0.0444 0.00559
-##  6  0.213 0.0398 0.0114 
-##  7  0.195 0.0424 0.00769
-##  8  0.188 0.0444 0.00556
-##  9  0.193 0.0414 0.00895
-## 10  0.164 0.0296 0.0437 
-## # ℹ 144 more rows
+##  1  0.173 0.0428 0.00721
+##  2  0.174 0.0343 0.0243 
+##  3  0.179 0.0359 0.0196 
+##  4  0.203 0.0286 0.0492 
+##  5  0.205 0.0297 0.0430 
+##  6  0.168 0.0494 0.00243
+##  7  0.156 0.0292 0.0458 
+##  8  0.197 0.0295 0.0444 
+##  9  0.182 0.0374 0.0160 
+## 10  0.161 0.0384 0.0139 
+## # ℹ 153 more rows
 ```
 
 
@@ -200,4 +192,4 @@ ggplot2::ggplot(data = qv_sign, ggplot2::aes(x = qv_sed)) +
 
 ![**Figure 2**. Q-value distribution from randomized simulations that best align with actual conditions.](../man/figures/whysed/plot_mcres_2-1.png)
 
-The q-value derived from classifying into five categories using the natural breaks method is 0.07985, while the q-value from five-category hierarchical clustering without spatial constraints is 0.07315. In comparison, the q-value obtained through robust discretization into five categories is 0.11997. In the Monte Carlo simulation experiment, the q-values range from 0.12074 to 0.22217. Among randomized simulations that best align with actual conditions, the q-value range spans from 0.13296 to 0.21551. These results indicate that spatially implicit discretization tends to underestimate the q-value of the variable under moderate spatial autocorrelation, highlighting the importance of spatially explicit discretization. The results also reveal that robust discretization, which accounts for the relationship between independent and dependent variables, can effectively reduce the q-value estimation bias introduced by spatially implicit discretization methods. However, it still underestimates the q-value by approximately 35.3718%. This highlights the need for a spatially explicit discretization approach that fully considers the relationship between independent and dependent variables to more accurately capture the impact of spatial dependence on discretization.
+The q-value derived from classifying into five categories using the natural breaks method is 0.07985, while the q-value from five-category hierarchical clustering without spatial constraints is 0.07315. In comparison, the q-value obtained through robust discretization into five categories is 0.11997. In the Monte Carlo simulation experiment, the q-values range from 0.11659 to 0.22601. Among randomized simulations that best align with actual conditions, the q-value range spans from 0.11952 to 0.21663. These results indicate that spatially implicit discretization tends to underestimate the q-value of the variable under moderate spatial autocorrelation, highlighting the importance of spatially explicit discretization. The results also reveal that robust discretization, which accounts for the relationship between independent and dependent variables, can effectively reduce the q-value estimation bias introduced by spatially implicit discretization methods. However, it still underestimates the q-value by approximately 35.1796%. This highlights the need for a spatially explicit discretization approach that fully considers the relationship between independent and dependent variables to more accurately capture the impact of spatial dependence on discretization.
