@@ -70,6 +70,7 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
   yname = formula.vars[1]
   yvec = data[, yname, drop = TRUE]
   geom = sf::st_geometry(data)
+  gdist = sdsfun::sf_distance_matrix(data)
   gname = sdsfun::sf_geometry_name(data)
   xname = colnames(data)[-which(colnames(data) %in% c(yname,gname))]
 
@@ -124,7 +125,7 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
       se_alpha = dplyr::if_else(moran_v>=alpha&moran_p<=0.05,
                                 moran_v,alpha,missing = alpha)
       resdisc = tibble::as_tibble(
-        sdsfun::hclustgeo_disc(moran_dt,discnum,se_alpha,...)
+        sdsfun::hclustgeo_disc(moran_dt,discnum,se_alpha,D1 = gdist,...)
       )
       names(resdisc) = paste0("disc_",discnum)
       resdisc = dplyr::mutate(resdisc,xname = names(gwrcoefs)[n])
