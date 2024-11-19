@@ -115,15 +115,16 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
 
     gwrcoefs = sesp::gwr_betas(paste0(yname," ~ ."),discdf,bw,adaptive,kernel)
     gwr_hclust = \(n,discnum,alpha,...) {
-      moran_g = sdsfun::moran_test(
-        sf::st_set_geometry(tibble::tibble(x = gwrcoefs[,n,drop = TRUE]),geom)
+      moran_dt = sf::st_set_geometry(
+        tibble::tibble(x = gwrcoefs[,n,drop = TRUE]),geom
       )
+      moran_g = sdsfun::moran_test(moran_dt)
       moran_v = dplyr::pull(moran_g$result,2)
       moran_p = dplyr::pull(moran_g$result,6)
       se_alpha = dplyr::if_else(moran_v>=alpha&moran_p<=0.05,
                                 moran_v,alpha,missing = alpha)
       resdisc = tibble::as_tibble(
-        sdsfun::hclustgeo_disc(moran_g,discnum,se_alpha,...)
+        sdsfun::hclustgeo_disc(moran_dt,discnum,se_alpha,...)
       )
       names(resdisc) = paste0("disc_",discnum)
       resdisc = dplyr::mutate(resdisc,xname = names(gwrcoefs)[n])
