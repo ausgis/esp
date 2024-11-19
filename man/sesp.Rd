@@ -60,7 +60,7 @@ Default is \verb{5\%}.}
 \item{cores}{(optional) Positive integer (default is 1). When cores are greater than 1, use
 multi-core parallel computing.}
 
-\item{...}{(optional) Other arguments passed to \code{ClustGeo::hclustgeo()}.}
+\item{...}{(optional) Other arguments passed to \code{sdsfun::hclustgeo_disc()}.}
 }
 \value{
 A list.
