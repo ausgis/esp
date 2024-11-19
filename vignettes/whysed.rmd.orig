@@ -89,7 +89,7 @@ mc_simq = \(times = 1000, cores = 6){
   }
 
   if (doclust) {
-    parallel::clusterExport(cores,varlist = c("geom"))
+    parallel::clusterExport(cores,varlist = c("geom","x","y"))
     out_g = parallel::parLapply(cores,seq(1,times,by = 1),calcul_q)
     out_g = tibble::as_tibble(do.call(rbind, out_g))
   } else {
