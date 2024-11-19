@@ -15,8 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-
-We demonstrate the necessity of the spatial explicit discretization (discretization with spatial soft constraints) method using the `Depression.csv` data from the `gdverse` package. In this analysis, we select `Depression_prevalence` as the dependent variable $Y$ and `PopulationDensity` as the independent variable $X$. $X$ is randomly shuffled, and the q-value is calculated using both discretization methods that do and do not account for spatial soft constraints, with the process repeated 3000 times. We selected hierarchical clustering with spatial soft constraints and hierarchical clustering without spatial soft constraints method to represent explicit and implicit spatial discretization, respectively. At the same time, natural breaks method and robust discretization are used as the control in this experiment. The hierarchical clustering with spatial soft constraints method and hierarchical clustering without spatial soft constraints method were implemented using the `ClustGeo` package, the natural breaks method is implemented based on the `sdsfun` package and the robust discretization is implemented by `gdverse` package. In subsequent analyses, all discretization methods applied will discretize the dataset into five strata for the calculation of the q-values.
+We demonstrate the necessity of the spatial explicit discretization (discretization with spatial soft constraints) method using the `Depression.csv` data from the `gdverse` package. In this analysis, we select `Depression_prevalence` as the dependent variable $Y$ and `PopulationDensity` as the independent variable $X$. $X$ is randomly shuffled, and the q-value is calculated using both discretization methods that do and do not account for spatial soft constraints, with the process repeated 3000 times. We selected hierarchical clustering with spatial soft constraints and hierarchical clustering without spatial soft constraints method to represent explicit and implicit spatial discretization, respectively. At the same time, natural breaks method and robust discretization are used as the control in this experiment. The hierarchical clustering with spatial soft constraints method, hierarchical clustering without spatial soft constraints method and the natural breaks method were implemented using the `sdsfun` package, and the robust discretization is implemented by `gdverse` package. In subsequent analyses, all discretization methods applied will discretize the dataset into five strata for the calculation of the q-values.
 
 ### Install necessary R packages
 
@@ -44,18 +43,12 @@ sdsfun::moran_test(dt)
 geom = sf::st_geometry(dt)
 y = dt$y
 x = dt$x
-gdist = stats::as.dist(sdsfun::sf_distance_matrix(dt))
-hclustgeo_disc = \(xv,discnum,alpha = 0.5){
-  D0 = stats::dist(xv)
-  resh = ClustGeo::hclustgeo(D0,gdist,alpha = alpha)
-  return(stats::cutree(resh,discnum))
-}
 
 x_naturaldisc = sdsfun::discretize_vector(x,5,method = "natural")
-x_hclustdisc = hclustgeo_disc(x,5,alpha = 0)
+x_hclustdisc = sdsfun::hclustgeo_disc(dplyr::select(dt,x),5,alpha = 0)
 x_robustdisc = gdverse::robust_disc(y ~ .,
-                                 data = tibble::tibble(y = y,x = x),
-                                 discnum = 5, cores = 1) |>
+                                    data = tibble::tibble(y = y,x = x),
+                                    discnum = 5, cores = 1) |>
   dplyr::pull(1) |>
   as.factor() |>
   as.integer()
@@ -84,12 +77,11 @@ mc_simq = \(times = 1000, cores = 6){
 
   calcul_q = \(n_sim) {
     x_sim = sample(x)
-    g = sdsfun::moran_test(
-      sf::st_set_geometry(tibble::tibble(x_sim = x_sim),geom)
-    )
+    x_sim = sf::st_set_geometry(tibble::tibble(x_sim = x_sim),geom)
+    g = sdsfun::moran_test(x_sim)
     moran = dplyr::pull(g$result,2)
     moran_p = dplyr::pull(g$result,6)
-    x_sed = hclustgeo_disc(x_sim, discnum = 5, alpha = 0.365)
+    x_sed = sdsfun::hclustgeo_disc(x_sim, n = 5, alpha = 0.365)
     qv1 = gdverse::factor_detector(y,x_sed)[[1]]
     res = tibble::tibble(qv_sed = qv1, moran = moran,
                          moran_p = moran_p)
@@ -97,7 +89,7 @@ mc_simq = \(times = 1000, cores = 6){
   }
 
   if (doclust) {
-    parallel::clusterExport(cores,varlist = c("geom","y","x","gdist","hclustgeo_disc"))
+    parallel::clusterExport(cores,varlist = c("geom","x","y"))
     out_g = parallel::parLapply(cores,seq(1,times,by = 1),calcul_q)
     out_g = tibble::as_tibble(do.call(rbind, out_g))
   } else {

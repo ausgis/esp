@@ -29,7 +29,6 @@ BugReports: https://github.com/stscl/sesp/issues
 Depends: 
     R (>= 4.1.0)
 Imports: 
-    ClustGeo,
     dplyr,
     forcats,
     ggplot2,
@@ -38,7 +37,7 @@ Imports:
     parallel,
     patchwork,
     purrr,
-    sdsfun (>= 0.4.3),
+    sdsfun (>= 0.5.0),
     sf,
     spatialreg,
     spdep,
@@ -54,6 +53,7 @@ Suggests:
     readr,
     rmarkdown
 Remotes:
+    stscl/sdsfun,
     GWmodel-Lab/GWmodel3
 LinkingTo: 
     Rcpp,
