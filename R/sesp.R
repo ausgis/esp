@@ -29,7 +29,7 @@
 #' Default is `5%`.
 #' @param cores (optional) Positive integer (default is 1). When cores are greater than 1, use
 #' multi-core parallel computing.
-#' @param ... (optional) Other arguments passed to `ClustGeo::hclustgeo()`.
+#' @param ... (optional) Other arguments passed to `sdsfun::hclustgeo_disc()`.
 #'
 #' @return A list.
 #' \describe{
@@ -70,7 +70,6 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
   yname = formula.vars[1]
   yvec = data[, yname, drop = TRUE]
   geom = sf::st_geometry(data)
-  gdist = sdsfun::sf_distance_matrix(data)
   gname = sdsfun::sf_geometry_name(data)
   xname = colnames(data)[-which(colnames(data) %in% c(yname,gname))]
 
@@ -123,9 +122,9 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
       moran_p = dplyr::pull(moran_g$result,6)
       se_alpha = dplyr::if_else(moran_v>=alpha&moran_p<=0.05,
                                 moran_v,alpha,missing = alpha)
-      D0 = stats::dist(gwrcoefs[,n,drop = TRUE])
-      resh = ClustGeo::hclustgeo(D0,stats::as.dist(gdist),se_alpha,...)
-      resdisc = tibble::as_tibble(stats::cutree(resh,discnum))
+      resdisc = tibble::as_tibble(
+        sdsfun::hclustgeo_disc(moran_g,discnum,se_alpha,...)
+      )
       names(resdisc) = paste0("disc_",discnum)
       resdisc = dplyr::mutate(resdisc,xname = names(gwrcoefs)[n])
       resdisc = tibble::rowid_to_column(resdisc)
