@@ -29,7 +29,6 @@ BugReports: https://github.com/stscl/sesp/issues
 Depends: 
     R (>= 4.1.0)
 Imports: 
-    ClustGeo,
     dplyr,
     forcats,
     ggplot2,
