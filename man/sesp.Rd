@@ -73,12 +73,13 @@ A list.
 }
 }
 \description{
-Equivalent geographical detector \eqn{q}-values under a spatial linear regression framework.
+Spatially Explicit Stratified Power (SESP) Model
 }
 \note{
 Note that when the number of continuous independent variables is small (three or fewer), the built-in spatial explicit
-discretization in \code{sesp} may overestimate the variable q value. In such cases, it is recommended to discretize the
-variables beforehand and then input them into \code{sesp} for computation.
+discretization in \code{sesp} may overestimate the variable q value (when there are fewer input independent variables, GWR
+tends to overestimate the contribution of each variable). In such cases, it is recommended to discretize these variables
+beforehand and then input them into \code{sesp} for computation.
 }
 \examples{
 NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
