@@ -20,6 +20,8 @@
 #' @param overlay (optional) Spatial overlay method. One of `and`, `or`, `intersection`. Default is `and`.
 #' @param alpha (optional) Controlling the strength of spatial soft constraints, the larger the `alpha`,
 #' the stronger the spatial soft constraint. Default is `0.5`.
+#' @param intercept (optional) Whether to include the intercept term in the gwr coefficient `tibble`.
+#' Default is `FALSE`.
 #' @param bw (optional) The bandwidth used in selecting models. The optimal bandwidth can be
 #' selected using one of two methods: `AIC`, and `CV`. Default is `AIC`.
 #' @param adaptive (optional) Whether the bandwidth value is adaptive or not. Default is `TRUE`.
@@ -46,8 +48,8 @@
 #'          model = 'ols', overlay = 'intersection', cores = 1)
 #' g
 #'
-sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
-         model = 'ols', durbin = FALSE, overlay = 'and', alpha = 0.5, bw = "AIC",
+sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'ols',
+         durbin = FALSE, overlay = 'and', alpha = 0.5, intercept = FALSE, bw = "AIC",
          adaptive = TRUE, kernel = "gaussian", increase_rate = 0.05, cores = 1, ...) {
   if (!(model %in% c("ols","gwr","lag","error"))){
     stop("`model` must be one of `ols`,`gwr`,`lag` or `error`!")
@@ -113,7 +115,8 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
       undiscdf = NULL
     }
 
-    gwrcoefs = sesp::gwr_betas(paste0(yname," ~ ."),discdf,bw,adaptive,kernel)
+    gwrcoefs = sesp::gwr_betas(paste0(yname," ~ ."),discdf,
+                               bw,adaptive,kernel,intercept)
     gwr_hclust = \(n,discnum,alpha,...) {
       moran_dt = sf::st_set_geometry(
         tibble::tibble(x = gwrcoefs[,n,drop = TRUE]),geom
@@ -124,6 +127,9 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
       se_alpha = dplyr::if_else(moran_v>=alpha&moran_p<=0.05,
                                 moran_v,alpha,missing = alpha)
       se_alpha = dplyr::if_else(se_alpha>=0.95,0.95,se_alpha)
+      if (intercept) {
+        moran_dt = dplyr::bind_cols(moran_dt,gwrcoefs[,1,drop = TRUE])
+      }
       resdisc = tibble::as_tibble(
         sdsfun::hclustgeo_disc(moran_dt,discnum,se_alpha,D1 = gdist,...)
       )
@@ -133,12 +139,13 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
       return(resdisc)
     }
 
+    coefseq = dplyr::if_else(intercept,seq_along(gwrcoefs)[-1],seq_along(gwrcoefs))
     if (doclust) {
-      out_g = parallel::parLapply(cores, seq_along(gwrcoefs), gwr_hclust,
+      out_g = parallel::parLapply(cores, coefseq, gwr_hclust,
                                   discnum = discnum, alpha = alpha, ...)
       discdf = tibble::as_tibble(do.call(rbind, out_g))
     } else {
-      discdf = purrr::map_dfr(seq_along(gwrcoefs), gwr_hclust,
+      discdf = purrr::map_dfr(coefseq, gwr_hclust,
                               discnum = discnum, alpha = alpha, ...)
     }
 
