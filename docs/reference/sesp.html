@@ -54,6 +54,7 @@
 <span>  durbin <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  overlay <span class="op">=</span> <span class="st">"and"</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  intercept <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  bw <span class="op">=</span> <span class="st">"AIC"</span>,</span>
 <span>  adaptive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  kernel <span class="op">=</span> <span class="st">"gaussian"</span>,</span>
@@ -107,6 +108,11 @@ be discretized.</p></dd>
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
 <dd><p>(optional) Controlling the strength of spatial soft constraints, the larger the <code>alpha</code>,
 the stronger the spatial soft constraint. Default is <code>0.5</code>.</p></dd>
+
+
+<dt id="arg-intercept">intercept<a class="anchor" aria-label="anchor" href="#arg-intercept"></a></dt>
+<dd><p>(optional) Whether to include the intercept term in the gwr coefficient <code>tibble</code>.
+Default is <code>FALSE</code>.</p></dd>
 
 
 <dt id="arg-bw">bw<a class="anchor" aria-label="anchor" href="#arg-bw"></a></dt>
