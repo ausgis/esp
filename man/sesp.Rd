@@ -14,6 +14,7 @@ sesp(
   durbin = FALSE,
   overlay = "and",
   alpha = 0.5,
+  intercept = FALSE,
   bw = "AIC",
   adaptive = TRUE,
   kernel = "gaussian",
@@ -46,6 +47,9 @@ be discretized.}
 
 \item{alpha}{(optional) Controlling the strength of spatial soft constraints, the larger the \code{alpha},
 the stronger the spatial soft constraint. Default is \code{0.5}.}
+
+\item{intercept}{(optional) Whether to include the intercept term in the gwr coefficient \code{tibble}.
+Default is \code{FALSE}.}
 
 \item{bw}{(optional) The bandwidth used in selecting models. The optimal bandwidth can be
 selected using one of two methods: \code{AIC}, and \code{CV}. Default is \code{AIC}.}
