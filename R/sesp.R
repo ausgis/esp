@@ -139,7 +139,11 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
       return(resdisc)
     }
 
-    coefseq = dplyr::if_else(intercept,seq_along(gwrcoefs)[-1],seq_along(gwrcoefs))
+    if (intercept) {
+      coefseq = seq_along(gwrcoefs)[-1]
+    } else {
+      coefseq = seq_along(gwrcoefs)
+    }
     if (doclust) {
       out_g = parallel::parLapply(cores, coefseq, gwr_hclust,
                                   discnum = discnum, alpha = alpha, ...)
