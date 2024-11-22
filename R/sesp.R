@@ -123,6 +123,7 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8,
       moran_p = dplyr::pull(moran_g$result,6)
       se_alpha = dplyr::if_else(moran_v>=alpha&moran_p<=0.05,
                                 moran_v,alpha,missing = alpha)
+      se_alpha = dplyr::if_else(se_alpha>=0.95,0.95,se_alpha)
       resdisc = tibble::as_tibble(
         sdsfun::hclustgeo_disc(moran_dt,discnum,se_alpha,D1 = gdist,...)
       )
