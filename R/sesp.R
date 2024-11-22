@@ -387,6 +387,7 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
 
   opt_fdv$Variable = as.character(opt_fdv$Variable)
   fdv$Variable = as.character(fdv$Variable)
+  opt_fdv = dplyr::arrange(opt_fdv, dplyr::desc(Qvalue))
   names(opt_discdf) = xvarname
   res = list("factor" = opt_fdv,
              "interaction" = opt_idv,
@@ -416,7 +417,6 @@ print.sespm = \(x, ...) {
 #' @noRd
 plot.sespm = \(x, slicenum = 2, ...) {
   g_factor = x$factor |>
-    dplyr::arrange(dplyr::desc(Qvalue)) |>
     dplyr::mutate(Variable = forcats::fct_reorder(Variable, Qvalue, .desc = TRUE)) |>
     dplyr::mutate(Variable_col = c("first",rep("others",times = nrow(x$factor)-1))) |>
     dplyr::mutate(Qvtext = paste0(sprintf("%4.2f", Qvalue * 100), "%"))
