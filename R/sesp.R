@@ -128,7 +128,7 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
                                 moran_v,alpha,missing = alpha)
       se_alpha = dplyr::if_else(se_alpha>=0.95,0.95,se_alpha)
       if (intercept) {
-        moran_dt = dplyr::bind_cols(moran_dt,gwrcoefs[,n,drop = TRUE])
+        moran_dt = dplyr::bind_cols(moran_dt,gwrcoefs[,1,drop = TRUE])
       }
       resdisc = tibble::as_tibble(
         sdsfun::hclustgeo_disc(moran_dt,discnum,se_alpha,D1 = gdist,...)
