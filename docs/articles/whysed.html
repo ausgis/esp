@@ -81,7 +81,7 @@ dependent variable <span class="math inline">\(Y\)</span> and
 <code>PopulationDensity</code> as the independent variable <span class="math inline">\(X\)</span>. <span class="math inline">\(X\)</span>
 is randomly shuffled, and the q-value is calculated using both
 discretization methods that do and do not account for spatial soft
-constraints, with the process repeated 3000 times. We selected
+constraints, with the process repeated 5000 times. We selected
 hierarchical clustering with spatial soft constraints and hierarchical
 clustering without spatial soft constraints method to represent explicit
 and implicit spatial discretization, respectively. At the same time,
@@ -188,7 +188,7 @@ strata for the calculation of the q-values.</p>
 spatial explicit discretization<a class="anchor" aria-label="anchor" href="#a-monte-carlo-simulation-experiment-demonstrating-the-necessity-of-spatial-explicit-discretization"></a>
 </h3>
 <p>In the repeated experiment, <span class="math inline">\(X\)</span> is
-shuffled 3000 times, and the global Moran’s I of the original
+shuffled 5000 times, and the global Moran’s I of the original
 independent variable <span class="math inline">\(X\)</span> serves as
 the degree of spatial soft constraint (0.365 in this case).
 Subsequently, the q-values for each simulation round is computed.</p>
@@ -226,22 +226,22 @@ Subsequently, the q-values for each simulation round is computed.</p>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">out_g</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">qv</span> <span class="op">=</span> <span class="fu">mc_simq</span><span class="op">(</span>times <span class="op">=</span> <span class="fl">3000</span>, cores <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">qv</span> <span class="op">=</span> <span class="fu">mc_simq</span><span class="op">(</span>times <span class="op">=</span> <span class="fl">5000</span>, cores <span class="op">=</span> <span class="fl">12</span><span class="op">)</span></span>
 <span><span class="va">qv</span></span>
-<span><span class="co">## # A tibble: 3,000 × 3</span></span>
-<span><span class="co">##    qv_sed      moran moran_p</span></span>
-<span><span class="co">##     &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">##  1  0.182  0.0000884   0.477</span></span>
-<span><span class="co">##  2  0.182  0.00891     0.291</span></span>
-<span><span class="co">##  3  0.195 -0.0236      0.898</span></span>
-<span><span class="co">##  4  0.194 -0.0201      0.858</span></span>
-<span><span class="co">##  5  0.195 -0.00266     0.538</span></span>
-<span><span class="co">##  6  0.188 -0.00397     0.567</span></span>
-<span><span class="co">##  7  0.181 -0.0275      0.931</span></span>
-<span><span class="co">##  8  0.156  0.00970     0.276</span></span>
-<span><span class="co">##  9  0.167  0.0132      0.215</span></span>
-<span><span class="co">## 10  0.165 -0.0266      0.925</span></span>
-<span><span class="co">## # ℹ 2,990 more rows</span></span></code></pre></div>
+<span><span class="co">## # A tibble: 5,000 × 3</span></span>
+<span><span class="co">##    qv_sed    moran moran_p</span></span>
+<span><span class="co">##     &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">##  1  0.177  0.00782   0.312</span></span>
+<span><span class="co">##  2  0.136 -0.00580   0.607</span></span>
+<span><span class="co">##  3  0.210  0.00788   0.311</span></span>
+<span><span class="co">##  4  0.180  0.0145    0.194</span></span>
+<span><span class="co">##  5  0.180  0.0177    0.148</span></span>
+<span><span class="co">##  6  0.199  0.00956   0.278</span></span>
+<span><span class="co">##  7  0.174 -0.00721   0.637</span></span>
+<span><span class="co">##  8  0.195 -0.0190    0.844</span></span>
+<span><span class="co">##  9  0.200 -0.00940   0.682</span></span>
+<span><span class="co">## 10  0.167  0.0140    0.202</span></span>
+<span><span class="co">## # ℹ 4,990 more rows</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">qv</span>, <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">qv_sed</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">density</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -265,20 +265,20 @@ greater than zero.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qv_sign</span> <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">qv</span>,<span class="va">moran</span><span class="op">&gt;=</span><span class="fl">0</span><span class="op">&amp;</span><span class="va">moran_p</span><span class="op">&lt;=</span><span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">qv_sign</span></span>
-<span><span class="co">## # A tibble: 163 × 3</span></span>
-<span><span class="co">##    qv_sed  moran moran_p</span></span>
-<span><span class="co">##     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">##  1  0.173 0.0428 0.00721</span></span>
-<span><span class="co">##  2  0.174 0.0343 0.0243 </span></span>
-<span><span class="co">##  3  0.179 0.0359 0.0196 </span></span>
-<span><span class="co">##  4  0.203 0.0286 0.0492 </span></span>
-<span><span class="co">##  5  0.205 0.0297 0.0430 </span></span>
-<span><span class="co">##  6  0.168 0.0494 0.00243</span></span>
-<span><span class="co">##  7  0.156 0.0292 0.0458 </span></span>
-<span><span class="co">##  8  0.197 0.0295 0.0444 </span></span>
-<span><span class="co">##  9  0.182 0.0374 0.0160 </span></span>
-<span><span class="co">## 10  0.161 0.0384 0.0139 </span></span>
-<span><span class="co">## # ℹ 153 more rows</span></span></code></pre></div>
+<span><span class="co">## # A tibble: 252 × 3</span></span>
+<span><span class="co">##    qv_sed  moran   moran_p</span></span>
+<span><span class="co">##     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span><span class="co">##  1  0.204 0.0308 0.0376   </span></span>
+<span><span class="co">##  2  0.175 0.0304 0.0395   </span></span>
+<span><span class="co">##  3  0.171 0.0325 0.0305   </span></span>
+<span><span class="co">##  4  0.189 0.0523 0.00143  </span></span>
+<span><span class="co">##  5  0.197 0.0296 0.0437   </span></span>
+<span><span class="co">##  6  0.151 0.0423 0.00774  </span></span>
+<span><span class="co">##  7  0.175 0.0388 0.0131   </span></span>
+<span><span class="co">##  8  0.191 0.0328 0.0294   </span></span>
+<span><span class="co">##  9  0.206 0.0331 0.0285   </span></span>
+<span><span class="co">## 10  0.197 0.0720 0.0000222</span></span>
+<span><span class="co">## # ℹ 242 more rows</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">qv_sign</span>, <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">qv_sed</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat</a></span><span class="op">(</span><span class="va">density</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -301,16 +301,16 @@ natural breaks method is 0.07985, while the q-value from five-category
 hierarchical clustering without spatial constraints is 0.07315. In
 comparison, the q-value obtained through robust discretization into five
 categories is 0.11997. In the Monte Carlo simulation experiment, the
-q-values range from 0.11659 to 0.22601. Among randomized simulations
-that best align with actual conditions, the q-value range spans from
-0.11952 to 0.21663. These results indicate that spatially implicit
+q-values range from 0.1138 to 0.22158. Among randomized simulations that
+best align with actual conditions, the q-value range spans from 0.13359
+to 0.21584. These results indicate that spatially implicit
 discretization tends to underestimate the q-value of the variable under
 moderate spatial autocorrelation, highlighting the importance of
 spatially explicit discretization. The results also reveal that robust
 discretization, which accounts for the relationship between independent
 and dependent variables, can effectively reduce the q-value estimation
 bias introduced by spatially implicit discretization methods. However,
-it still underestimates the q-value by approximately 35.1796%. This
+it still underestimates the q-value by approximately 35.2584%. This
 highlights the need for a spatially explicit discretization approach
 that fully considers the relationship between independent and dependent
 variables to more accurately capture the impact of spatial dependence on
