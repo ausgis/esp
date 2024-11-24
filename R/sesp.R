@@ -126,7 +126,7 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
       moran_p = dplyr::pull(moran_g$result,6)
       se_alpha = dplyr::if_else(moran_v>=alpha&moran_p<=0.05,
                                 moran_v,alpha,missing = alpha)
-      se_alpha = dplyr::if_else(se_alpha>=0.95,0.95,se_alpha)
+      se_alpha = dplyr::if_else(se_alpha>=0.75,0.75,se_alpha)
       if (intercept) {
         moran_dt = dplyr::bind_cols(moran_dt,gwrcoefs[,1,drop = TRUE])
       }

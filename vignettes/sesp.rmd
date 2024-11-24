@@ -73,7 +73,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    4.70    0.68   28.17
+##    2.45    0.23   29.56
 g1
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -125,7 +125,7 @@ system.time({
             model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    7.80    1.07  252.03
+##    5.86    0.18  250.97
 g2
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -177,7 +177,7 @@ system.time({
             model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    5.35    0.23  135.22
+##    8.17    0.89  135.08
 g3
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -228,7 +228,7 @@ system.time({
             model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##    8.67    1.39  248.84
+##    8.33    0.77  246.39
 g4
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -280,7 +280,7 @@ system.time({
             model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    8.35    0.78  147.83
+##    8.40    0.68  147.00
 g5
 ## ***          Spatially Explicit Stratified Power     
 ## 
