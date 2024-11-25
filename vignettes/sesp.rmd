@@ -34,9 +34,9 @@ depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
   readr::read_csv() |>
   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
 ## Rows: 1072 Columns: 13
-## ── Column specification ───────────────────────────────────────────────────────────────────────────
+## ── Column specification ────────────────────────────────────────────────────────────────────────────
 ## Delimiter: ","
-## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neig...
+## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neigh...
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -73,7 +73,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    2.45    0.23   29.56
+##    4.79    0.78   29.21
 g1
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -81,16 +81,16 @@ g1
 ## 
 ##  -------------- Global Power of Determinant : ------------
 ## Variable              Qvalue AIC      BIC      LogLik    
-## Neighbor_Disadvantage 0.296  4370.901 4370.901 -2179.450 
-## MentalHealthPati      0.260  4428.205 4428.205 -2206.103 
-## NoHealthInsurance     0.255  4435.513 4435.513 -2209.756 
-## X.HouseRent           0.225  4476.344 4476.344 -2231.172 
-## Casinos               0.205  4503.507 4503.507 -2244.754 
-## DrinkingPlaces        0.203  4503.855 4503.855 -2245.927 
-## PopulationDensity     0.202  4505.365 4505.365 -2246.682 
-## Beer                  0.200  4507.758 4507.758 -2247.879 
-## NatureParks           0.181  4533.589 4533.589 -2260.794 
-## Population65          0.159  4561.304 4561.304 -2274.652 
+## Neighbor_Disadvantage 0.296  4370.901 4400.765 -2179.450 
+## MentalHealthPati      0.260  4428.205 4468.023 -2206.103 
+## NoHealthInsurance     0.255  4435.513 4475.331 -2209.756 
+## X.HouseRent           0.225  4476.344 4511.185 -2231.172 
+## Casinos               0.205  4503.507 4538.348 -2244.754 
+## DrinkingPlaces        0.203  4503.855 4533.718 -2245.927 
+## PopulationDensity     0.202  4505.365 4535.229 -2246.682 
+## Beer                  0.200  4507.758 4537.622 -2247.879 
+## NatureParks           0.181  4533.589 4563.453 -2260.794 
+## Population65          0.159  4561.304 4591.168 -2274.652 
 ## 
 ##  -------------  Global Variable Interaction : ------------
 ## Variable                                    Interaction  
@@ -125,7 +125,7 @@ system.time({
             model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    5.86    0.18  250.97
+##    5.67    0.44  244.28
 g2
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -133,16 +133,16 @@ g2
 ## 
 ##  -------------- Global Power of Determinant : ------------
 ## Variable              Qvalue AIC      BIC      LogLik    
-## Neighbor_Disadvantage 0.289  4248.866 4248.866 -2117.433 
-## MentalHealthPati      0.240  4288.518 4288.518 -2135.259 
-## NoHealthInsurance     0.216  4267.870 4267.870 -2124.935 
-## X.HouseRent           0.187  4316.759 4316.759 -2150.380 
-## Beer                  0.187  4319.936 4319.936 -2149.968 
-## DrinkingPlaces        0.160  4330.763 4330.763 -2158.382 
-## PopulationDensity     0.154  4333.170 4333.170 -2159.585 
-## Casinos               0.153  4346.299 4346.299 -2166.149 
-## NatureParks           0.138  4364.690 4364.690 -2175.345 
-## Population65          0.122  4370.485 4370.485 -2178.242 
+## Neighbor_Disadvantage 0.289  4248.866 4283.707 -2117.433 
+## MentalHealthPati      0.240  4288.518 4333.313 -2135.259 
+## NoHealthInsurance     0.216  4267.870 4312.665 -2124.935 
+## X.HouseRent           0.187  4316.759 4356.578 -2150.380 
+## Beer                  0.187  4319.936 4369.709 -2149.968 
+## DrinkingPlaces        0.160  4330.763 4365.604 -2158.382 
+## PopulationDensity     0.154  4333.170 4368.011 -2159.585 
+## Casinos               0.153  4346.299 4381.139 -2166.149 
+## NatureParks           0.138  4364.690 4399.531 -2175.345 
+## Population65          0.122  4370.485 4405.326 -2178.242 
 ## 
 ##  -------------  Global Variable Interaction : ------------
 ## Variable                                    Interaction  
@@ -177,7 +177,7 @@ system.time({
             model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    8.17    0.89  135.08
+##    8.09    0.75  132.50
 g3
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -185,16 +185,16 @@ g3
 ## 
 ##  -------------- Global Power of Determinant : ------------
 ## Variable              Qvalue AIC      BIC      LogLik    
-## Neighbor_Disadvantage 0.289  4238.682 4238.682 -2112.341 
-## NoHealthInsurance     0.253  4230.432 4230.432 -2106.216 
-## MentalHealthPati      0.247  4262.110 4262.110 -2122.055 
-## X.HouseRent           0.219  4279.959 4279.959 -2131.979 
-## PopulationDensity     0.199  4288.640 4288.640 -2137.320 
-## DrinkingPlaces        0.198  4295.621 4295.621 -2140.811 
-## Beer                  0.193  4292.395 4292.395 -2139.197 
-## Casinos               0.184  4305.020 4305.020 -2145.510 
-## NatureParks           0.171  4325.679 4325.679 -2155.839 
-## Population65          0.156  4335.830 4335.830 -2160.915 
+## Neighbor_Disadvantage 0.289  4238.682 4273.523 -2112.341 
+## NoHealthInsurance     0.253  4230.432 4275.227 -2106.216 
+## MentalHealthPati      0.247  4262.110 4306.905 -2122.055 
+## X.HouseRent           0.219  4279.959 4319.777 -2131.979 
+## PopulationDensity     0.199  4288.640 4323.481 -2137.320 
+## DrinkingPlaces        0.198  4295.621 4330.462 -2140.811 
+## Beer                  0.193  4292.395 4327.236 -2139.197 
+## Casinos               0.184  4305.020 4339.861 -2145.510 
+## NatureParks           0.171  4325.679 4360.520 -2155.839 
+## Population65          0.156  4335.830 4370.671 -2160.915 
 ## 
 ##  -------------  Global Variable Interaction : ------------
 ## Variable                                    Interaction  
@@ -228,7 +228,7 @@ system.time({
             model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##    8.33    0.77  246.39
+##    8.86    0.92  243.60
 g4
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -236,16 +236,16 @@ g4
 ## 
 ##  -------------- Global Power of Determinant : ------------
 ## Variable              Qvalue AIC      BIC      LogLik    
-## Neighbor_Disadvantage 0.316  4226.864 4226.864 -2102.432 
-## MentalHealthPati      0.296  4247.222 4247.222 -2108.611 
-## NoHealthInsurance     0.261  4238.839 4238.839 -2104.420 
-## NatureParks           0.252  4285.895 4285.895 -2125.948 
-## X.HouseRent           0.239  4280.458 4280.458 -2127.229 
-## Casinos               0.237  4291.052 4291.052 -2132.526 
-## PopulationDensity     0.211  4291.372 4291.372 -2134.686 
-## DrinkingPlaces        0.210  4294.833 4294.833 -2136.417 
-## Beer                  0.209  4291.057 4291.057 -2134.529 
-## Population65          0.163  4340.250 4340.250 -2159.125 
+## Neighbor_Disadvantage 0.316  4226.864 4281.614 -2102.432 
+## MentalHealthPati      0.296  4247.222 4321.882 -2108.611 
+## NoHealthInsurance     0.261  4238.839 4313.499 -2104.420 
+## NatureParks           0.252  4285.895 4370.509 -2125.948 
+## X.HouseRent           0.239  4280.458 4345.163 -2127.229 
+## Casinos               0.237  4291.052 4355.756 -2132.526 
+## PopulationDensity     0.211  4291.372 4346.122 -2134.686 
+## DrinkingPlaces        0.210  4294.833 4349.584 -2136.417 
+## Beer                  0.209  4291.057 4345.807 -2134.529 
+## Population65          0.163  4340.250 4395.001 -2159.125 
 ## 
 ##  -------------  Global Variable Interaction : ------------
 ## Variable                                    Interaction  
@@ -270,18 +270,70 @@ plot(g4,slicenum = 10) +
 
 ![**Figure 4**. Results of SESP With Spatial Durbin Regression](../man/figures/sesp/g4-1.png)
 
-### SESP With Geographically Weighted Regression
+### SESP With Spatial Autoregressive Combined
 
 
 ``` r
 system.time({
   g5 = sesp(Depression_prevelence ~ .,
             data = depression,
+            model = 'sac', cores = 8)
+})
+##    user  system elapsed 
+##   10.25    1.53  661.03
+g5
+## ***          Spatially Explicit Stratified Power     
+## 
+##  Q values are estimated using *Spatial Autoregressive Combined* 
+## 
+##  -------------- Global Power of Determinant : ------------
+## Variable              Qvalue AIC      BIC      LogLik    
+## Neighbor_Disadvantage 0.269  4237.927 4277.746 -2110.964 
+## NoHealthInsurance     0.241  4215.178 4264.950 -2097.589 
+## MentalHealthPati      0.230  4245.335 4295.108 -2112.667 
+## X.HouseRent           0.214  4255.934 4300.730 -2118.967 
+## PopulationDensity     0.197  4263.110 4302.928 -2123.555 
+## DrinkingPlaces        0.191  4274.134 4313.952 -2129.067 
+## Beer                  0.191  4266.667 4306.485 -2125.334 
+## Casinos               0.190  4276.229 4321.025 -2129.115 
+## NatureParks           0.175  4300.239 4340.058 -2142.120 
+## Population65          0.156  4310.872 4350.690 -2147.436 
+## 
+##  -------------  Global Variable Interaction : ------------
+## Variable                                    Interaction  
+## PopulationDensity ∩ Population65          Weaken, uni- 
+## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
+## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ MentalHealthPati      Enhance, bi- 
+## PopulationDensity ∩ NatureParks           Weaken, uni- 
+## PopulationDensity ∩ Casinos               Enhance, bi- 
+## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
+## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
+## Population65 ∩ NoHealthInsurance          Weaken, uni- 
+## 
+## ! Only the top ten items of global scale are displayed.
+## ! The others can be accessed through specific subsets.
+plot(g5,slicenum = 10) +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(
+                                  angle = 30,vjust = 0.85,hjust = 0.75)
+                )
+```
+
+![**Figure 5**. Results of SESP With Spatial Autoregressive Combined](../man/figures/sesp/g5-1.png)
+
+### SESP With Geographically Weighted Regression
+
+
+``` r
+system.time({
+  g6 = sesp(Depression_prevelence ~ .,
+            data = depression,
             model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    8.40    0.68  147.00
-g5
+##    8.51    1.11  147.69
+g6
 ## ***          Spatially Explicit Stratified Power     
 ## 
 ##  Q values are estimated using *Geographically Weighted Regression* 
@@ -314,13 +366,13 @@ g5
 ## 
 ## ! Only the top ten items of global scale are displayed.
 ## ! The others can be accessed through specific subsets.
-plot(g5,slicenum = 10) +
+plot(g6,slicenum = 10) +
   ggplot2::theme(axis.text.x = ggplot2::element_text(
                                   angle = 30,vjust = 0.85,hjust = 0.75)
                 )
 ```
 
-![**Figure 5**. Results of SESP With Geographically Weighted Regression](../man/figures/sesp/g5-1.png)
+![**Figure 6**. Results of SESP With Geographically Weighted Regression](../man/figures/sesp/g6-1.png)
 
 ### Results of optimal spatial discretization
 
@@ -355,32 +407,39 @@ plot_optdisc = \(g){
 plot_optdisc(g1)
 ```
 
-![**Figure 6**. Optimal spatial discretization result with linear regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc1-1.png)
+![**Figure 7**. Optimal spatial discretization result with linear regression operator.](../man/figures/sesp/optdisc1-1.png)
 
 
 ``` r
 plot_optdisc(g2)
 ```
 
-![**Figure 7**. Optimal spatial discretization result with spatial lag regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc2-1.png)
+![**Figure 8**. Optimal spatial discretization result with spatial lag regression operator.](../man/figures/sesp/optdisc2-1.png)
 
 
 ``` r
 plot_optdisc(g3)
 ```
 
-![**Figure 8**. Optimal spatial discretization result with spatial error regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc3-1.png)
+![**Figure 9**. Optimal spatial discretization result with spatial error regression operator.](../man/figures/sesp/optdisc3-1.png)
 
 
 ``` r
 plot_optdisc(g4)
 ```
 
-![**Figure 9**. Optimal spatial discretization result with spatial durbin regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc4-1.png)
+![**Figure 10**. Optimal spatial discretization result with spatial durbin regression operator.](../man/figures/sesp/optdisc4-1.png)
 
 
 ``` r
 plot_optdisc(g5)
 ```
 
-![**Figure 10**. Optimal spatial discretization result with geographically weighted regression operator. Subfigures (a)–(j) depict the optimal spatial discretizations for the variables PopulationDensity, Population65, NoHealthInsurance, Neighbor_Disadvantage, Beer, MentalHealthPati, NatureParks, Casinos, DrinkingPlaces, and X.HouseRent, respectively.](../man/figures/sesp/optdisc5-1.png)
+![**Figure 11**. Optimal spatial discretization result with spatial autoregressive combined operator.](../man/figures/sesp/optdisc5-1.png)
+
+
+``` r
+plot_optdisc(g6)
+```
+
+![**Figure 12**. Optimal spatial discretization result with geographically weighted regression operator.](../man/figures/sesp/optdisc6-1.png)
