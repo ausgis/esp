@@ -215,30 +215,26 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
                 "sarlm(slmformula, dummydf, listw, Durbin = durbin,zero.policy = TRUE)")
         ))
       }})
-      # suppressWarnings({if (model == "lag") {
-      #   g = spatialreg::lagsarlm(slmformula, dummydf, listw,
-      #                            Durbin = durbin,zero.policy = TRUE)
-      # } else if (model == "error") {
-      #   g = spatialreg::errorsarlm(slmformula, dummydf, listw,
-      #                              Durbin = durbin,zero.policy = TRUE)
-      # } else if (model == "gwr") {
-      #   dummydf = sf::st_set_geometry(dummydf,geom)
-      #   g = GWmodel3::gwr_basic(
-      #     slmformula, dummydf, bw = bw, adaptive = adaptive, kernel = kernel
-      #   )
-      # } else {
-      #   g = stats::lm(slmformula, dummydf)
-      # }})
 
       if (model != "gwr") {
         aicv = stats::AIC(g)
         bicv = stats::AIC(g)
         loglikv = as.numeric(stats::logLik(g))
-        if (model == 'error'){
-          fity = as.numeric(stats::predict(g, pred.type = 'trend', listw = listw, re.form = NA))
-        } else {
-          fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
-        }
+
+        pred.type = dplyr::case_match(model,
+                                      "lag" ~ "TC",
+                                      "sac" ~ "BP",
+                                      "error" ~ "trend")
+        fity = eval(parse(text =
+            paste0("as.numeric(stats::predict(g, pred.type = ",
+                   "pred.type",", listw = listw, re.form = NA))")
+        ))
+
+        # if (model == 'error'){
+        #   fity = as.numeric(stats::predict(g, pred.type = 'trend', listw = listw, re.form = NA))
+        # } else {
+        #   fity = as.numeric(stats::predict(g, pred.type = 'BP', listw = listw, re.form = NA))
+        # }
         return(list("pred" = fity, "AIC" = aicv,
                     "BIC" = bicv, "LogLik" = loglikv))
       } else {
