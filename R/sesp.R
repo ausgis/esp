@@ -15,7 +15,7 @@
 #' be discretized.
 #' @param discnum (optional) Number of discretization. Default all will use `3:8`.
 #' @param model (optional) The type of linear model used, default is `ols`. The `model` value must be any of
-#' `ols`, `gwr`, `lag` or `error`.
+#' `ols`, `gwr`, `lag`,`error` or `sac`.
 #' @param durbin (optional) Whether to consider spatial durbin terms, default is `false`.
 #' @param overlay (optional) Spatial overlay method. One of `and`, `or`, `intersection`. Default is `and`.
 #' @param alpha (optional) Controlling the strength of spatial soft constraints, the larger the `alpha`,
@@ -212,7 +212,7 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
       } else {
         g = eval(parse(text =
          paste0("spatialreg::",model,
-                "sarlm(slmformula, dummydf, listw, Durbin = durbin,zero.policy = TRUE)")
+                "sarlm(slmformula,dummydf,listw,Durbin = durbin,zero.policy = TRUE)")
         ))
       }})
 
@@ -223,12 +223,13 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
 
         pred.type = dplyr::case_match(model,
                                       "lag" ~ "TC",
-                                      "sac" ~ "BP",
+                                      "sac" ~ "TC", #"BP",
                                       "error" ~ "trend")
-        fity = eval(parse(text =
+        suppressWarnings({
+          fity = eval(parse(text =
             paste0("as.numeric(stats::predict(g, pred.type = ",
-                   "pred.type",", listw = listw, re.form = NA))")
-        ))
+                   "pred.type", ", listw = listw, re.form = NA))")
+        ))})
         return(list("pred" = fity, "AIC" = aicv,
                     "BIC" = bicv, "LogLik" = loglikv))
       } else {
@@ -334,30 +335,34 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
 
     suppressMessages({slm_res = purrr::map_dfc(slmx, \(.varname) {
       slmformula = paste0("y ~ ",.varname)
-      suppressWarnings({if (model == "lag") {
-        g = spatialreg::lagsarlm(slmformula, dummyidvdf, listw,
-                                 Durbin = durbin,zero.policy = TRUE)
-      } else if (model == "error") {
-        g = spatialreg::errorsarlm(slmformula, dummyidvdf, listw,
-                                   Durbin = durbin,zero.policy = TRUE)
+      suppressWarnings({if (model == "ols") {
+        g = stats::lm(slmformula, dummyidvdf)
       } else if (model == "gwr") {
         dummyidvdf = sf::st_set_geometry(dummyidvdf,geom)
         g = GWmodel3::gwr_basic(
           slmformula, dummyidvdf, bw = bw, adaptive = adaptive, kernel = kernel
         )
       } else {
-        g = stats::lm(slmformula, dummyidvdf)
+        g = eval(parse(text =
+          paste0("spatialreg::", model,
+                 "sarlm(slmformula,dummyidvdf,listw,Durbin = durbin,zero.policy = TRUE)")
+        ))
       }})
 
       if (model != "gwr") {
         aicv = stats::AIC(g)
-        bicv = stats::AIC(g)
+        bicv = stats::BIC(g)
         loglikv = as.numeric(stats::logLik(g))
-        if (model == 'error'){
-          fity = as.numeric(stats::predict(g, pred.type = 'trend', listw = listw, re.form = NA))
-        } else {
-          fity = as.numeric(stats::predict(g, pred.type = 'TC', listw = listw, re.form = NA))
-        }
+
+        pred.type = dplyr::case_match(model,
+                                      "lag" ~ "TC",
+                                      "sac" ~ "TC", #"BP",
+                                      "error" ~ "trend")
+        suppressWarnings({
+          fity = eval(parse(text =
+            paste0("as.numeric(stats::predict(g, pred.type = ",
+                   "pred.type", ", listw = listw, re.form = NA))")
+          ))})
         return(list("pred" = fity, "AIC" = aicv,
                     "BIC" = bicv, "LogLik" = loglikv))
       } else {
