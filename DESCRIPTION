@@ -61,7 +61,6 @@ Suggests:
     readr,
     rmarkdown
 Remotes:
-    stscl/sdsfun,
     GWmodel-Lab/GWmodel3
 LinkingTo: 
     Rcpp,
