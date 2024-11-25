@@ -218,7 +218,7 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
 
       if (model != "gwr") {
         aicv = stats::AIC(g)
-        bicv = stats::AIC(g)
+        bicv = stats::BIC(g)
         loglikv = as.numeric(stats::logLik(g))
 
         pred.type = dplyr::case_match(model,
@@ -229,12 +229,6 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
             paste0("as.numeric(stats::predict(g, pred.type = ",
                    "pred.type",", listw = listw, re.form = NA))")
         ))
-
-        # if (model == 'error'){
-        #   fity = as.numeric(stats::predict(g, pred.type = 'trend', listw = listw, re.form = NA))
-        # } else {
-        #   fity = as.numeric(stats::predict(g, pred.type = 'BP', listw = listw, re.form = NA))
-        # }
         return(list("pred" = fity, "AIC" = aicv,
                     "BIC" = bicv, "LogLik" = loglikv))
       } else {
