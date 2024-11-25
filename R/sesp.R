@@ -51,8 +51,8 @@
 sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'ols',
          durbin = FALSE, overlay = 'and', alpha = 0.5, intercept = FALSE, bw = "AIC",
          adaptive = TRUE, kernel = "gaussian", increase_rate = 0.05, cores = 1, ...) {
-  if (!(model %in% c("ols","gwr","lag","error"))){
-    stop("`model` must be one of `ols`,`gwr`,`lag` or `error`!")
+  if (!(model %in% c("ols","gwr","lag","error","sac"))){
+    stop("`model` must be one of `ols`,`gwr`,`lag`,`error` or `sac` !")
   }
   doclust = FALSE
   if (inherits(cores, "cluster")) {
@@ -202,20 +202,33 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
 
     suppressMessages({slm_res = purrr::map_dfc(slmx, \(.varname) {
       slmformula = paste0("y ~ ",.varname)
-      suppressWarnings({if (model == "lag") {
-        g = spatialreg::lagsarlm(slmformula, dummydf, listw,
-                                 Durbin = durbin,zero.policy = TRUE)
-      } else if (model == "error") {
-        g = spatialreg::errorsarlm(slmformula, dummydf, listw,
-                                   Durbin = durbin,zero.policy = TRUE)
+      suppressWarnings({if (model == "ols") {
+        g = stats::lm(slmformula, dummydf)
       } else if (model == "gwr") {
         dummydf = sf::st_set_geometry(dummydf,geom)
         g = GWmodel3::gwr_basic(
           slmformula, dummydf, bw = bw, adaptive = adaptive, kernel = kernel
         )
       } else {
-        g = stats::lm(slmformula, dummydf)
+        g = eval(parse(text =
+         paste0("spatialreg::",model,
+                "sarlm(slmformula, dummydf, listw, Durbin = durbin,zero.policy = TRUE)")
+        ))
       }})
+      # suppressWarnings({if (model == "lag") {
+      #   g = spatialreg::lagsarlm(slmformula, dummydf, listw,
+      #                            Durbin = durbin,zero.policy = TRUE)
+      # } else if (model == "error") {
+      #   g = spatialreg::errorsarlm(slmformula, dummydf, listw,
+      #                              Durbin = durbin,zero.policy = TRUE)
+      # } else if (model == "gwr") {
+      #   dummydf = sf::st_set_geometry(dummydf,geom)
+      #   g = GWmodel3::gwr_basic(
+      #     slmformula, dummydf, bw = bw, adaptive = adaptive, kernel = kernel
+      #   )
+      # } else {
+      #   g = stats::lm(slmformula, dummydf)
+      # }})
 
       if (model != "gwr") {
         aicv = stats::AIC(g)
