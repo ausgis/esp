@@ -39,7 +39,7 @@ be discretized.}
 \item{discnum}{(optional) Number of discretization. Default all will use \code{3:8}.}
 
 \item{model}{(optional) The type of linear model used, default is \code{ols}. The \code{model} value must be any of
-\code{ols}, \code{gwr}, \code{lag} or \code{error}.}
+\code{ols}, \code{gwr}, \code{lag},\code{error} or \code{sac}.}
 
 \item{durbin}{(optional) Whether to consider spatial durbin terms, default is \code{false}.}
 
