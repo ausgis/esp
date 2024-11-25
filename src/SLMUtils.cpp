@@ -90,7 +90,7 @@ std::string SLMUsed(std::string model, bool durbin) {
     } else {
       return "Spatial Autoregressive Combined";
     }
-  }  else if (model == "gwr") {
+  } else if (model == "gwr") {
     return "Geographically Weighted Regression";
   } else {
     return "Unknown Model";
