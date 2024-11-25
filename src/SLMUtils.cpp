@@ -84,7 +84,13 @@ std::string SLMUsed(std::string model, bool durbin) {
     } else {
       return "Spatial Error Model";
     }
-  } else if (model == "gwr") {
+  } else if (model == "sac") {
+    if (durbin) {
+      return "General Nested Model";
+    } else {
+      return "Spatial Autoregressive Combined";
+    }
+  }  else if (model == "gwr") {
     return "Geographically Weighted Regression";
   } else {
     return "Unknown Model";
