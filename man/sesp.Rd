@@ -86,9 +86,9 @@ tends to overestimate the contribution of each variable). In such cases, it is r
 beforehand and then input them into \code{sesp} for computation.
 }
 \examples{
-NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
-g = sesp(incidence ~ ., data = NTDs, discvar = 'none',
-         model = 'ols', overlay = 'intersection', cores = 1)
+NTD = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
+g = sesp(incidence ~ ., data = NTD, discvar = 'none',
+         model = 'ols', overlay = 'intersection')
 g
 
 }
