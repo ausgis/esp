@@ -34,9 +34,9 @@ depression = system.file('extdata/Depression.csv',package = 'gdverse') |>
   readr::read_csv() |>
   sf::st_as_sf(coords = c('X','Y'), crs = 4326)
 ## Rows: 1072 Columns: 13
-## ── Column specification ────────────────────────────────────────────────────────────────────────────
+## ── Column specification ───────────────────────────────────────────────────────────────────────────
 ## Delimiter: ","
-## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neigh...
+## dbl (13): X, Y, Depression_prevelence, PopulationDensity, Population65, NoHealthInsurance, Neig...
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -73,7 +73,7 @@ system.time({
             model = 'ols', overlay = 'intersection', cores = 8)
 })
 ##    user  system elapsed 
-##    4.79    0.78   29.21
+##    5.20    0.86   28.68
 g1
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -81,16 +81,16 @@ g1
 ## 
 ##  -------------- Global Power of Determinant : ------------
 ## Variable              Qvalue AIC      BIC      LogLik    
-## Neighbor_Disadvantage 0.296  4370.901 4400.765 -2179.450 
-## MentalHealthPati      0.260  4428.205 4468.023 -2206.103 
-## NoHealthInsurance     0.255  4435.513 4475.331 -2209.756 
-## X.HouseRent           0.225  4476.344 4511.185 -2231.172 
-## Casinos               0.205  4503.507 4538.348 -2244.754 
-## DrinkingPlaces        0.203  4503.855 4533.718 -2245.927 
-## PopulationDensity     0.202  4505.365 4535.229 -2246.682 
-## Beer                  0.200  4507.758 4537.622 -2247.879 
-## NatureParks           0.181  4533.589 4563.453 -2260.794 
-## Population65          0.159  4561.304 4591.168 -2274.652 
+## Neighbor_Disadvantage 0.296  4372.009 4401.873 -2180.004 
+## MentalHealthPati      0.286  4389.996 4429.814 -2186.998 
+## PopulationDensity     0.276  4405.695 4445.513 -2194.847 
+## X.HouseRent           0.225  4475.679 4510.520 -2230.840 
+## NoHealthInsurance     0.225  4478.352 4518.170 -2231.176 
+## Population65          0.222  4481.979 4521.797 -2232.990 
+## DrinkingPlaces        0.209  4500.026 4539.844 -2242.013 
+## Beer                  0.181  4533.007 4562.871 -2260.504 
+## Casinos               0.179  4535.821 4565.685 -2261.911 
+## NatureParks           0.175  4541.835 4571.698 -2264.917 
 ## 
 ##  -------------  Global Variable Interaction : ------------
 ## Variable                                    Interaction  
@@ -125,7 +125,7 @@ system.time({
             model = 'lag', cores = 8)
 })
 ##    user  system elapsed 
-##    5.67    0.44  244.28
+##    8.17    0.78  247.42
 g2
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -133,16 +133,16 @@ g2
 ## 
 ##  -------------- Global Power of Determinant : ------------
 ## Variable              Qvalue AIC      BIC      LogLik    
-## Neighbor_Disadvantage 0.289  4248.866 4283.707 -2117.433 
-## MentalHealthPati      0.240  4288.518 4333.313 -2135.259 
-## NoHealthInsurance     0.216  4267.870 4312.665 -2124.935 
-## X.HouseRent           0.187  4316.759 4356.578 -2150.380 
-## Beer                  0.187  4319.936 4369.709 -2149.968 
-## DrinkingPlaces        0.160  4330.763 4365.604 -2158.382 
-## PopulationDensity     0.154  4333.170 4368.011 -2159.585 
-## Casinos               0.153  4346.299 4381.139 -2166.149 
-## NatureParks           0.138  4364.690 4399.531 -2175.345 
-## Population65          0.122  4370.485 4405.326 -2178.242 
+## Neighbor_Disadvantage 0.293  4256.111 4290.952 -2121.055 
+## MentalHealthPati      0.287  4266.957 4311.752 -2124.478 
+## PopulationDensity     0.241  4267.938 4312.733 -2124.969 
+## NoHealthInsurance     0.208  4307.645 4357.418 -2143.822 
+## Population65          0.189  4324.897 4369.692 -2153.448 
+## X.HouseRent           0.189  4317.496 4357.314 -2150.748 
+## DrinkingPlaces        0.168  4335.838 4380.633 -2158.919 
+## Beer                  0.152  4354.059 4393.878 -2169.030 
+## NatureParks           0.138  4373.845 4408.686 -2179.922 
+## Casinos               0.134  4356.378 4391.219 -2171.189 
 ## 
 ##  -------------  Global Variable Interaction : ------------
 ## Variable                                    Interaction  
@@ -150,12 +150,12 @@ g2
 ## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
 ## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
 ## PopulationDensity ∩ Beer                  Enhance, bi- 
-## PopulationDensity ∩ MentalHealthPati      Weaken, uni- 
+## PopulationDensity ∩ MentalHealthPati      Enhance, bi- 
 ## PopulationDensity ∩ NatureParks           Weaken, uni- 
 ## PopulationDensity ∩ Casinos               Enhance, bi- 
-## PopulationDensity ∩ DrinkingPlaces        Weaken, uni- 
+## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
 ## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
-## Population65 ∩ NoHealthInsurance          Weaken, uni- 
+## Population65 ∩ NoHealthInsurance          Enhance, bi- 
 ## 
 ## ! Only the top ten items of global scale are displayed.
 ## ! The others can be accessed through specific subsets.
@@ -177,7 +177,7 @@ system.time({
             model = 'error', cores = 8)
 })
 ##    user  system elapsed 
-##    8.09    0.75  132.50
+##    5.28    0.27  137.28
 g3
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -185,20 +185,20 @@ g3
 ## 
 ##  -------------- Global Power of Determinant : ------------
 ## Variable              Qvalue AIC      BIC      LogLik    
-## Neighbor_Disadvantage 0.289  4238.682 4273.523 -2112.341 
-## NoHealthInsurance     0.253  4230.432 4275.227 -2106.216 
-## MentalHealthPati      0.247  4262.110 4306.905 -2122.055 
-## X.HouseRent           0.219  4279.959 4319.777 -2131.979 
-## PopulationDensity     0.199  4288.640 4323.481 -2137.320 
-## DrinkingPlaces        0.198  4295.621 4330.462 -2140.811 
-## Beer                  0.193  4292.395 4327.236 -2139.197 
-## Casinos               0.184  4305.020 4339.861 -2145.510 
-## NatureParks           0.171  4325.679 4360.520 -2155.839 
-## Population65          0.156  4335.830 4370.671 -2160.915 
+## Neighbor_Disadvantage 0.290  4252.835 4287.676 -2119.417 
+## PopulationDensity     0.272  4227.185 4271.980 -2104.592 
+## MentalHealthPati      0.270  4264.868 4309.663 -2123.434 
+## X.HouseRent           0.220  4284.841 4324.660 -2134.421 
+## NoHealthInsurance     0.220  4285.254 4330.050 -2133.627 
+## Population65          0.217  4291.297 4336.092 -2136.648 
+## DrinkingPlaces        0.203  4299.139 4343.935 -2140.570 
+## Beer                  0.177  4327.157 4361.998 -2156.579 
+## Casinos               0.170  4316.437 4351.278 -2151.219 
+## NatureParks           0.164  4338.373 4373.214 -2162.186 
 ## 
 ##  -------------  Global Variable Interaction : ------------
 ## Variable                                    Interaction  
-## PopulationDensity ∩ Population65          Weaken, uni- 
+## PopulationDensity ∩ Population65          Enhance, bi- 
 ## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
 ## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
 ## PopulationDensity ∩ Beer                  Enhance, bi- 
@@ -207,7 +207,7 @@ g3
 ## PopulationDensity ∩ Casinos               Enhance, bi- 
 ## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
 ## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
-## Population65 ∩ NoHealthInsurance          Weaken, uni- 
+## Population65 ∩ NoHealthInsurance          Enhance, bi- 
 ## 
 ## ! Only the top ten items of global scale are displayed.
 ## ! The others can be accessed through specific subsets.
@@ -228,7 +228,7 @@ system.time({
             model = 'lag', durbin = TRUE, cores = 8)
 })
 ##    user  system elapsed 
-##    8.86    0.92  243.60
+##    7.72    0.88  246.64
 g4
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -236,16 +236,16 @@ g4
 ## 
 ##  -------------- Global Power of Determinant : ------------
 ## Variable              Qvalue AIC      BIC      LogLik    
-## Neighbor_Disadvantage 0.316  4226.864 4281.614 -2102.432 
-## MentalHealthPati      0.296  4247.222 4321.882 -2108.611 
-## NoHealthInsurance     0.261  4238.839 4313.499 -2104.420 
-## NatureParks           0.252  4285.895 4370.509 -2125.948 
-## X.HouseRent           0.239  4280.458 4345.163 -2127.229 
-## Casinos               0.237  4291.052 4355.756 -2132.526 
-## PopulationDensity     0.211  4291.372 4346.122 -2134.686 
-## DrinkingPlaces        0.210  4294.833 4349.584 -2136.417 
-## Beer                  0.209  4291.057 4345.807 -2134.529 
-## Population65          0.163  4340.250 4395.001 -2159.125 
+## MentalHealthPati      0.331  4233.808 4308.467 -2101.904 
+## Neighbor_Disadvantage 0.313  4244.421 4299.171 -2111.210 
+## PopulationDensity     0.286  4233.201 4307.860 -2101.600 
+## NoHealthInsurance     0.269  4269.331 4353.945 -2117.666 
+## X.HouseRent           0.239  4285.802 4350.506 -2129.901 
+## Population65          0.233  4295.578 4370.238 -2132.789 
+## Casinos               0.227  4298.022 4372.682 -2134.011 
+## DrinkingPlaces        0.218  4297.905 4362.610 -2135.952 
+## Beer                  0.189  4326.896 4381.646 -2152.448 
+## NatureParks           0.188  4333.978 4388.729 -2155.989 
 ## 
 ##  -------------  Global Variable Interaction : ------------
 ## Variable                                    Interaction  
@@ -280,7 +280,7 @@ system.time({
             model = 'sac', cores = 8)
 })
 ##    user  system elapsed 
-##   10.25    1.53  661.03
+##    8.64    0.89  659.73
 g5
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -288,20 +288,20 @@ g5
 ## 
 ##  -------------- Global Power of Determinant : ------------
 ## Variable              Qvalue AIC      BIC      LogLik    
-## Neighbor_Disadvantage 0.269  4237.927 4277.746 -2110.964 
-## NoHealthInsurance     0.241  4215.178 4264.950 -2097.589 
-## MentalHealthPati      0.230  4245.335 4295.108 -2112.667 
-## X.HouseRent           0.214  4255.934 4300.730 -2118.967 
-## PopulationDensity     0.197  4263.110 4302.928 -2123.555 
-## DrinkingPlaces        0.191  4274.134 4313.952 -2129.067 
-## Beer                  0.191  4266.667 4306.485 -2125.334 
-## Casinos               0.190  4276.229 4321.025 -2129.115 
-## NatureParks           0.175  4300.239 4340.058 -2142.120 
-## Population65          0.156  4310.872 4350.690 -2147.436 
+## Neighbor_Disadvantage 0.280  4236.875 4281.670 -2109.437 
+## PopulationDensity     0.263  4211.086 4260.859 -2095.543 
+## MentalHealthPati      0.233  4257.856 4307.629 -2118.928 
+## Population65          0.212  4271.953 4321.726 -2125.977 
+## X.HouseRent           0.211  4263.141 4307.936 -2122.570 
+## NoHealthInsurance     0.209  4265.819 4315.591 -2122.909 
+## DrinkingPlaces        0.196  4277.345 4327.118 -2128.672 
+## Casinos               0.168  4290.655 4330.473 -2137.327 
+## Beer                  0.166  4308.727 4348.546 -2146.364 
+## NatureParks           0.165  4314.683 4354.501 -2149.342 
 ## 
 ##  -------------  Global Variable Interaction : ------------
 ## Variable                                    Interaction  
-## PopulationDensity ∩ Population65          Weaken, uni- 
+## PopulationDensity ∩ Population65          Enhance, bi- 
 ## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
 ## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
 ## PopulationDensity ∩ Beer                  Enhance, bi- 
@@ -310,7 +310,7 @@ g5
 ## PopulationDensity ∩ Casinos               Enhance, bi- 
 ## PopulationDensity ∩ DrinkingPlaces        Enhance, bi- 
 ## PopulationDensity ∩ X.HouseRent           Enhance, bi- 
-## Population65 ∩ NoHealthInsurance          Weaken, uni- 
+## Population65 ∩ NoHealthInsurance          Enhance, bi- 
 ## 
 ## ! Only the top ten items of global scale are displayed.
 ## ! The others can be accessed through specific subsets.
@@ -332,7 +332,7 @@ system.time({
             model = 'gwr', cores = 8)
 })
 ##    user  system elapsed 
-##    8.51    1.11  147.69
+##    7.81    1.02  138.22
 g6
 ## ***          Spatially Explicit Stratified Power     
 ## 
@@ -340,23 +340,23 @@ g6
 ## 
 ##  -------------- Global Power of Determinant : ------------
 ## Variable              Qvalue AIC      
-## X.HouseRent           0.370  4255.989 
-## MentalHealthPati      0.367  4258.876 
-## PopulationDensity     0.366  4260.457 
-## Neighbor_Disadvantage 0.354  4277.147 
-## Beer                  0.350  4288.285 
-## Population65          0.317  4337.745 
-## Casinos               0.307  4354.933 
-## DrinkingPlaces        0.294  4373.148 
-## NatureParks           0.266  4412.671 
-## NoHealthInsurance     0.254  4429.183 
+## MentalHealthPati      0.384  4229.657 
+## Neighbor_Disadvantage 0.368  4254.204 
+## PopulationDensity     0.367  4256.980 
+## X.HouseRent           0.324  4325.510 
+## Beer                  0.306  4355.146 
+## Population65          0.299  4365.582 
+## Casinos               0.299  4366.973 
+## DrinkingPlaces        0.291  4377.897 
+## NoHealthInsurance     0.249  4436.470 
+## NatureParks           0.238  4453.684 
 ## 
 ##  -------------  Global Variable Interaction : ------------
 ## Variable                                    Interaction  
 ## PopulationDensity ∩ Population65          Enhance, bi- 
-## PopulationDensity ∩ NoHealthInsurance     Enhance, bi- 
+## PopulationDensity ∩ NoHealthInsurance     Weaken, uni- 
 ## PopulationDensity ∩ Neighbor_Disadvantage Enhance, bi- 
-## PopulationDensity ∩ Beer                  Enhance, bi- 
+## PopulationDensity ∩ Beer                  Weaken, uni- 
 ## PopulationDensity ∩ MentalHealthPati      Enhance, bi- 
 ## PopulationDensity ∩ NatureParks           Weaken, uni- 
 ## PopulationDensity ∩ Casinos               Weaken, uni- 
