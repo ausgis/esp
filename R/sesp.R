@@ -121,6 +121,7 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
       moran_dt = sf::st_set_geometry(
         tibble::tibble(x = gwrcoefs[,n,drop = TRUE]),geom
       )
+      gc_dt = geocomplexity::geocd_vector(moran_dt,returnsf = FALSE)
       moran_g = sdsfun::moran_test(moran_dt)
       moran_v = dplyr::pull(moran_g$result,2)
       moran_p = dplyr::pull(moran_g$result,6)
@@ -131,7 +132,8 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
         moran_dt = dplyr::bind_cols(moran_dt,gwrcoefs[,1,drop = TRUE])
       }
       resdisc = tibble::as_tibble(
-        sdsfun::hclustgeo_disc(moran_dt,discnum,se_alpha,D1 = gdist,...)
+        sdsfun::hclustgeo_disc(moran_dt,discnum,se_alpha,D1 = gdist,
+                               wt = dplyr::pull(gc_dt,1),...)
       )
       names(resdisc) = paste0("disc_",discnum)
       resdisc = dplyr::mutate(resdisc,xname = names(gwrcoefs)[n])

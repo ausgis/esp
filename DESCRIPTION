@@ -39,6 +39,7 @@ Depends:
 Imports: 
     dplyr,
     forcats,
+    geocomplexity,
     ggplot2,
     GWmodel3,
     magrittr,
