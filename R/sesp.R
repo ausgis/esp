@@ -43,9 +43,9 @@
 #' @export
 #'
 #' @examples
-#' NTDs = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
-#' g = sesp(incidence ~ ., data = NTDs, discvar = 'none',
-#'          model = 'ols', overlay = 'intersection', cores = 1)
+#' NTD = sf::st_as_sf(gdverse::NTDs, coords = c('X','Y'))
+#' g = sesp(incidence ~ ., data = NTD, discvar = 'none',
+#'          model = 'ols', overlay = 'intersection')
 #' g
 #'
 sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'ols',
@@ -117,10 +117,6 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
 
     gwrcoefs = sesp::gwr_betas(paste0(yname," ~ ."),discdf,
                                bw,adaptive,kernel,intercept)
-    gc_gwrcoefs = geocomplexity::geocd_vector(
-      sf::st_set_geometry(gwrcoefs,geom),
-      returnsf = FALSE
-    )
     gwr_hclust = \(n,discnum,alpha,...) {
       moran_dt = sf::st_set_geometry(
         tibble::tibble(x = gwrcoefs[,n,drop = TRUE]),geom
@@ -128,15 +124,16 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
       moran_g = sdsfun::moran_test(moran_dt)
       moran_v = dplyr::pull(moran_g$result,2)
       moran_p = dplyr::pull(moran_g$result,6)
-      se_alpha = dplyr::if_else(moran_v>=alpha&moran_p<=0.05,
+      se_alpha = dplyr::if_else(moran_v>=alpha & moran_p<=0.05,
                                 moran_v,alpha,missing = alpha)
       se_alpha = dplyr::if_else(se_alpha>=0.75,0.75,se_alpha)
+      moran_dt = dplyr::bind_cols(moran_dt,
+                                  discdf[,names(gwrcoefs)[n],drop = TRUE])
       if (intercept) {
-        moran_dt = dplyr::bind_cols(moran_dt,gwrcoefs[,1,drop = TRUE])
+        moran_dt = dplyr::bind_cols(moran_dt,gwrcoefs[,1])
       }
       resdisc = tibble::as_tibble(
-        sdsfun::hclustgeo_disc(moran_dt,discnum,se_alpha,D1 = gdist,
-                               wt = dplyr::pull(gc_gwrcoefs,n),...)
+        sdsfun::hclustgeo_disc(moran_dt,discnum,se_alpha,D1 = gdist,...)
       )
       names(resdisc) = paste0("disc_",discnum)
       resdisc = dplyr::mutate(resdisc,xname = names(gwrcoefs)[n])
@@ -154,8 +151,8 @@ sesp = \(formula, data, listw = NULL, discvar = "all", discnum = 3:8, model = 'o
                                   discnum = discnum, alpha = alpha, ...)
       discdf = tibble::as_tibble(do.call(rbind, out_g))
     } else {
-      discdf = purrr::map_dfr(coefseq, gwr_hclust,
-                              discnum = discnum, alpha = alpha, ...)
+      discdf = purrr::map_dfr(coefseq, gwr_hclust, discnum = discnum,
+                              alpha = alpha, ...)
     }
 
     discdf = discdf |>

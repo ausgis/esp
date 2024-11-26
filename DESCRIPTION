@@ -39,14 +39,13 @@ Depends:
 Imports: 
     dplyr,
     forcats,
-    geocomplexity,
     ggplot2,
     GWmodel3,
     magrittr,
     parallel,
     patchwork,
     purrr,
-    sdsfun (>= 0.5.0),
+    sdsfun (>= 0.6.0),
     sf,
     spatialreg,
     spdep,
@@ -62,6 +61,7 @@ Suggests:
     readr,
     rmarkdown
 Remotes:
+    stscl/sdsfun,
     GWmodel-Lab/GWmodel3
 LinkingTo: 
     Rcpp,
